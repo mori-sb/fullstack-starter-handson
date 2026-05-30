@@ -107,12 +107,16 @@ FAVORITE    お気に入り
 
 ## 主要ドキュメント
 
+- [Beginner Guide](docs/beginner-guide.md)
 - [Day 1: Webアプリの全体像](docs/day1.md)
 - [Day 2: Spring Bootの基本](docs/day2.md)
 - [Day 3: DB接続とCRUD API](docs/day3.md)
 - [Day 4: Reactの基本](docs/day4.md)
 - [Day 5: ReactとAPI連携](docs/day5.md)
+- [Glossary](docs/glossary.md)
+- [Checklists](docs/checklists.md)
 - [Teaching Policy](docs/teaching-policy.md)
+- [Beginner-Friendly Design](docs/beginner-friendly-design.md)
 - [Visual Learning Plan](docs/visual-learning-plan.md)
 - [Code Sample Plan](docs/code-sample-plan.md)
 - [Instructor Notes](docs/instructor-notes.md)
