@@ -2,10 +2,10 @@
 
 このディレクトリには、ハンズオンで使う資料を置いています。
 
-まず参加者は、次の順番で読んでください。
+まずは、次の順番で読んでください。
 
 ```text
-1. beginner-guide.md
+1. getting-started.md
 2. day1.md
 3. day2.md
 4. day3.md
@@ -17,7 +17,7 @@
 
 ## 参加者向け
 
-- [Beginner Guide](beginner-guide.md)
+- [Getting Started](getting-started.md)
 - [Day 1: Webアプリの全体像](day1.md)
 - [Day 2: Spring Bootの基本](day2.md)
 - [Day 3: DB接続とCRUD API](day3.md)

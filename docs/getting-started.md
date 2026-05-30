@@ -1,4 +1,4 @@
-# Beginner Guide
+# Getting Started
 
 このページは、ハンズオンに参加する人が最初に読むページです。
 

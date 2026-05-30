@@ -61,7 +61,7 @@ AIがReactコードを生成した場合も、まずコンポーネント単位�
 
 ## propsとstate
 
-Reactで初心者が混乱しやすいのが、propsとstate。
+Reactで最初に混乱しやすいのが、propsとstate。
 
 ### props
 

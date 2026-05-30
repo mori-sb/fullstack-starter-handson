@@ -108,7 +108,7 @@ FAVORITE    お気に入り
 ## 主要ドキュメント
 
 - [Docs README](docs/README.md)
-- [Beginner Guide](docs/beginner-guide.md)
+- [Getting Started](docs/getting-started.md)
 - [Day 1: Webアプリの全体像](docs/day1.md)
 - [Day 2: Spring Bootの基本](docs/day2.md)
 - [Day 3: DB接続とCRUD API](docs/day3.md)

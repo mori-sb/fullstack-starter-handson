@@ -2,7 +2,7 @@
 
 この教材では、文字だけで説明しない。
 
-初心者が迷いやすい概念は、できるだけ図にする。
+迷いやすい概念は、できるだけ図にする。
 画像は多めでよい。
 ただし、1枚に詰め込みすぎず、段階的に見せる。
 
@@ -87,7 +87,7 @@ images/screen-api-map.png
 左から右へ矢印でつないでください。
 HTTPメソッドは小さなカラーバッジで表示してください。
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアン・グリーン・オレンジ・レッドをアクセントに使ってください。
-初心者が「画面操作とAPIは対応している」と一目で分かる図にしてください。
+「画面操作とAPIは対応している」と一目で分かる図にしてください。
 ```
 
 ### 4. 画像URL表示の流れ
@@ -148,7 +148,7 @@ images/controller-role.png
 生成依頼文:
 
 ```text
-初心者向けに、Spring BootのControllerの役割を説明するモダンな図を作ってください。
+Spring BootのControllerの役割を説明するモダンな図を作ってください。
 
 左にReact、中央にRestaurantController、右にRestaurantServiceを配置してください。
 ReactからRestaurantControllerへ「GET /api/restaurants」「POST /api/restaurants」のリクエストが入るようにしてください。
@@ -171,7 +171,7 @@ images/service-role.png
 生成依頼文:
 
 ```text
-初心者向けに、Spring BootのServiceの役割を説明するモダンな図を作ってください。
+Spring BootのServiceの役割を説明するモダンな図を作ってください。
 
 左にRestaurantController、中央にRestaurantService、右にRestaurantRepositoryを配置してください。
 ControllerからServiceへ「一覧取得を依頼」「登録を依頼」「削除を依頼」という矢印を描いてください。
@@ -194,7 +194,7 @@ images/repository-role.png
 生成依頼文:
 
 ```text
-初心者向けに、Spring BootのRepositoryの役割を説明するモダンな図を作ってください。
+Spring BootのRepositoryの役割を説明するモダンな図を作ってください。
 
 左にRestaurantService、中央にRestaurantRepository、右にDatabaseを配置してください。
 ServiceからRepositoryへ「保存して」「一覧を取って」「削除して」という依頼が来るようにしてください。
@@ -234,7 +234,7 @@ images/spring-entity-flow.png
 生成依頼文:
 
 ```text
-初心者向けに、Spring BootのEntityとDBテーブルの対応を説明する図を作ってください。
+Spring BootのEntityとDBテーブルの対応を説明する図を作ってください。
 
 左にJavaのRestaurant Entityカード、右にDBのrestaurants tableカードを配置してください。
 対応する項目を線でつないでください。
@@ -288,7 +288,7 @@ images/query-param-flow.png
 生成依頼文:
 
 ```text
-初心者向けに、クエリパラメータで一覧を絞り込む流れを説明する図を作ってください。
+クエリパラメータで一覧を絞り込む流れを説明する図を作ってください。
 
 左にReactのフィルタUIカードを置き、「地域: 新宿」を選択している状態にしてください。
 中央にURLカードとして「GET /api/restaurants?area=新宿」を表示してください。
@@ -324,7 +324,7 @@ images/react-props-flow.png
 生成依頼文:
 
 ```text
-初心者向けに、Reactのpropsの流れを説明するモダンな図を作ってください。
+Reactのpropsの流れを説明するモダンな図を作ってください。
 
 上にAppコンポーネントを配置し、下にRestaurantList、さらにその下にRestaurantCardを複数配置してください。
 AppからRestaurantListへ「restaurantsを渡す」
@@ -355,7 +355,7 @@ images/form-state-flow.png
 生成依頼文:
 
 ```text
-初心者向けに、Reactのフォーム入力とstateの関係を説明する図を作ってください。
+Reactのフォーム入力とstateの関係を説明する図を作ってください。
 
 左に入力フォームを置き、店名、地域、ジャンル、メモ、画像URLの入力欄を表示してください。
 右にform stateカードを置き、name、area、genre、memo、imageUrlが入っている様子を表示してください。
@@ -376,7 +376,7 @@ images/react-image-tag.png
 生成依頼文:
 
 ```text
-初心者向けに、Reactで画像URLをimgタグに渡して画像を表示する流れを説明する図を作ってください。
+Reactで画像URLをimgタグに渡して画像を表示する流れを説明する図を作ってください。
 
 左にrestaurantデータカードを置き、imageUrl: "https://..." を表示してください。
 中央にReactコードカードとして <img src={restaurant.imageUrl} alt={restaurant.name} /> を表示してください。
@@ -400,7 +400,7 @@ images/useeffect-api-flow.png
 生成依頼文:
 
 ```text
-初心者向けに、ReactのuseEffectでAPIを呼ぶ流れを説明する図を作ってください。
+ReactのuseEffectでAPIを呼ぶ流れを説明する図を作ってください。
 
 左から右に、画面を開く、useEffectが動く、fetchでGET /api/restaurantsを呼ぶ、JSONを受け取る、setRestaurantsでstate更新、カード一覧が表示される、の6ステップを並べてください。
 
@@ -420,7 +420,7 @@ images/fetch-request-map.png
 生成依頼文:
 
 ```text
-初心者向けに、ReactのfetchでAPIを呼ぶときの中身を説明する図を作ってください。
+ReactのfetchでAPIを呼ぶときの中身を説明する図を作ってください。
 
 左にfetchコードカード、右にHTTPリクエストカードを配置してください。
 fetchコードカードには、URL、method、headers、bodyを表示してください。
@@ -446,7 +446,7 @@ images/cors-basic.png
 生成依頼文:
 
 ```text
-初心者向けに、CORSの基本を説明する図を作ってください。
+CORSの基本を説明する図を作ってください。
 
 左にReact開発サーバー http://localhost:5173、右にSpring Boot API http://localhost:8080 を配置してください。
 ReactからSpring BootへAPIリクエストの矢印を描いてください。
