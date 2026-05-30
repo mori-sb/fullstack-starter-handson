@@ -59,6 +59,55 @@ RestaurantCard    お店1件を表示する
 
 AIがReactコードを生成した場合も、まずコンポーネント単位で読む。
 
+## Reactのディレクトリ構造
+
+React側は `frontend/` に作ります。
+
+画面を部品ごとに分けるため、`components/` にコンポーネントを置きます。
+APIを呼ぶ処理は `api/` にまとめます。
+
+```text
+frontend/
+└─ src/
+   ├─ main.jsx
+   ├─ App.jsx
+   ├─ api/
+   │  └─ restaurants.js
+   ├─ components/
+   │  ├─ RestaurantFilter.jsx
+   │  ├─ RestaurantForm.jsx
+   │  ├─ RestaurantList.jsx
+   │  └─ RestaurantCard.jsx
+   └─ styles/
+      └─ app.css
+```
+
+それぞれの役割:
+
+```text
+main.jsx                 Reactアプリの起動入口
+App.jsx                  画面全体の親コンポーネント
+api/restaurants.js       Spring Boot APIを呼ぶ関数
+RestaurantFilter.jsx     地域・ジャンル・ステータスの絞り込み
+RestaurantForm.jsx       お店の登録・編集フォーム
+RestaurantList.jsx       お店カードを並べる
+RestaurantCard.jsx       お店1件を表示する
+app.css                  見た目のスタイル
+```
+
+最初に読む順番:
+
+```text
+1. App.jsx
+2. RestaurantList.jsx
+3. RestaurantCard.jsx
+4. RestaurantForm.jsx
+5. RestaurantFilter.jsx
+6. api/restaurants.js
+```
+
+Reactでは、ファイルを分けることで「どの部品が何を担当しているか」を見つけやすくします。
+
 ## propsとstate
 
 Reactで最初に混乱しやすいのが、propsとstate。

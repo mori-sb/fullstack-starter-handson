@@ -106,7 +106,49 @@ images/image-url-flow.png
 
 ## Day 2: Spring Bootの基本
 
-### 5. Spring Boot基本構造図
+### 5. Spring Bootディレクトリ構造図
+
+ファイル名:
+
+```text
+images/spring-directory-structure.png
+```
+
+伝えること:
+
+- Spring Bootのファイルは役割ごとに分かれている
+- `restaurant/` 配下にController、Service、Repository、Entity、DTO、Mapperをまとめる
+- まず読むのはController、Service、Repository
+
+生成依頼文:
+
+```text
+モダンなSaaS技術資料風に、Spring Bootプロジェクトのディレクトリ構造図を作ってください。
+
+左側に backend/src/main/java/com/example/gourmet のツリーを表示してください。
+restaurant フォルダの中に次のファイルを並べてください。
+RestaurantController.java
+RestaurantService.java
+RestaurantRepository.java
+Restaurant.java
+RestaurantRequest.java
+RestaurantResponse.java
+RestaurantMapper.java
+RestaurantStatus.java
+
+右側に、各ファイルの役割をカードで表示してください。
+Controller: APIの入口
+Service: 処理を書く場所
+Repository: DBとやり取りする場所
+Entity: DBに保存するデータ
+Request/Response: APIで受け渡しするデータ
+Mapper: DTOとEntityを変換する
+
+「まず読む順番」として、Controller -> Service -> Repository を強調してください。
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、グリーンとシアンを使った読みやすい図にしてください。
+```
+
+### 6. Spring Boot基本構造図
 
 ファイル名:
 
@@ -123,7 +165,7 @@ images/spring-basic-flow.png
 - RepositoryはDBとやり取りする場所
 - DBはデータを保存する場所
 
-### 6. Spring Bootクラス名対応図
+### 7. Spring Bootクラス名対応図
 
 ファイル名:
 
@@ -137,7 +179,7 @@ images/spring-class-map.png
 - Serviceという概念は`RestaurantService`に対応する
 - Repositoryという概念は`RestaurantRepository`に対応する
 
-### 7. Controllerの役割図
+### 8. Controllerの役割図
 
 ファイル名:
 
@@ -160,7 +202,7 @@ Controllerカードには「APIの入口」「URLとHTTPメソッドを受け取
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアンとグリーンを使ったモダンな教材図にしてください。
 ```
 
-### 8. Serviceの役割図
+### 9. Serviceの役割図
 
 ファイル名:
 
@@ -183,7 +225,7 @@ Serviceカードには「処理を書く場所」「アプリとして何をす�
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、グリーンを中心にしたモダンな教材図にしてください。
 ```
 
-### 9. Repositoryの役割図
+### 10. Repositoryの役割図
 
 ファイル名:
 
@@ -207,7 +249,7 @@ Repositoryカードには「DBとやり取りする場所」「Serviceから呼�
 
 ## Day 3: DBとCRUD
 
-### 10. CRUDとHTTPメソッド対応図
+### 11. CRUDとHTTPメソッド対応図
 
 ファイル名:
 
@@ -215,7 +257,7 @@ Repositoryカードには「DBとやり取りする場所」「Serviceから呼�
 images/crud-api-map.png
 ```
 
-### 11. EntityとDBテーブル対応図
+### 12. EntityとDBテーブル対応図
 
 ファイル名:
 
@@ -261,7 +303,7 @@ status
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、グリーンとパープルを使ったモダンな教材図にしてください。
 ```
 
-### 12. 登録APIの流れ
+### 13. 登録APIの流れ
 
 ファイル名:
 
@@ -269,7 +311,7 @@ status
 images/create-api-flow.png
 ```
 
-### 13. 一覧取得APIの流れ
+### 14. 一覧取得APIの流れ
 
 ファイル名:
 
@@ -277,7 +319,7 @@ images/create-api-flow.png
 images/list-api-flow.png
 ```
 
-### 14. クエリパラメータの図
+### 15. クエリパラメータの図
 
 ファイル名:
 
@@ -305,7 +347,51 @@ DBからReactへ「新宿のお店だけ返す」
 
 ## Day 4: Reactの基本
 
-### 15. Reactコンポーネント分割図
+### 16. Reactディレクトリ構造図
+
+ファイル名:
+
+```text
+images/react-directory-structure.png
+```
+
+伝えること:
+
+- Reactのファイルは画面部品ごとに分ける
+- `components/` に画面部品を置く
+- `api/` にAPI呼び出しをまとめる
+- まず読むのはApp、List、Card
+
+生成依頼文:
+
+```text
+モダンなSaaS技術資料風に、Reactプロジェクトのディレクトリ構造図を作ってください。
+
+左側に frontend/src のツリーを表示してください。
+次の構成を入れてください。
+main.jsx
+App.jsx
+api/restaurants.js
+components/RestaurantFilter.jsx
+components/RestaurantForm.jsx
+components/RestaurantList.jsx
+components/RestaurantCard.jsx
+styles/app.css
+
+右側に、各ファイルの役割をカードで表示してください。
+App.jsx: 画面全体の親
+api/restaurants.js: Spring Boot APIを呼ぶ
+RestaurantFilter.jsx: 絞り込み
+RestaurantForm.jsx: 登録・編集フォーム
+RestaurantList.jsx: 一覧
+RestaurantCard.jsx: お店カード
+app.css: 見た目
+
+「まず読む順番」として、App -> RestaurantList -> RestaurantCard -> RestaurantForm -> api/restaurants.js を表示してください。
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、Reactらしいシアンとネイビーを使った読みやすい図にしてください。
+```
+
+### 17. Reactコンポーネント分割図
 
 ファイル名:
 
@@ -313,7 +399,7 @@ DBからReactへ「新宿のお店だけ返す」
 images/react-components.png
 ```
 
-### 16. propsの流れ
+### 18. propsの流れ
 
 ファイル名:
 
@@ -336,7 +422,7 @@ propsカードには「親から子へ渡すデータ」と表示してくださ
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、Reactらしいシアンを中心にしたモダンな教材図にしてください。
 ```
 
-### 17. stateの流れ
+### 19. stateの流れ
 
 ファイル名:
 
@@ -344,7 +430,7 @@ propsカードには「親から子へ渡すデータ」と表示してくださ
 images/react-state-flow.png
 ```
 
-### 18. フォーム入力とstate
+### 20. フォーム入力とstate
 
 ファイル名:
 
@@ -365,7 +451,7 @@ Reactのフォーム入力とstateの関係を説明する図を作ってくだ�
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアンとオレンジを使ったモダンな教材図にしてください。
 ```
 
-### 19. 画像URLとimgタグ
+### 21. 画像URLとimgタグ
 
 ファイル名:
 
@@ -389,7 +475,7 @@ Reactで画像URLをimgタグに渡して画像を表示する流れを説明す
 
 ## Day 5: API連携とデバッグ
 
-### 20. useEffectでAPIを呼ぶ流れ
+### 22. useEffectでAPIを呼ぶ流れ
 
 ファイル名:
 
@@ -409,7 +495,7 @@ useEffect、fetch、state更新のカードを少し強調してください。
 白または薄いグレー背景、シアン・グリーン・オレンジを使ったモダンな教材図にしてください。
 ```
 
-### 21. fetchの中身
+### 23. fetchの中身
 
 ファイル名:
 
@@ -435,7 +521,7 @@ body -> 送信するJSON
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアンとグリーンを使ったモダンな教材図にしてください。
 ```
 
-### 22. CORSの図
+### 24. CORSの図
 
 ファイル名:
 
@@ -458,7 +544,7 @@ Spring Boot側に「CORS設定でReactからのアクセスを許可」と表示
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアン・グリーン・オレンジを使ったモダンな教材図にしてください。
 ```
 
-### 23. エラー切り分けマップ
+### 25. エラー切り分けマップ
 
 ファイル名:
 
@@ -466,7 +552,7 @@ Spring Boot側に「CORS設定でReactからのアクセスを許可」と表示
 images/debugging-map.png
 ```
 
-### 24. 開発の進め方
+### 26. 開発の進め方
 
 ファイル名:
 

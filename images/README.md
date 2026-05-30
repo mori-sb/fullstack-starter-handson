@@ -7,6 +7,7 @@
 - `app-overview.png`: ブラウザ、React、Spring Boot、DBの全体構成
 - `http-json-flow.png`: HTTPリクエスト、HTTPレスポンス、JSONの流れ
 - `screen-api-map.png`: 画面操作とAPIの対応
+- `spring-directory-structure.png`: Spring Bootのディレクトリ構造
 - `spring-basic-flow.png`: Browser / React、Controller、Service、Repository、DBの基本の流れ
 - `spring-class-map.png`: Spring Bootの役割名とクラス名の対応
 - `controller-role.png`: Controllerの役割
@@ -21,6 +22,7 @@
 - `create-api-flow.png`: 登録APIでReactからDB保存まで進む流れ
 - `list-api-flow.png`: 一覧取得APIでDBからReact表示まで戻る流れ
 - `query-param-flow.png`: クエリパラメータで一覧を絞り込む流れ
+- `react-directory-structure.png`: Reactのディレクトリ構造
 - `react-components.png`: Reactコンポーネントの分割
 - `react-props-flow.png`: propsが親から子へ渡る流れ
 - `react-state-flow.png`: state変更から画面更新までの流れ

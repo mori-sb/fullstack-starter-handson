@@ -58,6 +58,62 @@ Browser / React -> Controller -> Service -> Repository -> Database
 DTO、Entity、Mapperはまだ覚えなくて大丈夫です。
 最初は「APIの入口」「処理を書く場所」「DBとやり取りする場所」の3つに分けて考えます。
 
+## Spring Bootのディレクトリ構造
+
+Spring Boot側は `backend/` に作ります。
+
+まずは、どのファイルが何の役割なのかを見えるようにします。
+
+```text
+backend/
+└─ src/
+   └─ main/
+      ├─ java/
+      │  └─ com/example/gourmet/
+      │     ├─ GourmetApplication.java
+      │     └─ restaurant/
+      │        ├─ RestaurantController.java
+      │        ├─ RestaurantService.java
+      │        ├─ RestaurantRepository.java
+      │        ├─ Restaurant.java
+      │        ├─ RestaurantRequest.java
+      │        ├─ RestaurantResponse.java
+      │        ├─ RestaurantMapper.java
+      │        └─ RestaurantStatus.java
+      └─ resources/
+         └─ application.yml
+```
+
+最初に見るファイル:
+
+```text
+RestaurantController.java
+RestaurantService.java
+RestaurantRepository.java
+```
+
+あとから見るファイル:
+
+```text
+Restaurant.java
+RestaurantRequest.java
+RestaurantResponse.java
+RestaurantMapper.java
+RestaurantStatus.java
+```
+
+ファイル名を見るだけでも、おおよその役割が分かるようにしておきます。
+
+```text
+Controller  APIの入口
+Service     処理を書く場所
+Repository  DBとやり取りする場所
+Request     Reactから受け取るデータ
+Response    Reactへ返すデータ
+Mapper      Request/ResponseとEntityを変換する
+Entity      DBに保存するデータ
+```
+
 ## 役割を日常の言葉で考える
 
 ### Controller
@@ -131,6 +187,28 @@ Spring Bootのコードを見るときは、次の順番で読むと迷いにく
 
 AIにコードを生成してもらった後も、この順番で読む。
 動いたかどうかだけでなく、どの層に何が書かれているかを見る。
+
+## 変更したい内容と見るファイル
+
+```text
+APIのURLを確認したい
+  -> RestaurantController.java
+
+登録や一覧取得の処理を確認したい
+  -> RestaurantService.java
+
+DBへの保存・取得を確認したい
+  -> RestaurantRepository.java
+
+APIで受け取るJSONの形を確認したい
+  -> RestaurantRequest.java
+
+APIで返すJSONの形を確認したい
+  -> RestaurantResponse.java
+
+DBに保存する項目を確認したい
+  -> Restaurant.java
+```
 
 ## 使用する図
 

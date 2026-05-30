@@ -74,6 +74,47 @@ React -> Controller -> Service -> Repository -> DB
 DTO、Entity、Mapperは後から出てきます。
 いきなり全部覚えようとしなくて大丈夫です。
 
+Spring Boot側のディレクトリは、最終的に次のような形にします。
+
+```text
+backend/
+└─ src/
+   └─ main/
+      ├─ java/
+      │  └─ com/example/gourmet/
+      │     ├─ GourmetApplication.java
+      │     ├─ restaurant/
+      │     │  ├─ RestaurantController.java
+      │     │  ├─ RestaurantService.java
+      │     │  ├─ RestaurantRepository.java
+      │     │  ├─ Restaurant.java
+      │     │  ├─ RestaurantRequest.java
+      │     │  ├─ RestaurantResponse.java
+      │     │  ├─ RestaurantMapper.java
+      │     │  └─ RestaurantStatus.java
+      │     └─ config/
+      │        └─ WebConfig.java
+      └─ resources/
+         └─ application.yml
+```
+
+最初に見る場所:
+
+```text
+RestaurantController.java
+RestaurantService.java
+RestaurantRepository.java
+```
+
+慣れてきたら見る場所:
+
+```text
+Restaurant.java
+RestaurantRequest.java
+RestaurantResponse.java
+RestaurantMapper.java
+```
+
 ## 最初に覚えるReact
 
 Reactは、画面を部品に分けて作ります。
@@ -93,6 +134,38 @@ App
 ```text
 props  親から子へ渡すデータ
 state  画面の中で変わるデータ
+```
+
+React側のディレクトリは、最終的に次のような形にします。
+
+```text
+frontend/
+└─ src/
+   ├─ App.jsx
+   ├─ main.jsx
+   ├─ api/
+   │  └─ restaurants.js
+   ├─ components/
+   │  ├─ RestaurantFilter.jsx
+   │  ├─ RestaurantForm.jsx
+   │  ├─ RestaurantList.jsx
+   │  └─ RestaurantCard.jsx
+   └─ styles/
+      └─ app.css
+```
+
+最初に見る場所:
+
+```text
+App.jsx
+components/RestaurantCard.jsx
+components/RestaurantList.jsx
+```
+
+API連携で見る場所:
+
+```text
+api/restaurants.js
 ```
 
 ## 分からなくなったときの見方
