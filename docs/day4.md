@@ -447,6 +447,58 @@ RestaurantListに渡す配列が変わる
 - stateが変わると画面が変わる理由
 - Tailwind CSSの `className` がどこに書かれているか
 
+## AIへの依頼例
+
+Day4では、React画面を固定データで作ります。
+API接続はまだ入れず、コンポーネント分割、props、stateを確認します。
+
+最初の依頼例:
+
+```text
+Reactでグルメ管理アプリのお店カードと一覧を作ってください。
+
+作るファイル:
+- frontend/src/components/RestaurantCard.jsx
+- frontend/src/components/RestaurantList.jsx
+
+条件:
+- RestaurantCardはpropsとしてrestaurantを受け取ってください
+- name, area, genre, memo, imageUrl, statusを表示してください
+- imageUrlはimgタグのsrcに渡してください
+- RestaurantListはrestaurants配列を受け取り、mapでRestaurantCardを表示してください
+- Tailwind CSSで見やすいカードUIにしてください
+
+作成後に、propsがどのように渡っているか説明してください。
+```
+
+フォームの依頼例:
+
+```text
+Reactでグルメ管理アプリのお店登録フォームを作ってください。
+
+作るファイル:
+frontend/src/components/RestaurantForm.jsx
+
+入力項目:
+name, area, genre, memo, imageUrl, status
+
+条件:
+- useStateでフォームの入力値を管理してください
+- 入力値が変わったらstateを更新してください
+- 送信時にonSubmit propsへフォームの値を渡してください
+- API呼び出しはまだ書かないでください
+
+作成後に、form stateがどのように更新されるか説明してください。
+```
+
+AIの回答を確認するときのポイント:
+
+- API接続が勝手に入っていないか
+- コンポーネントが大きくなりすぎていないか
+- propsとstateの役割が分かれているか
+- `className` にTailwind CSSの指定が書かれているか
+- `img` の `src` に `restaurant.imageUrl` を渡しているか
+
 ## コードサンプル
 
 お店1件を表示するコンポーネント。

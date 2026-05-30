@@ -305,6 +305,64 @@ GET /api/restaurants?area=新宿
 - DBのデータが変わっている
 - 存在しないIDを指定したときの動きが分かる
 
+## AIへの依頼例
+
+Day3では、DB保存とCRUD APIを作ります。
+一度に全部依頼せず、登録と一覧から始めます。
+
+最初の依頼例:
+
+```text
+Spring Bootでグルメ管理アプリのお店データをDBに保存できるようにしてください。
+
+まず作るもの:
+- Restaurant Entity
+- RestaurantRepository
+- RestaurantRequest
+- RestaurantResponse
+- RestaurantMapper
+- POST /api/restaurants
+- GET /api/restaurants
+
+項目:
+id, name, area, genre, memo, imageUrl, status
+
+条件:
+- EntityはDBに保存する形として作ってください
+- Request DTOは登録時にReactから受け取る形にしてください
+- Response DTOはReactへ返す形にしてください
+- MapperでDTOとEntityを変換してください
+- Serviceに処理を書き、ControllerはServiceを呼ぶだけにしてください
+
+作成後に、Request DTO、Entity、Response DTOの違いを説明してください。
+```
+
+次の依頼例:
+
+```text
+既存のRestaurant APIに、詳細、更新、削除を追加してください。
+
+追加するAPI:
+GET /api/restaurants/{id}
+PUT /api/restaurants/{id}
+DELETE /api/restaurants/{id}
+
+条件:
+- 存在しないIDの場合は404として扱ってください
+- 更新ではURLのidを使って対象データを探してください
+- 削除後はレスポンスボディなしで返してください
+
+作成後に、各APIがServiceとRepositoryで何をしているか説明してください。
+```
+
+AIの回答を確認するときのポイント:
+
+- EntityとDTOが混ざっていないか
+- ControllerにDB操作が直接書かれていないか
+- RepositoryをServiceから呼んでいるか
+- 存在しないIDの扱いがあるか
+- CRUDのHTTPメソッドが資料と合っているか
+
 ## リクエストとレスポンスの例
 
 登録APIでは、ReactからSpring BootへJSONを送る。

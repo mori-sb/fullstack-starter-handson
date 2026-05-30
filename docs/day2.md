@@ -373,6 +373,42 @@ Service     返すデータを用意する
 - 各データに必要な項目が入っている
 - ControllerとServiceの役割を説明できる
 
+## AIへの依頼例
+
+Day2では、まず固定データを返す一覧APIを作ります。
+AIには、役割を分けることと、作るファイルを明確に伝えます。
+
+```text
+Spring Bootでグルメ管理アプリのお店一覧APIを作ってください。
+
+作るAPI:
+GET /api/restaurants
+
+返す項目:
+id, name, area, genre, memo, imageUrl, status
+
+作るファイル:
+RestaurantController.java
+RestaurantService.java
+RestaurantResponse.java
+
+条件:
+- ControllerはAPIの入口だけを担当してください
+- 固定データはServiceで作ってください
+- DB接続はまだ使わないでください
+- レスポンスはJSON配列にしてください
+
+作成後に、ControllerとServiceの役割の違いを説明してください。
+```
+
+AIの回答を確認するときのポイント:
+
+- Controllerに処理を書きすぎていないか
+- Serviceが一覧データを返しているか
+- `RestaurantResponse` に必要な項目が揃っているか
+- `imageUrl` が文字列として含まれているか
+- `GET /api/restaurants` で呼べる形になっているか
+
 ## コードサンプル
 
 最初はDBを使わず、固定データを返して流れを理解する。

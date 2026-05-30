@@ -13,6 +13,146 @@
 3. 小さな変更を自分で試せる
 ```
 
+## 事前に準備するもの
+
+このハンズオンでは、次のツールを使います。
+
+```text
+IntelliJ IDEA       Spring Bootのコードを書く
+VS Code             Reactのコードを書く
+Rancher Desktop     DBコンテナを起動する
+Git / GitHub        コードと資料を管理する
+Java                Spring Bootを動かす
+Node.js / npm       Reactを動かす
+```
+
+当日は、すべての設定が終わっている前提にはしません。
+ただし、最初に環境確認をしておくと、実装中の詰まりを減らせます。
+
+## 環境確認
+
+ターミナルで次のコマンドを実行します。
+
+```bash
+java -version
+node -v
+npm -v
+git --version
+```
+
+確認できればよいこと:
+
+```text
+Javaのバージョンが表示される
+Node.jsのバージョンが表示される
+npmのバージョンが表示される
+Gitのバージョンが表示される
+```
+
+コマンドが見つからない場合は、実装に入る前にツールのインストールまたはPATH設定を確認します。
+
+## IntelliJ IDEAの初期設定
+
+IntelliJ IDEAは、Spring Boot側の開発に使います。
+
+確認すること:
+
+- プロジェクトとして `backend/` を開ける
+- Java SDKが設定されている
+- GradleまたはMavenの読み込みが完了している
+- `GourmetApplication.java` を実行できる
+- 実行ログにエラーが出ていない
+
+最初に見る場所:
+
+```text
+backend/src/main/java/.../GourmetApplication.java
+backend/src/main/resources/application.yml
+```
+
+Spring Bootが起動できたら、API側の準備は最初の段階としてOKです。
+
+## VS Codeの初期設定
+
+VS Codeは、React側の開発に使います。
+
+確認すること:
+
+- プロジェクトとして `frontend/` を開ける
+- ターミナルで `npm install` を実行できる
+- `npm run dev` でReact開発サーバーを起動できる
+- ブラウザで `http://localhost:5173` を開ける
+
+最初に見る場所:
+
+```text
+frontend/src/App.jsx
+frontend/src/components/
+frontend/src/api/
+```
+
+Reactが起動できたら、画面側の準備は最初の段階としてOKです。
+
+## Rancher DesktopでDBを起動する
+
+DBはRancher Desktopを使ってコンテナで起動します。
+
+確認すること:
+
+- Rancher Desktopが起動している
+- コンテナエンジンが使える
+- ターミナルで `docker --version` が表示される
+- DBコンテナを起動できる
+
+DB起動は、リポジトリに `compose.yml` または `docker-compose.yml` がある場合はそれを使います。
+
+```bash
+docker compose up -d
+```
+
+起動後に確認すること:
+
+```bash
+docker ps
+```
+
+見るポイント:
+
+- DBコンテナが起動している
+- `STATUS` が `Up` になっている
+- Spring Bootの `application.yml` に書いたDB接続先と合っている
+
+DB接続で詰まった場合は、ReactではなくSpring BootとDBの設定を確認します。
+
+## Gitとブランチ
+
+作業は `develop` ブランチで進めます。
+
+```bash
+git branch
+git status
+```
+
+確認すること:
+
+```text
+今いるブランチがdevelopである
+作業前に不要な差分がない
+変更したファイルを把握している
+```
+
+作業後は、差分を確認してからコミットします。
+
+```bash
+git status
+git diff
+git add .
+git commit -m "作業内容が分かるメッセージ"
+```
+
+このハンズオンでは、Git操作そのものを深く扱いすぎません。
+ただし「今どのファイルを変更したか」は毎回確認します。
+
 ## このハンズオンで作るもの
 
 グルメ管理アプリを作ります。
@@ -252,6 +392,82 @@ AIは使って大丈夫です。
 
 AIは実装を速くしてくれます。
 でも、実務で大事なのは「何が作られたかを読めること」です。
+
+## AIへの指示の出し方
+
+AIに依頼するときは、次の4つを入れます。
+
+```text
+1. 何を作りたいか
+2. どの技術で作るか
+3. どのファイルに書くか
+4. 完成後に何を確認したいか
+```
+
+悪い例:
+
+```text
+Reactでいい感じに作って
+```
+
+この指示だと、どのファイルに何を作るべきかが曖昧です。
+
+良い例:
+
+```text
+Reactでグルメ管理アプリのお店カードを作ってください。
+ファイルは frontend/src/components/RestaurantCard.jsx です。
+propsとして restaurant を受け取り、name、area、genre、memo、imageUrl、status を表示してください。
+Tailwind CSSを使って、画像付きカードとして見やすくしてください。
+作成後に、このコンポーネントがどのpropsを使っているか説明してください。
+```
+
+Spring Bootの例:
+
+```text
+Spring Bootでお店一覧APIを作ってください。
+Controller、Service、Repositoryの役割を分けてください。
+APIは GET /api/restaurants です。
+レスポンスは id、name、area、genre、memo、imageUrl、status を含むJSON配列にしてください。
+作成後に、リクエストがController、Service、Repositoryをどの順番で通るか説明してください。
+```
+
+AIに実装を依頼した後は、必ず次の確認をします。
+
+- どのファイルが作られたか
+- どのファイルが変更されたか
+- 画面、API、DBのどこを担当するコードか
+- 動作確認の方法は何か
+- 不要に複雑な実装になっていないか
+
+## 自分で進めるときの基本サイクル
+
+講義後の演習では、次の流れで進めます。
+
+```text
+1. 資料で今日のゴールを確認する
+2. 触るファイルを確認する
+3. AIに小さく依頼する
+4. 生成されたコードを読む
+5. 動かして確認する
+6. エラーが出たら確認順序に沿って切り分ける
+7. 分かったことをメモする
+```
+
+AIへの依頼は小さく分けます。
+
+```text
+悪い進め方:
+グルメ管理アプリを全部作って
+
+良い進め方:
+まず RestaurantCard を作る
+次に RestaurantList を作る
+次に RestaurantForm を作る
+次に API接続を作る
+```
+
+小さく依頼すると、生成されたコードを確認しやすくなります。
 
 ## 今日できればOKのライン
 

@@ -339,6 +339,64 @@ export async function fetchRestaurants({ area } = {}) {
 - レスポンスJSONをstateに反映しているか
 - 画面表示が変わっているか
 
+## AIへの依頼例
+
+Day5では、ReactとSpring Boot APIを接続します。
+一度に全部つなげず、一覧取得から始めます。
+
+一覧取得の依頼例:
+
+```text
+Reactのグルメ管理アプリで、Spring Bootの一覧APIを呼ぶ処理を追加してください。
+
+対象ファイル:
+- frontend/src/api/restaurants.js
+- frontend/src/App.jsx
+
+API:
+GET http://localhost:8080/api/restaurants
+
+条件:
+- API呼び出し関数は api/restaurants.js に書いてください
+- App.jsxではuseEffectで初回表示時に一覧を取得してください
+- 取得したJSONをrestaurants stateに入れてください
+- RestaurantListへrestaurantsを渡してください
+- ローディング中とエラー時の表示も最低限入れてください
+
+作成後に、useEffect、fetch、setRestaurantsの流れを説明してください。
+```
+
+登録APIの依頼例:
+
+```text
+Reactの登録フォームからSpring Bootの登録APIを呼べるようにしてください。
+
+API:
+POST http://localhost:8080/api/restaurants
+
+対象ファイル:
+- frontend/src/api/restaurants.js
+- frontend/src/App.jsx
+- frontend/src/components/RestaurantForm.jsx
+
+条件:
+- createRestaurant関数をapi/restaurants.jsに追加してください
+- フォーム送信時にcreateRestaurantを呼んでください
+- 登録後に一覧を再取得してください
+- 送信するJSONにはname, area, genre, memo, imageUrl, statusを含めてください
+
+作成後に、送信するJSONとレスポンスJSONの違いを説明してください。
+```
+
+AIの回答を確認するときのポイント:
+
+- APIのURLが正しいか
+- HTTPメソッドが正しいか
+- `Content-Type: application/json` が必要な箇所にあるか
+- `JSON.stringify` で送信しているか
+- API結果をstateに反映しているか
+- Networkでリクエストを確認できるか
+
 ## 動作確認の順番
 
 フルスタック開発では、いきなり全部つなげて確認しない。
