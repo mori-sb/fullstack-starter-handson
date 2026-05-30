@@ -118,6 +118,7 @@ FAVORITE    お気に入り
 - [Teaching Policy](docs/teaching-policy.md)
 - [Beginner-Friendly Design](docs/beginner-friendly-design.md)
 - [Visual Learning Plan](docs/visual-learning-plan.md)
+- [Visual Map](docs/visual-map.md)
 - [Code Sample Plan](docs/code-sample-plan.md)
 - [Instructor Notes](docs/instructor-notes.md)
 
