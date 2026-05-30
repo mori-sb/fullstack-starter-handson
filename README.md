@@ -107,6 +107,7 @@ FAVORITE    お気に入り
 
 ## 主要ドキュメント
 
+- [Docs README](docs/README.md)
 - [Beginner Guide](docs/beginner-guide.md)
 - [Day 1: Webアプリの全体像](docs/day1.md)
 - [Day 2: Spring Bootの基本](docs/day2.md)
@@ -115,12 +116,10 @@ FAVORITE    お気に入り
 - [Day 5: ReactとAPI連携](docs/day5.md)
 - [Glossary](docs/glossary.md)
 - [Checklists](docs/checklists.md)
-- [Teaching Policy](docs/teaching-policy.md)
-- [Beginner-Friendly Design](docs/beginner-friendly-design.md)
-- [Visual Learning Plan](docs/visual-learning-plan.md)
-- [Visual Map](docs/visual-map.md)
-- [Code Sample Plan](docs/code-sample-plan.md)
-- [Instructor Notes](docs/instructor-notes.md)
+- [Instructor Notes](docs/instructor/notes.md)
+- [Design Policy](docs/instructor/design-policy.md)
+- [Visual Map](docs/instructor/visual-map.md)
+- [Code Samples](docs/instructor/code-samples.md)
 
 ## ブランチ運用
 
