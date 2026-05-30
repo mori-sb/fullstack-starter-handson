@@ -331,6 +331,38 @@ const initialRestaurants = [
 ];
 ```
 
+1行ずつ読む:
+
+```text
+const initialRestaurants = [
+  固定のお店データを配列として用意している。
+  API接続前は、この配列を画面表示に使う。
+
+{
+  ここから1件分のお店データ。
+
+id: 1
+  Reactが一覧表示で1件を区別するためのID。
+
+name: "新宿うまい店"
+  店名。
+
+area: "新宿"
+  地域。
+
+genre: "和食"
+  ジャンル。
+
+memo: "落ち着いた雰囲気でランチがおすすめです。"
+  カードに表示するメモ。
+
+imageUrl: "https://example.com/images/shinjuku-umai.jpg"
+  imgタグで表示する画像URL。
+
+status: "行きたい"
+  お店の状態。
+```
+
 この時点ではAPIを呼びません。
 まず画面に出したいデータの形を確認します。
 
@@ -361,6 +393,29 @@ export function RestaurantList({ restaurants }) {
 }
 ```
 
+1行ずつ読む:
+
+```text
+export function RestaurantList({ restaurants })
+  RestaurantListコンポーネントを定義している。
+  restaurantsは親コンポーネントからpropsとして受け取る配列。
+
+return (...)
+  画面に表示するJSXを返す。
+
+<div className="grid gap-4">
+  お店カードを並べる外側の箱。
+  classNameはTailwind CSSの見た目指定。
+
+restaurants.map((restaurant) => (...))
+  restaurants配列を1件ずつ取り出して、RestaurantCardに変換する。
+
+<RestaurantCard key={restaurant.id} restaurant={restaurant} />
+  お店1件分をRestaurantCardへ渡して表示する。
+  keyはReactがリストの各要素を区別するために使う。
+  restaurant={restaurant} で子コンポーネントへデータを渡している。
+```
+
 見るポイント:
 
 - `restaurants` は配列
@@ -382,6 +437,32 @@ const [form, setForm] = useState({
 });
 ```
 
+1行ずつ読む:
+
+```text
+const [form, setForm] = useState(...)
+  フォームの入力値をstateとして持つ。
+  formは現在の入力値、setFormは入力値を更新する関数。
+
+name: ""
+  店名の初期値。まだ入力されていないので空文字。
+
+area: ""
+  地域の初期値。
+
+genre: ""
+  ジャンルの初期値。
+
+memo: ""
+  メモの初期値。
+
+imageUrl: ""
+  画像URLの初期値。
+
+status: "行きたい"
+  ステータスの初期値。
+```
+
 入力欄が変わったら `setForm` でstateを更新します。
 
 ```jsx
@@ -389,6 +470,20 @@ function handleChange(event) {
   const { name, value } = event.target;
   setForm({ ...form, [name]: value });
 }
+```
+
+1行ずつ読む:
+
+```text
+function handleChange(event)
+  入力欄の値が変わったときに実行する関数。
+
+const { name, value } = event.target;
+  変更された入力欄のname属性と入力値を取り出す。
+
+setForm({ ...form, [name]: value });
+  既存のformをコピーし、変更された項目だけ新しい値に更新する。
+  [name] と書くことで、name、area、genreなどを共通の処理で更新できる。
 ```
 
 ### 5. 登録ボタンで一覧に追加する
@@ -403,6 +498,30 @@ setRestaurants([
     ...form,
   },
 ]);
+```
+
+1行ずつ読む:
+
+```text
+setRestaurants(...)
+  お店一覧のstateを更新する。
+  stateが変わると、Reactが画面を再描画する。
+
+[
+  新しい配列を作っている。
+
+...restaurants
+  既存のお店一覧をそのまま入れる。
+
+{
+  追加する新しいお店データ。
+
+id: Date.now()
+  仮のIDを作る。
+  API接続後はDBで作られたIDを使う。
+
+...form
+  フォームに入力された値を新しいお店データとして展開する。
 ```
 
 ここで理解したいのは、登録ボタンを押すとstateが変わり、画面が更新されることです。
@@ -531,6 +650,45 @@ export function RestaurantCard({ restaurant }) {
 - `imageUrl` を `img` の `src` に入れている
 - `className` にTailwind CSSのクラスを書いて見た目を整えている
 - このコンポーネントは1件分の表示だけを担当する
+
+1行ずつ読む:
+
+```text
+export function RestaurantCard({ restaurant })
+  お店1件分を表示するコンポーネント。
+  restaurantは親からpropsとして受け取る。
+
+return (...)
+  画面に表示するJSXを返す。
+
+<article className="...">
+  お店カード全体の箱。
+  classNameで枠線、背景、余白、影を指定している。
+
+<img ... />
+  お店画像を表示する。
+
+className="h-40 w-full rounded object-cover"
+  画像の高さ、幅、角丸、トリミング方法を指定している。
+
+src={restaurant.imageUrl}
+  画像URLをimgタグに渡している。
+
+alt={restaurant.name}
+  画像の代替テキスト。店名を入れている。
+
+<h3>{restaurant.name}</h3>
+  店名を表示する。
+
+{restaurant.area} / {restaurant.genre}
+  地域とジャンルを表示する。
+
+{restaurant.memo}
+  メモを表示する。
+
+{restaurant.status}
+  ステータスを表示する。
+```
 
 ## 今日の確認ポイント
 

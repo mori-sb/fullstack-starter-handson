@@ -213,11 +213,69 @@ public class Restaurant {
 - `id` はDB上で1件を区別するために使う
 - Reactへ返すJSONではなく、DBに保存する形である
 
+1行ずつ読む:
+
+```text
+@Entity
+  このクラスをDBに保存する対象として扱う。
+
+public class Restaurant
+  お店データを表すJavaクラス。
+
+@Id
+  このフィールドが主キーであることを表す。
+  主キーは、DB上で1件のデータを区別するために使う。
+
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+  idの値をDBに自動で作ってもらう。
+
+private Long id;
+  お店のID。
+
+private String name;
+  店名。
+
+private String area;
+  地域。
+
+private String genre;
+  ジャンル。
+
+private String memo;
+  メモ。
+
+private String imageUrl;
+  画像URL。
+
+private String status;
+  ステータス。
+```
+
 ### 2. Repositoryを作る
 
 ```java
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 }
+```
+
+1行ずつ読む:
+
+```text
+public interface RestaurantRepository
+  Restaurant用のRepositoryを定義している。
+  RepositoryはDB操作の入口。
+
+extends JpaRepository<Restaurant, Long>
+  Spring Data JPAが用意している基本的なDB操作を使えるようにする。
+
+Restaurant
+  このRepositoryで扱うEntity。
+
+Long
+  RestaurantのIDの型。
+
+{ }
+  中身が空でも、save、findAll、findById、deleteなどを使える。
 ```
 
 これだけで、基本的なDB操作を使えるようになります。

@@ -211,6 +211,27 @@ export async function fetchRestaurants() {
 }
 ```
 
+1行ずつ読む:
+
+```text
+const API_BASE_URL = "http://localhost:8080/api/restaurants";
+  APIのURLを定数としてまとめている。
+  URLを毎回直接書くより、後で変更しやすい。
+
+export async function fetchRestaurants()
+  お店一覧を取得する関数。
+  exportしているので、App.jsxなど別ファイルから呼び出せる。
+  asyncは、API通信のような時間がかかる処理を書くために使う。
+
+const response = await fetch(API_BASE_URL);
+  fetchでSpring Boot APIへGETリクエストを送る。
+  awaitは、レスポンスが返ってくるまで待つという意味。
+
+return response.json();
+  レスポンスのJSONをJavaScriptのデータとして取り出す。
+  この結果がrestaurants stateに入る。
+```
+
 見るポイント:
 
 - Reactコンポーネントの中にURLを何度も書かない
@@ -230,6 +251,29 @@ useEffect(() => {
 
   loadRestaurants();
 }, []);
+```
+
+1行ずつ読む:
+
+```text
+useEffect(() => { ... }, [])
+  画面が表示された後に処理を実行する。
+  最後の [] は、初回表示時だけ実行するという意味。
+
+async function loadRestaurants()
+  APIからお店一覧を読み込むための関数。
+  useEffectの中でasync処理を扱うために関数として分けている。
+
+const data = await fetchRestaurants();
+  api/restaurants.js の fetchRestaurants を呼び、お店一覧を取得する。
+  dataにはAPIレスポンスのJSONが入る。
+
+setRestaurants(data);
+  取得したデータをrestaurants stateに入れる。
+  stateが変わると、画面のお店一覧が更新される。
+
+loadRestaurants();
+  定義した読み込み関数を実行する。
 ```
 
 確認すること:
@@ -256,6 +300,31 @@ export async function createRestaurant(restaurant) {
 }
 ```
 
+1行ずつ読む:
+
+```text
+export async function createRestaurant(restaurant)
+  お店を新規登録する関数。
+  restaurantにはフォームで入力した値が入る。
+
+const response = await fetch(API_BASE_URL, { ... })
+  Spring Boot APIへリクエストを送る。
+  第2引数にmethod、headers、bodyなどの設定を書く。
+
+method: "POST"
+  新しくデータを作るAPIなのでPOSTを指定する。
+
+headers: { "Content-Type": "application/json" }
+  送るデータがJSONであることをSpring Bootへ伝える。
+
+body: JSON.stringify(restaurant)
+  JavaScriptのオブジェクトをJSON文字列に変換して送る。
+  fetchのbodyには、そのままオブジェクトを渡せない。
+
+return response.json();
+  登録後にAPIから返ってきたJSONを取り出す。
+```
+
 画面側では、登録後に一覧を再取得するか、返ってきたデータをstateに追加します。
 最初は分かりやすさを優先して、登録後に一覧を再取得してもよいです。
 
@@ -267,6 +336,24 @@ export async function deleteRestaurant(id) {
     method: "DELETE",
   });
 }
+```
+
+1行ずつ読む:
+
+```text
+export async function deleteRestaurant(id)
+  お店を削除する関数。
+  idには削除したいお店のIDが入る。
+
+`${API_BASE_URL}/${id}`
+  /api/restaurants/1 のようなURLを作る。
+  どのお店を削除するかをURLで指定している。
+
+method: "DELETE"
+  削除APIなのでDELETEを指定する。
+
+await fetch(...)
+  削除リクエストが完了するまで待つ。
 ```
 
 確認すること:
@@ -309,6 +396,37 @@ export async function fetchRestaurants({ area } = {}) {
   const response = await fetch(url);
   return response.json();
 }
+```
+
+1行ずつ読む:
+
+```text
+export async function fetchRestaurants({ area } = {})
+  お店一覧を取得する関数。
+  areaが渡された場合は、地域で絞り込む。
+  = {} は、引数がない場合でもエラーにしないための初期値。
+
+const params = new URLSearchParams();
+  クエリパラメータを組み立てるためのオブジェクトを作る。
+
+if (area && area !== "すべて")
+  areaが指定されていて、かつ「すべて」ではない場合だけ絞り込む。
+
+params.set("area", area);
+  URLに area=新宿 のような条件を追加する。
+
+const query = params.toString();
+  クエリパラメータを文字列に変換する。
+
+const url = query ? `${API_BASE_URL}?${query}` : API_BASE_URL;
+  条件がある場合は /api/restaurants?area=新宿 にする。
+  条件がない場合は /api/restaurants のままにする。
+
+const response = await fetch(url);
+  作ったURLでAPIを呼ぶ。
+
+return response.json();
+  APIから返ってきたJSONを取り出す。
 ```
 
 確認すること:

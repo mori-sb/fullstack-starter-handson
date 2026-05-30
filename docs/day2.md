@@ -286,6 +286,20 @@ public String hello() {
 }
 ```
 
+1行ずつ読む:
+
+```text
+@GetMapping
+  GETリクエストを受け取るメソッドだとSpring Bootに伝える。
+
+public String hello()
+  APIが呼ばれたときに実行されるメソッド。
+  Stringを返すので、文字列のレスポンスになる。
+
+return "restaurants api";
+  ブラウザやAPIクライアントへ返す文字列。
+```
+
 確認すること:
 
 ```text
@@ -311,6 +325,35 @@ public record RestaurantResponse(
 }
 ```
 
+1行ずつ読む:
+
+```text
+public record RestaurantResponse(...)
+  Reactへ返すデータの形を定義している。
+  recordは、値をまとめて持つためのJavaの書き方。
+
+Long id
+  お店を区別するID。
+
+String name
+  店名。
+
+String area
+  地域。
+
+String genre
+  ジャンル。
+
+String memo
+  メモ。
+
+String imageUrl
+  画像URL。画像ファイル本体ではなく、URL文字列を持つ。
+
+String status
+  行きたい、行った、お気に入りなどの状態。
+```
+
 見るポイント:
 
 - フィールド名がJSONのキーになる
@@ -334,6 +377,44 @@ public List<RestaurantResponse> findAll() {
             )
     );
 }
+```
+
+1行ずつ読む:
+
+```text
+@GetMapping
+  GET /api/restaurants が来たときに、このメソッドを動かす。
+
+public List<RestaurantResponse> findAll()
+  RestaurantResponseを複数件返すメソッド。
+  Listなので、JSONでは配列として返る。
+
+return List.of(...)
+  固定のお店データをリストとして返す。
+
+new RestaurantResponse(...)
+  Reactへ返す1件分のお店データを作っている。
+
+1L
+  idの値。Long型なのでLを付けている。
+
+"Cafe Sakura"
+  nameに入る値。
+
+"新宿"
+  areaに入る値。
+
+"カフェ"
+  genreに入る値。
+
+"落ち着いて作業できそう"
+  memoに入る値。
+
+"https://example.com/cafe.jpg"
+  imageUrlに入る値。
+
+"WANT_TO_GO"
+  statusに入る値。
 ```
 
 確認すること:
