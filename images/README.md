@@ -6,8 +6,11 @@
 
 - `app-overview.png`: ブラウザ、React、Spring Boot、DBの全体構成
 - `http-json-flow.png`: HTTPリクエスト、HTTPレスポンス、JSONの流れ
-- `spring-layers.png`: Controller / Service / Repository / Entity の役割
-- `spring-internal-structure.png`: Controller / Service / Repository / Entity / DTO / Mapper の関係
+- `spring-basic-flow.png`: Browser / React、Controller、Service、Repository、DBの基本の流れ
+- `spring-class-map.png`: Spring Bootの役割名とクラス名の対応
+- `spring-dto-flow.png`: DTOがReactとControllerの間で受け渡される流れ
+- `spring-entity-flow.png`: EntityがService、Repository、DBとつながる流れ
+- `spring-mapper-flow.png`: DTO、Mapper、Entityの変換
 - `dto-entity-mapper.png`: DTO、Entity、Mapperの違い
 - `crud-api-map.png`: CRUDとHTTPメソッドの対応
 - `create-api-flow.png`: 登録APIでReactからDB保存まで進む流れ
