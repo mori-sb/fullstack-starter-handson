@@ -1,0 +1,22 @@
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Java / Spring Boot
+target/
+build/
+.gradle/
+*.class
+
+# Node / React
+node_modules/
+dist/
+coverage/
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
