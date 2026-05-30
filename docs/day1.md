@@ -404,6 +404,93 @@ Spring Boot
 DB
 ```
 
+## BrunoでAPIとJSONを見る
+
+Day1の最後に、BrunoでAPIを直接呼び出して、JSONが返るところを見ます。
+
+ここではReactの画面はまだ作りません。
+Reactがあとで呼ぶことになるAPIを、先にBrunoで確認します。
+
+見たい流れ:
+
+```text
+React
+  ↓ APIを呼ぶ
+Spring Boot API
+  ↓ JSONを返す
+React
+  ↓ JSONを画面に表示する
+```
+
+Brunoでは、このうち次の部分を確認します。
+
+```text
+APIを呼ぶ
+  ↓
+JSONが返る
+```
+
+### Brunoで送るリクエスト
+
+```http
+GET http://localhost:8080/api/restaurants
+```
+
+見るポイント:
+
+```text
+GET
+  データを取得するHTTPメソッド。
+
+http://localhost:8080
+  自分のPCで起動しているSpring Bootの場所。
+
+/api/restaurants
+  お店一覧を取得するAPIのURL。
+```
+
+### Brunoで返ってくるJSONの例
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Cafe Sakura",
+    "area": "新宿",
+    "genre": "カフェ",
+    "memo": "落ち着いて作業できそう",
+    "imageUrl": "https://example.com/cafe.jpg",
+    "status": "WANT_TO_GO"
+  }
+]
+```
+
+見るポイント:
+
+```text
+[]
+  複数のお店を返すため、配列になっている。
+
+{}
+  1件分のお店データ。
+
+"name": "Cafe Sakura"
+  JSONのキーと値。
+  Reactでは restaurant.name のように取り出して表示する。
+
+"imageUrl": "https://example.com/cafe.jpg"
+  Reactでは imgタグのsrcに渡して画像を表示する。
+```
+
+### Bruno実演で確認すること
+
+- APIはURLで呼び出す
+- APIはJSONを返す
+- ReactはこのJSONを受け取って画面に表示する
+- JSONのキー名とReactで使うプロパティ名は対応する
+
+この実演を見てからDay2に進むと、「なぜSpring BootでJSONを返すAPIを作るのか」が分かりやすくなります。
+
 ## ハンズオン
 
 まだコードを書き始めず、完成するアプリの画面、データ、APIを設計する。
@@ -414,6 +501,7 @@ DB
 - 登録フォームに必要な項目を決める
 - APIの一覧を確認する
 - JSONの形を読む
+- BrunoでAPIとJSONの流れを見る
 - フロントエンドとバックエンドの境界を確認する
 - AIに実装を依頼するとしたら、どんな指示を出すか考える
 
@@ -422,6 +510,7 @@ DB
 - ReactはDBを直接触らない、と説明できる
 - Spring BootはAPIを受け取り、必要に応じてDBへアクセスする、と説明できる
 - JSONがReactとSpring Bootの間を流れるデータ形式だと説明できる
+- BrunoでAPIを呼び、JSONレスポンスを見る流れを説明できる
 - `GET`、`POST`、`PUT`、`DELETE` の大まかな意味を説明できる
 - `imageUrl` を `img` タグで表示する考え方を説明できる
 

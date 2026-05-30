@@ -18,6 +18,7 @@
 - `npm -v` が表示される
 - `git --version` が表示される
 - Rancher Desktopが起動している
+- Brunoを起動できる
 - `docker --version` が表示される
 - `docker ps` を実行できる
 - DBコンテナが起動している
@@ -44,7 +45,7 @@
 
 - Spring Bootが起動している
 - APIのURLが分かる
-- ブラウザまたはAPIクライアントでAPIを呼べる
+- BrunoでAPIを呼べる
 - ステータスコードが成功になっている
 - JSONが返っている
 - JSONに必要な項目が含まれている

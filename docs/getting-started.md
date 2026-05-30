@@ -21,6 +21,7 @@
 IntelliJ IDEA       Spring Bootのコードを書く
 VS Code             Reactのコードを書く
 Rancher Desktop     DBコンテナを起動する
+Bruno               APIの動作確認をする
 Git / GitHub        コードと資料を管理する
 Java                Spring Bootを動かす
 Node.js / npm       Reactを動かす
@@ -50,6 +51,30 @@ Gitのバージョンが表示される
 ```
 
 コマンドが見つからない場合は、実装に入る前にツールのインストールまたはPATH設定を確認します。
+
+## Brunoの準備
+
+Brunoは、React画面を作る前にAPIを直接確認するために使います。
+
+確認すること:
+
+- Brunoを起動できる
+- 新しいリクエストを作成できる
+- HTTPメソッドを `GET`、`POST` などに変更できる
+- URLに `http://localhost:8080/api/restaurants` を入力できる
+- API実行後にステータスコードとJSONレスポンスを確認できる
+
+Brunoで確認する流れ:
+
+```text
+1. Spring Bootを起動する
+2. BrunoでGETリクエストを作る
+3. URLに http://localhost:8080/api/restaurants を入れる
+4. Sendを押す
+5. JSONが返ることを確認する
+```
+
+ReactからAPIを呼ぶ前にBrunoで確認すると、問題がReact側なのかAPI側なのか切り分けやすくなります。
 
 ## IntelliJ IDEAの初期設定
 
