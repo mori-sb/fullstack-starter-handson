@@ -6,7 +6,7 @@
 - Controllerの役割を理解する
 - Serviceの役割を理解する
 - Repositoryの役割を理解する
-- 簡単なAPIを作って動作確認する
+- お店一覧APIを作ってJSONで返せる
 
 ## 扱う内容
 
@@ -14,15 +14,37 @@
 - Controller / Service / Repository
 - DTO
 - APIの動作確認
+- 画像URLを含むレスポンス
 
 ## 入れたい図
 
 - Controller / Service / Repository の役割図
 - リクエストがControllerに届いてレスポンスが返るまでの流れ
+- お店データがJSONとして返る流れ
 
 ## ハンズオン
 
-最初のGET APIを作成する。
+固定のお店データを返す一覧APIを作成する。
+
+```text
+GET /api/restaurants
+```
+
+返すJSONの例:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Cafe Sakura",
+    "area": "新宿",
+    "genre": "カフェ",
+    "memo": "落ち着いて作業できそう",
+    "imageUrl": "https://example.com/cafe.jpg",
+    "status": "WANT_TO_GO"
+  }
+]
+```
 
 ## メモ
 
