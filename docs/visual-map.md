@@ -114,6 +114,8 @@ images/image-url-flow.png
 images/spring-basic-flow.png
 ```
 
+作成済み。
+
 伝えること:
 
 - ControllerはAPIの入口
@@ -220,6 +222,14 @@ images/crud-api-map.png
 ```text
 images/entity-table-map.png
 ```
+
+関連する作成済み画像:
+
+```text
+images/spring-entity-flow.png
+```
+
+まず `spring-entity-flow.png` でEntityの位置づけを説明し、その後でEntityとDBテーブルの対応を説明する。
 
 生成依頼文:
 

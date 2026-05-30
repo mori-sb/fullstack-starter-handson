@@ -35,3 +35,31 @@
 - `debugging-map.png`: エラー切り分けの確認順序
 
 画像は教材の理解補助として使います。見た目を飾るためだけではなく、コードを読む前に構造をつかむ目的で配置します。
+
+## 作成済み
+
+- `spring-basic-flow.png`: Spring Bootバックエンドの基本構造
+- `spring-dto-flow.png`: Spring BootにおけるDTOの位置づけ
+- `spring-entity-flow.png`: Spring BootにおけるEntityの位置づけ
+- `spring-mapper-flow.png`: DTO、Mapper、Entityの関係
+
+## Spring Boot画像の使う順番
+
+Spring Bootの説明では、次の順番で見せます。
+
+```text
+1. spring-basic-flow.png
+   Controller -> Service -> Repository -> Database の本線を理解する
+
+2. spring-dto-flow.png
+   ReactとControllerの間で受け渡すデータの形としてDTOを理解する
+
+3. spring-entity-flow.png
+   DBに保存するデータの形としてEntityを理解する
+
+4. spring-mapper-flow.png
+   DTOとEntityを変換する役割としてMapperを理解する
+```
+
+最初から4枚をまとめて説明しない。
+まず基本構造を理解してから、DTO、Entity、Mapperを順番に追加します。
