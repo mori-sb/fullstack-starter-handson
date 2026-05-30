@@ -20,6 +20,21 @@
 - imgタグでの画像表示
 - フィルタUI
 
+## 3時間講義の流れ
+
+```text
+00:00-00:20  Reactで作る画面の完成イメージを確認する
+00:20-00:50  HTML、CSS、JavaScript、React、Tailwind CSSの関係を確認する
+00:50-01:20  Reactのディレクトリ構造とコンポーネント分割を確認する
+01:20-01:50  props、state、useStateを図で確認する
+01:50-02:30  お店カード、一覧、フォームをライブ実装する
+02:30-02:50  画像URL表示とフィルタUIを確認する
+02:50-03:00  演習の進め方と確認ポイントを共有する
+```
+
+Day4では、API接続を急ぎません。
+固定データで画面を作り、Reactのファイル構造、props、state、Tailwind CSSの読み方をつかみます。
+
 ## 今日の大事な考え方
 
 Reactでは、画面を部品に分けて考える。
@@ -293,6 +308,144 @@ RestaurantCard
 - メモ
 - 画像URL
 - ステータス
+
+## 実装の進め方
+
+Reactはファイルが分かれるため、次の順番で作ると迷いにくいです。
+
+### 1. 固定データを用意する
+
+まず `App.jsx` にお店データを直接書きます。
+
+```jsx
+const initialRestaurants = [
+  {
+    id: 1,
+    name: "新宿うまい店",
+    area: "新宿",
+    genre: "和食",
+    memo: "落ち着いた雰囲気でランチがおすすめです。",
+    imageUrl: "https://example.com/images/shinjuku-umai.jpg",
+    status: "行きたい",
+  },
+];
+```
+
+この時点ではAPIを呼びません。
+まず画面に出したいデータの形を確認します。
+
+### 2. RestaurantCardを作る
+
+1件分のお店を表示します。
+
+見るポイント:
+
+- propsで `restaurant` を受け取る
+- `restaurant.name` などを画面に表示する
+- `restaurant.imageUrl` を `img` の `src` に渡す
+- `className` で見た目を整える
+
+### 3. RestaurantListを作る
+
+複数件のお店を並べます。
+
+```jsx
+export function RestaurantList({ restaurants }) {
+  return (
+    <div className="grid gap-4">
+      {restaurants.map((restaurant) => (
+        <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+      ))}
+    </div>
+  );
+}
+```
+
+見るポイント:
+
+- `restaurants` は配列
+- `map` で1件ずつ `RestaurantCard` に渡す
+- `key` はReactがリストを管理するために必要
+
+### 4. RestaurantFormを作る
+
+フォームの入力値をstateで管理します。
+
+```jsx
+const [form, setForm] = useState({
+  name: "",
+  area: "",
+  genre: "",
+  memo: "",
+  imageUrl: "",
+  status: "行きたい",
+});
+```
+
+入力欄が変わったら `setForm` でstateを更新します。
+
+```jsx
+function handleChange(event) {
+  const { name, value } = event.target;
+  setForm({ ...form, [name]: value });
+}
+```
+
+### 5. 登録ボタンで一覧に追加する
+
+API接続前は、stateの配列に追加します。
+
+```jsx
+setRestaurants([
+  ...restaurants,
+  {
+    id: Date.now(),
+    ...form,
+  },
+]);
+```
+
+ここで理解したいのは、登録ボタンを押すとstateが変わり、画面が更新されることです。
+
+### 6. RestaurantFilterを作る
+
+地域やジャンルの選択値をstateに持ち、表示する一覧を絞り込みます。
+
+```text
+selectedAreaが変わる
+  ↓
+表示するrestaurantsを絞り込む
+  ↓
+RestaurantListに渡す配列が変わる
+  ↓
+画面が更新される
+```
+
+## 演習
+
+固定データのReact画面を完成させます。
+
+最初に作るもの:
+
+- お店カード
+- お店一覧
+- 登録フォーム
+- 地域フィルタ
+
+余裕があれば追加するもの:
+
+- ジャンルフィルタ
+- ステータスフィルタ
+- 画像URLが空のときの代替表示
+- 削除ボタン
+
+演習中に説明できるようにすること:
+
+- `App.jsx` が何を管理しているか
+- `RestaurantList.jsx` と `RestaurantCard.jsx` の違い
+- propsで何を渡しているか
+- stateが変わると画面が変わる理由
+- Tailwind CSSの `className` がどこに書かれているか
 
 ## コードサンプル
 

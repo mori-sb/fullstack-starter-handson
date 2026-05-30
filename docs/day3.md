@@ -18,6 +18,21 @@
 - エラーレスポンス
 - クエリパラメータ
 
+## 3時間講義の流れ
+
+```text
+00:00-00:20  Day2の固定データAPIを復習する
+00:20-00:50  EntityとDBテーブルの関係を図で確認する
+00:50-01:20  Repositoryで使う基本操作を確認する
+01:20-01:50  DTO、Entity、Mapperの役割を確認する
+01:50-02:35  登録、一覧、詳細APIをライブ実装する
+02:35-02:50  更新、削除、フィルタの考え方を確認する
+02:50-03:00  演習の進め方と確認ポイントを共有する
+```
+
+Day3では、APIがDBとつながります。
+作る量が多いので、まず登録と一覧を確実に動かし、その後に詳細、更新、削除、フィルタへ広げます。
+
 ## 今日の大事な考え方
 
 CRUDは多くの業務アプリの基本になる。
@@ -166,6 +181,129 @@ GET /api/restaurants?area=新宿
 GET /api/restaurants?genre=カフェ
 GET /api/restaurants?status=WANT_TO_GO
 ```
+
+## 実装の進め方
+
+CRUDは量が多いため、次の順番で進めます。
+
+### 1. Entityを作る
+
+まずDBに保存する形を作ります。
+
+```java
+@Entity
+public class Restaurant {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String area;
+    private String genre;
+    private String memo;
+    private String imageUrl;
+    private String status;
+}
+```
+
+見るポイント:
+
+- `@Entity` がDBに保存するクラスであることを表す
+- `id` はDB上で1件を区別するために使う
+- Reactへ返すJSONではなく、DBに保存する形である
+
+### 2. Repositoryを作る
+
+```java
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+}
+```
+
+これだけで、基本的なDB操作を使えるようになります。
+
+```text
+save       登録・更新
+findAll    一覧取得
+findById   詳細取得
+delete     削除
+```
+
+### 3. 登録APIを作る
+
+登録では、Request DTOをEntityに変換してDBに保存します。
+
+```text
+RestaurantRequest
+  ↓ Mapper
+Restaurant Entity
+  ↓ Repository.save
+DBに保存
+```
+
+最初に確認すること:
+
+- POSTでJSONを送れる
+- DBに保存される
+- レスポンスに `id` が入る
+
+### 4. 一覧APIをDBから返す
+
+固定データではなく、DBから取得したデータを返します。
+
+```text
+Repository.findAll()
+  ↓
+Entityのリスト
+  ↓ Mapper
+Response DTOのリスト
+  ↓
+JSONレスポンス
+```
+
+### 5. 詳細、更新、削除を追加する
+
+登録と一覧が動いてから、IDを使うAPIを追加します。
+
+```text
+GET    /api/restaurants/{id}
+PUT    /api/restaurants/{id}
+DELETE /api/restaurants/{id}
+```
+
+IDを使うAPIでは、まず「そのIDのデータが存在するか」を確認します。
+
+### 6. クエリパラメータで絞り込む
+
+一覧が動いた後に、条件付きの一覧取得を追加します。
+
+```text
+GET /api/restaurants?area=新宿
+```
+
+最初から複雑な検索にしすぎず、まずは地域だけで絞り込みます。
+その後、ジャンルやステータスを追加します。
+
+## 演習
+
+次の順番でAPIを完成させます。
+
+```text
+1. 登録APIを作る
+2. 一覧APIをDBから返す
+3. 詳細APIを作る
+4. 更新APIを作る
+5. 削除APIを作る
+6. 地域フィルタを追加する
+```
+
+各APIごとに確認すること:
+
+- URLとHTTPメソッドが正しい
+- リクエストJSONが想定通り
+- レスポンスJSONが想定通り
+- DBのデータが変わっている
+- 存在しないIDを指定したときの動きが分かる
 
 ## リクエストとレスポンスの例
 

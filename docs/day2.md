@@ -17,6 +17,21 @@
 - APIの動作確認
 - 画像URLを含むレスポンス
 
+## 3時間講義の流れ
+
+```text
+00:00-00:20  Day1の全体像を復習し、今日はバックエンドだけを見る
+00:20-00:50  Spring Bootのディレクトリ構造とファイルの役割を確認する
+00:50-01:20  Controller、Service、Repositoryの流れを図で確認する
+01:20-01:50  DTOとJSONレスポンスの形を確認する
+01:50-02:30  固定データを返す一覧APIをライブ実装する
+02:30-02:50  ブラウザまたはAPIクライアントで動作確認する
+02:50-03:00  演習の進め方と確認ポイントを共有する
+```
+
+Day2では、DB保存までは急ぎません。
+まずは「APIの入口にリクエストが届き、JSONが返る」ことを理解します。
+
 ## 今日の大事な考え方
 
 Spring Bootでは、処理を役割ごとに分けて書く。
@@ -255,6 +270,108 @@ GET /api/restaurants
   }
 ]
 ```
+
+## 実装の進め方
+
+一気に全部作らず、次の順番で作ります。
+
+### 1. Controllerだけで固定文字列を返す
+
+まずはAPIにアクセスできるか確認します。
+
+```java
+@GetMapping
+public String hello() {
+    return "restaurants api";
+}
+```
+
+確認すること:
+
+```text
+GET /api/restaurants にアクセスできる
+404ではない
+Spring Bootが起動している
+```
+
+### 2. DTOを作ってJSONを返す
+
+次に、Reactへ返したい形を `RestaurantResponse` として作ります。
+
+```java
+public record RestaurantResponse(
+        Long id,
+        String name,
+        String area,
+        String genre,
+        String memo,
+        String imageUrl,
+        String status
+) {
+}
+```
+
+見るポイント:
+
+- フィールド名がJSONのキーになる
+- `imageUrl` も普通の文字列として扱う
+- ReactはこのJSONを受け取って画面に表示する
+
+### 3. ControllerからDTOのリストを返す
+
+```java
+@GetMapping
+public List<RestaurantResponse> findAll() {
+    return List.of(
+            new RestaurantResponse(
+                    1L,
+                    "Cafe Sakura",
+                    "新宿",
+                    "カフェ",
+                    "落ち着いて作業できそう",
+                    "https://example.com/cafe.jpg",
+                    "WANT_TO_GO"
+            )
+    );
+}
+```
+
+確認すること:
+
+```text
+レスポンスがJSON配列になっている
+name, area, genre, memo, imageUrl, status が含まれている
+画像URLが文字列として返っている
+```
+
+### 4. Serviceへ処理を移す
+
+Controllerに直接データを書くと、APIの入口と処理が混ざります。
+そのため、一覧を作る処理をServiceへ移します。
+
+```text
+Controller  リクエストを受け取る
+Service     返すデータを用意する
+```
+
+この分け方を早めに覚えておくと、後で登録、編集、削除を追加しやすくなります。
+
+## 演習
+
+固定データを3件に増やします。
+
+条件:
+
+- 地域が異なるお店を入れる
+- ジャンルが異なるお店を入れる
+- `imageUrl` を全件に入れる
+- `status` を `WANT_TO_GO`、`VISITED`、`FAVORITE` のいずれかにする
+
+確認すること:
+
+- APIを呼ぶと3件のJSONが返る
+- 各データに必要な項目が入っている
+- ControllerとServiceの役割を説明できる
 
 ## コードサンプル
 

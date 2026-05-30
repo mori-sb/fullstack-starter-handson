@@ -22,6 +22,21 @@
 - 削除
 - まとめ
 
+## 3時間講義の流れ
+
+```text
+00:00-00:20  Day3のAPIとDay4のReact画面を復習する
+00:20-00:50  fetchの中身とHTTPリクエストの対応を確認する
+00:50-01:20  useEffectで一覧APIを呼ぶ流れを確認する
+01:20-01:50  CORSとNetworkタブの見方を確認する
+01:50-02:35  一覧、登録、削除のAPI接続をライブ実装する
+02:35-02:50  編集、フィルタ、エラー表示のつなぎ方を確認する
+02:50-03:00  演習の進め方と完成チェックを共有する
+```
+
+Day5では、画面とAPIを一気に全部つなげません。
+まず一覧取得だけをつなぎ、Networkで確認してから登録、削除、編集、フィルタへ進みます。
+
 ## 今日の大事な考え方
 
 フロントエンドとバックエンドは、APIでつながる。
@@ -178,6 +193,151 @@ React画面とSpring Boot APIを接続し、ミニアプリとして完成させ
 - 地域で絞り込める
 - ジャンルで絞り込める
 - ステータスで絞り込める
+
+## 実装の進め方
+
+ReactとSpring Bootをつなぐときは、1つずつ確認します。
+
+### 1. API呼び出し用のファイルを作る
+
+APIを呼ぶ処理は `frontend/src/api/restaurants.js` にまとめます。
+
+```jsx
+const API_BASE_URL = "http://localhost:8080/api/restaurants";
+
+export async function fetchRestaurants() {
+  const response = await fetch(API_BASE_URL);
+  return response.json();
+}
+```
+
+見るポイント:
+
+- Reactコンポーネントの中にURLを何度も書かない
+- APIを呼ぶ関数は `api/` にまとめる
+- 画面側は `fetchRestaurants()` を呼ぶだけにする
+
+### 2. 一覧取得だけをつなぐ
+
+最初に固定データをやめて、APIから取得したデータをstateに入れます。
+
+```jsx
+useEffect(() => {
+  async function loadRestaurants() {
+    const data = await fetchRestaurants();
+    setRestaurants(data);
+  }
+
+  loadRestaurants();
+}, []);
+```
+
+確認すること:
+
+- Networkで `GET /api/restaurants` が呼ばれている
+- レスポンスJSONにお店データが入っている
+- `setRestaurants(data)` の後に画面が表示される
+
+### 3. 登録APIをつなぐ
+
+フォーム送信時にPOSTします。
+
+```jsx
+export async function createRestaurant(restaurant) {
+  const response = await fetch(API_BASE_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(restaurant),
+  });
+
+  return response.json();
+}
+```
+
+画面側では、登録後に一覧を再取得するか、返ってきたデータをstateに追加します。
+最初は分かりやすさを優先して、登録後に一覧を再取得してもよいです。
+
+### 4. 削除APIをつなぐ
+
+```jsx
+export async function deleteRestaurant(id) {
+  await fetch(`${API_BASE_URL}/${id}`, {
+    method: "DELETE",
+  });
+}
+```
+
+確認すること:
+
+- DELETEのURLにIDが入っている
+- 削除後に一覧から消える
+- DBからも消えている
+
+### 5. 編集APIをつなぐ
+
+編集では、既存のお店のIDを使ってPUTします。
+
+```text
+編集ボタンを押す
+  ↓
+フォームに既存データを入れる
+  ↓
+保存ボタンを押す
+  ↓
+PUT /api/restaurants/{id}
+  ↓
+一覧を更新する
+```
+
+### 6. フィルタをAPIにつなぐ
+
+地域で絞り込む場合は、URLにクエリパラメータを付けます。
+
+```jsx
+export async function fetchRestaurants({ area } = {}) {
+  const params = new URLSearchParams();
+
+  if (area && area !== "すべて") {
+    params.set("area", area);
+  }
+
+  const query = params.toString();
+  const url = query ? `${API_BASE_URL}?${query}` : API_BASE_URL;
+
+  const response = await fetch(url);
+  return response.json();
+}
+```
+
+確認すること:
+
+- Networkで `?area=新宿` が付いている
+- APIレスポンスが絞り込まれている
+- 画面に表示される一覧も変わる
+
+## 演習
+
+次の順番でReactとAPIを接続します。
+
+```text
+1. 一覧取得をAPIにつなぐ
+2. 登録をAPIにつなぐ
+3. 削除をAPIにつなぐ
+4. 編集をAPIにつなぐ
+5. 地域フィルタをAPIにつなぐ
+6. ジャンル、ステータスのフィルタを追加する
+```
+
+各機能で確認すること:
+
+- どのボタンや画面操作から始まるか
+- どのAPI関数を呼んでいるか
+- HTTPメソッドは何か
+- Networkでリクエストを確認できるか
+- レスポンスJSONをstateに反映しているか
+- 画面表示が変わっているか
 
 ## 動作確認の順番
 
