@@ -129,13 +129,13 @@ Entity -> Mapper -> Response DTO
 
 この対応が分かると、React側でどのAPIを呼べばよいか判断しやすくなる。
 
-## 使用する図
+## 図で確認すること
 
 - CRUDとHTTPメソッドの対応図
 - DBテーブルとEntityの対応図
 - クエリパラメータで一覧を絞り込む流れ
 
-## 図の説明メモ
+## CRUDとAPIの対応
 
 ```text
 POST   /api/restaurants       登録

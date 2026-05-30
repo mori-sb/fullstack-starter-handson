@@ -210,13 +210,13 @@ DBに保存する項目を確認したい
   -> Restaurant.java
 ```
 
-## 使用する図
+## 図で確認すること
 
 - Controller / Service / Repository の役割図
 - リクエストがControllerに届いてレスポンスが返るまでの流れ
 - お店データがJSONとして返る流れ
 
-## 図の説明メモ
+## API処理の流れ
 
 ```text
 GET /api/restaurants

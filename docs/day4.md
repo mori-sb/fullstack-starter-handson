@@ -37,6 +37,8 @@ Tailwind CSS classNameに見た目を書く
 今回のハンズオンでは、Tailwind CSSを使います。
 CSSファイルに細かいスタイルを書き足すよりも、JSXの `className` に見た目の指定を書いていきます。
 
+![HTML/CSS/JavaScriptとReact/Tailwind CSSの関係](../images/react-html-css-js-tailwind.png)
+
 ```jsx
 <article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
   <h3 className="text-lg font-semibold text-slate-900">
@@ -133,6 +135,8 @@ app.css                  全体に共通する最低限のスタイル
 
 Reactでは、ファイルを分けることで「どの部品が何を担当しているか」を見つけやすくします。
 
+![Reactプロジェクトのディレクトリ構造](../images/react-directory-structure.png)
+
 Tailwind CSSを使う場合、コンポーネント内に次の3つがまとまりやすくなります。
 
 ```text
@@ -169,6 +173,8 @@ export function RestaurantCard({ restaurant }) {
 - `className` はTailwind CSSで見た目を指定している
 - `{restaurant.name}` はJavaScriptの値を画面に表示している
 
+![JSXとTailwind CSSの読み方](../images/jsx-tailwind-reading.png)
+
 ## propsとstate
 
 Reactで最初に混乱しやすいのが、propsとstate。
@@ -184,6 +190,8 @@ RestaurantCard
 ```
 
 子コンポーネントは、受け取ったpropsを使って表示する。
+
+![Reactのpropsの流れ](../images/react-props-flow.png)
 
 ### state
 
@@ -220,6 +228,11 @@ setSelectedArea  値を変更する関数
 地域フィルタを変更したら、`setSelectedArea` を呼ぶ。
 すると `selectedArea` が変わり、画面に表示するお店も変わる。
 
+フォーム入力も同じ考え方です。
+入力欄の値をstateに保存しておくことで、登録ボタンを押したときに現在の入力内容をAPIへ渡せるようになります。
+
+![フォーム入力とstateの関係](../images/form-state-flow.png)
+
 ## useEffect
 
 useEffectは、画面表示時や値の変化時に処理を実行するために使う。
@@ -245,13 +258,9 @@ Reactでは、そのURLを `img` タグの `src` に指定する。
 ここで重要なのは、Reactが画像ファイルを持っているわけではないこと。
 ReactはURLを使って、ブラウザに画像を表示させている。
 
-## 入れたい図
+![画像URLをimgタグで表示する流れ](../images/react-image-tag.png)
 
-- Stateが変わると画面が更新される流れ
-- 親コンポーネントと子コンポーネントの関係
-- APIから受け取った画像URLをimgタグで表示する流れ
-
-## 図の説明メモ
+画像表示の流れ:
 
 ```text
 restaurants state

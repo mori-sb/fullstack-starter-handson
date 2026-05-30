@@ -102,6 +102,8 @@ export async function createRestaurant(restaurant) {
 - JavaScriptのオブジェクトは `JSON.stringify` でJSON文字列にする
 - APIの結果は `response.json()` で取り出す
 
+![fetchでAPIを呼ぶときの中身](../images/fetch-request-map.png)
+
 ## useEffectで一覧を取得する
 
 画面を開いたときに一覧を取得する。
@@ -133,6 +135,8 @@ setRestaurantsでstateを更新する
 お店一覧が表示される
 ```
 
+![useEffectでAPIを呼ぶ流れ](../images/useeffect-api-flow.png)
+
 ## CORS
 
 ReactとSpring Bootを別々のポートで動かすと、ブラウザが通信を止めることがある。
@@ -149,13 +153,9 @@ Spring Boot  http://localhost:8080
 CORSは、まず「ブラウザの安全機能」と考える。
 エラーが出たら、ReactのコードだけでなくSpring Boot側の設定も確認する。
 
-## 入れたい図
+![CORSの基本](../images/cors-basic.png)
 
-- ReactからAPIを呼び出して画面が更新される流れ
-- フロントエンドとバックエンドの責務分担
-- 登録、編集、削除でどのAPIが呼ばれるかの対応図
-
-## 図の説明メモ
+## 画面操作とAPIの対応
 
 ```text
 一覧表示  GET    /api/restaurants
