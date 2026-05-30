@@ -1,0 +1,88 @@
+<svg width="1280" height="820" viewBox="0 0 1280 820" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="820" fill="#F8FAFC"/>
+  <rect x="80" y="60" width="1120" height="700" rx="28" fill="white" stroke="#E2E8F0"/>
+  <rect x="80" y="60" width="1120" height="92" rx="28" fill="#0F172A"/>
+  <path d="M80 124H1200V152H80V124Z" fill="#0F172A"/>
+  <text x="124" y="116" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="white">グルメ管理アプリ</text>
+  <text x="124" y="142" font-family="Arial, sans-serif" font-size="15" fill="#CBD5E1">行きたいお店・行ったお店を地域やジャンルで探せる一覧画面</text>
+
+  <rect x="1000" y="88" width="142" height="40" rx="12" fill="#06B6D4"/>
+  <text x="1032" y="114" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="white">+ 登録する</text>
+
+  <text x="124" y="203" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#475569">地域</text>
+  <rect x="124" y="214" width="180" height="46" rx="12" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="146" y="243" font-family="Arial, sans-serif" font-size="16" fill="#0F172A">すべて</text>
+  <path d="M278 234L286 242L294 234" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text x="328" y="203" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#475569">ジャンル</text>
+  <rect x="328" y="214" width="180" height="46" rx="12" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="350" y="243" font-family="Arial, sans-serif" font-size="16" fill="#0F172A">すべて</text>
+  <path d="M482 234L490 242L498 234" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text x="532" y="203" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#475569">ステータス</text>
+  <rect x="532" y="214" width="180" height="46" rx="12" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="554" y="243" font-family="Arial, sans-serif" font-size="16" fill="#0F172A">すべて</text>
+  <path d="M686 234L694 242L702 234" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="748" y="214" width="208" height="46" rx="12" fill="#ECFEFF" stroke="#67E8F9"/>
+  <text x="774" y="243" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#0891B2">検索条件をクリア</text>
+
+  <rect x="124" y="300" width="316" height="360" rx="20" fill="white" stroke="#E2E8F0"/>
+  <rect x="148" y="324" width="268" height="168" rx="16" fill="#FDE68A"/>
+  <circle cx="214" cy="386" r="34" fill="#B45309" opacity="0.88"/>
+  <circle cx="250" cy="392" r="24" fill="#F97316"/>
+  <circle cx="286" cy="382" r="30" fill="#92400E" opacity="0.85"/>
+  <circle cx="324" cy="400" r="28" fill="#FBBF24"/>
+  <rect x="178" y="430" width="208" height="22" rx="11" fill="#78350F" opacity="0.85"/>
+  <rect x="148" y="324" width="268" height="168" rx="16" fill="url(#ramenGlow)" opacity="0.48"/>
+  <text x="148" y="535" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#0F172A">Cafe Sakura</text>
+  <text x="148" y="566" font-family="Arial, sans-serif" font-size="16" fill="#475569">新宿 / カフェ</text>
+  <rect x="310" y="542" width="88" height="32" rx="16" fill="#DCFCE7"/>
+  <text x="330" y="564" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#15803D">行きたい</text>
+  <text x="148" y="608" font-family="Arial, sans-serif" font-size="16" fill="#334155">落ち着いて作業できそう。</text>
+  <rect x="148" y="626" width="128" height="34" rx="10" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="174" y="649" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#334155">編集</text>
+  <rect x="288" y="626" width="128" height="34" rx="10" fill="#FFF1F2" stroke="#FECDD3"/>
+  <text x="334" y="649" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#E11D48">削除</text>
+
+  <rect x="482" y="300" width="316" height="360" rx="20" fill="white" stroke="#E2E8F0"/>
+  <rect x="506" y="324" width="268" height="168" rx="16" fill="#DBEAFE"/>
+  <rect x="534" y="362" width="214" height="96" rx="14" fill="#2563EB" opacity="0.82"/>
+  <rect x="556" y="382" width="170" height="16" rx="8" fill="#BFDBFE"/>
+  <rect x="556" y="412" width="126" height="16" rx="8" fill="#BFDBFE"/>
+  <rect x="556" y="442" width="148" height="16" rx="8" fill="#BFDBFE"/>
+  <text x="506" y="535" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#0F172A">Ginza Kitchen</text>
+  <text x="506" y="566" font-family="Arial, sans-serif" font-size="16" fill="#475569">銀座 / 洋食</text>
+  <rect x="660" y="542" width="98" height="32" rx="16" fill="#FEF3C7"/>
+  <text x="682" y="564" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#B45309">お気に入り</text>
+  <text x="506" y="608" font-family="Arial, sans-serif" font-size="16" fill="#334155">ランチがよかった。</text>
+  <rect x="506" y="626" width="128" height="34" rx="10" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="532" y="649" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#334155">編集</text>
+  <rect x="646" y="626" width="128" height="34" rx="10" fill="#FFF1F2" stroke="#FECDD3"/>
+  <text x="692" y="649" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#E11D48">削除</text>
+
+  <rect x="840" y="300" width="316" height="360" rx="20" fill="white" stroke="#E2E8F0"/>
+  <rect x="864" y="324" width="268" height="168" rx="16" fill="#E0F2FE"/>
+  <rect x="908" y="366" width="180" height="88" rx="18" fill="#0E7490" opacity="0.82"/>
+  <circle cx="958" cy="409" r="22" fill="#A7F3D0"/>
+  <circle cx="1000" cy="410" r="22" fill="#F0FDFA"/>
+  <circle cx="1042" cy="409" r="22" fill="#A7F3D0"/>
+  <text x="864" y="535" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#0F172A">Shibuya Coffee</text>
+  <text x="864" y="566" font-family="Arial, sans-serif" font-size="16" fill="#475569">渋谷 / カフェ</text>
+  <rect x="1018" y="542" width="78" height="32" rx="16" fill="#E0F2FE"/>
+  <text x="1040" y="564" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#0369A1">行った</text>
+  <text x="864" y="608" font-family="Arial, sans-serif" font-size="16" fill="#334155">作業しやすそう。</text>
+  <rect x="864" y="626" width="128" height="34" rx="10" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="890" y="649" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#334155">編集</text>
+  <rect x="1004" y="626" width="128" height="34" rx="10" fill="#FFF1F2" stroke="#FECDD3"/>
+  <text x="1050" y="649" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#E11D48">削除</text>
+
+  <text x="124" y="710" font-family="Arial, sans-serif" font-size="15" fill="#64748B">この画面をReactで作り、Spring Boot APIから受け取ったお店データをカードとして表示します。</text>
+
+  <defs>
+    <linearGradient id="ramenGlow" x1="148" y1="324" x2="416" y2="492" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
