@@ -47,8 +47,6 @@ AIを使えば実装は速く進みますが、実務では次の力が必要に
 
 ## 進め方
 
-| Day | テーマ | 成果物 |
-| --- | --- | --- |
 | Day | テーマ | 重視する理解 | 成果物 |
 | --- | --- | --- | --- |
 | Day 1 | Webアプリの全体像、HTTP、JSON、REST API | フロントエンドとバックエンドの境界 | グルメ管理アプリの画面・データ・API設計 |
@@ -106,6 +104,18 @@ FAVORITE    お気に入り
 ├─ backend/    # Spring Boot
 └─ frontend/   # React
 ```
+
+## 主要ドキュメント
+
+- [Day 1: Webアプリの全体像](docs/day1.md)
+- [Day 2: Spring Bootの基本](docs/day2.md)
+- [Day 3: DB接続とCRUD API](docs/day3.md)
+- [Day 4: Reactの基本](docs/day4.md)
+- [Day 5: ReactとAPI連携](docs/day5.md)
+- [Teaching Policy](docs/teaching-policy.md)
+- [Visual Learning Plan](docs/visual-learning-plan.md)
+- [Code Sample Plan](docs/code-sample-plan.md)
+- [Instructor Notes](docs/instructor-notes.md)
 
 ## ブランチ運用
 
