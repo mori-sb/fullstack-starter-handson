@@ -373,36 +373,20 @@ Day5  Reactから一覧APIを呼ぶ
 
 演習で残す部分があることで、参加者は資料を見ながら「どのファイルを直すか」「どのAPIを呼ぶか」を自分で判断できます。
 
-## 画像URL方式の考え方
+## 画像URLの扱い
 
-今回、画像アップロードは扱わない。
-
-画像アップロードを入れると、ファイル保存、容量制限、形式チェック、保存先、セキュリティなど考えることが急に増える。
-
-そのため今回は、画像そのものではなく画像URLを保存する。
-
-```text
-保存するもの:
-https://example.com/cafe.jpg
-
-保存しないもの:
-画像ファイル本体
-```
-
-ReactはこのURLを使って画像を表示する。
+画像は `imageUrl` という文字列として扱います。
+ReactはそのURLを `img` タグに渡して画像を表示します。
 
 ```jsx
 <img src={restaurant.imageUrl} alt={restaurant.name} />
 ```
-
-この方式でも、一覧画面に画像付きカードを表示できるため、アプリらしさは十分出せる。
 
 ## 図で確認すること
 
 - ブラウザ -> React -> API -> Spring Boot -> DB の全体図
 - HTTPリクエスト / レスポンスの往復図
 - JSONデータが画面に表示されるまでの流れ
-- 画像URLが画面に表示されるまでの流れ
 
 ## 全体の流れ
 
@@ -418,20 +402,6 @@ React
 Spring Boot
   ↓ 必要に応じてDBへアクセスする
 DB
-```
-
-画像URLの流れ:
-
-```text
-DB: image_url = "https://example.com/cafe.jpg"
-  ↓
-Spring Boot API: imageUrlとしてJSONに入れて返す
-  ↓
-React: restaurant.imageUrlを受け取る
-  ↓
-imgタグ: <img src={restaurant.imageUrl}>
-  ↓
-ブラウザ: 画像を表示する
 ```
 
 ## ハンズオン
@@ -453,7 +423,7 @@ imgタグ: <img src={restaurant.imageUrl}>
 - Spring BootはAPIを受け取り、必要に応じてDBへアクセスする、と説明できる
 - JSONがReactとSpring Bootの間を流れるデータ形式だと説明できる
 - `GET`、`POST`、`PUT`、`DELETE` の大まかな意味を説明できる
-- 画像URL方式で画像が表示される流れを説明できる
+- `imageUrl` を `img` タグで表示する考え方を説明できる
 
 ## よくある混乱
 
