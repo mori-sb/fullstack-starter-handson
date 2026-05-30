@@ -20,6 +20,16 @@
 - imgタグでの画像表示
 - フィルタUI
 
+## ライブコーディングと演習
+
+```text
+ライブコーディング  MovieList / MovieCard / MovieForm
+演習              RestaurantList / RestaurantCard / RestaurantForm
+```
+
+Movieで作ったコンポーネント構造を、Restaurantへ置き換えて実装します。
+API接続はDay5で扱うため、Day4の演習では固定データで進めます。
+
 ## 進める順番
 
 ```text

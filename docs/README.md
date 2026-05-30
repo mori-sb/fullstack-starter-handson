@@ -5,12 +5,13 @@
 まずは、次の順番で読んでください。
 
 ```text
-1. getting-started.md
-2. day1.md
-3. day2.md
-4. day3.md
-5. day4.md
-6. day5.md
+1. curriculum.md
+2. getting-started.md
+3. day1.md
+4. day2.md
+5. day3.md
+6. day4.md
+7. day5.md
 ```
 
 分からない言葉が出てきたら `glossary.md`、作業確認をしたいときは `checklists.md` を見ます。
@@ -31,6 +32,18 @@
 
 コードはAIで生成してもよいですが、生成されたコードをそのまま貼って終わりにはしません。
 必ず「どのファイルが、どの役割を持ち、どのデータを受け渡しているか」を確認します。
+
+## ライブコーディングと演習
+
+この教材では、ライブコーディングと演習の題材を分けます。
+
+```text
+ライブコーディング  Movie
+演習              Restaurant
+```
+
+参加者は、Movieで説明された構造を見ながら、Restaurantへ置き換えて実装します。
+説明していない内容を演習に出さないようにします。
 
 ## 進める順番
 
@@ -54,6 +67,7 @@
 
 ## 参加者向け
 
+- [Curriculum](curriculum.md)
 - [Getting Started](getting-started.md)
 - [Day 1: Webアプリの全体像](day1.md)
 - [Day 2: Spring Bootの基本](day2.md)

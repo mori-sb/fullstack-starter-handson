@@ -18,6 +18,16 @@
 - エラーレスポンス
 - クエリパラメータ
 
+## ライブコーディングと演習
+
+```text
+ライブコーディング  MovieのCRUD API
+演習              RestaurantのCRUD API
+```
+
+Movieで説明したCRUDと同じ構造で、RestaurantのCRUDを作ります。
+Movieで説明していない検索条件や複雑なバリデーションは演習に出しません。
+
 ## 進める順番
 
 ```text

@@ -17,6 +17,16 @@
 - APIの動作確認
 - 画像URLを含むレスポンス
 
+## ライブコーディングと演習
+
+```text
+ライブコーディング  MovieController / MovieService
+演習              RestaurantController / RestaurantService
+```
+
+Movieで作った一覧APIと同じ構造で、Restaurantの一覧APIを作ります。
+Day2の演習では、説明していない詳細APIやDB保存は扱いません。
+
 ## 進める順番
 
 ```text

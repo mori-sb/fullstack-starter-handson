@@ -276,6 +276,7 @@ App
 ### 演習内容
 
 React画面とSpring Boot APIを接続する。
+Day5の演習対象は、一覧取得と登録に絞る。
 
 ### 模範解答
 
@@ -284,8 +285,6 @@ API関数:
 ```text
 fetchRestaurants   GET    /api/restaurants
 createRestaurant   POST   /api/restaurants
-updateRestaurant   PUT    /api/restaurants/{id}
-deleteRestaurant   DELETE /api/restaurants/{id}
 ```
 
 一覧取得の流れ:
@@ -310,16 +309,6 @@ RestaurantForm
   -> 登録後に一覧を再取得、またはstateへ追加
 ```
 
-フィルタの流れ:
-
-```text
-RestaurantFilterで地域を選ぶ
-  -> selectedAreaが変わる
-  -> GET /api/restaurants?area=新宿
-  -> 絞り込まれたJSONを受け取る
-  -> setRestaurants
-```
-
 ### 採点観点
 
 - API呼び出し関数を `api/restaurants.js` にまとめている
@@ -329,6 +318,7 @@ RestaurantFilterで地域を選ぶ
 - API結果をstateに反映している
 - Networkタブでリクエストを確認できる
 - CORSエラー時にSpring Boot側の設定を確認できる
+- 編集、削除、フィルタなど、Day5で説明していない処理を勝手に増やしていない
 
 ## AIコメント例
 
