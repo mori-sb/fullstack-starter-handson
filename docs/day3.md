@@ -51,6 +51,8 @@ DB保存:
 
 Entityは、DBに保存するデータの形をJavaで表したもの。
 
+![Spring BootにおけるEntityの位置づけ](../images/spring-entity-flow.png)
+
 グルメ管理アプリでは、`Restaurant` Entityを作る。
 
 ```text
@@ -86,6 +88,22 @@ delete     削除
 
 初心者はまず、Repositoryは「DB操作をまとめたもの」と理解すればよい。
 
+## Mapperとは
+
+Mapperは、DTOとEntityを変換する役割です。
+
+![DTO、Mapper、Entityの関係](../images/spring-mapper-flow.png)
+
+ReactとAPIの間ではDTOを使い、DBに保存するときはEntityを使います。
+この2つは目的が違うため、変換する場所が必要になります。
+
+```text
+Request DTO -> Mapper -> Entity
+Entity -> Mapper -> Response DTO
+```
+
+最初は「MapperはDTOとEntityの変換係」と理解すれば十分です。
+
 ## CRUDとHTTPメソッド
 
 画面の操作、HTTPメソッド、APIは対応している。
@@ -109,7 +127,7 @@ delete     削除
 
 この対応が分かると、React側でどのAPIを呼べばよいか判断しやすくなる。
 
-## 入れたい図
+## 使用する図
 
 - CRUDとHTTPメソッドの対応図
 - DBテーブルとEntityの対応図

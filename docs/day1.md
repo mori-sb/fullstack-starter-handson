@@ -31,6 +31,17 @@ AIを使うとコードはすぐに作れるが、次のことが分からない
 
 Day 1では、コードを書き始める前にこの地図を作る。
 
+![Webアプリ全体構成図](../images/app-overview.png)
+
+この図では、左から右に向かって処理の流れを見ます。
+
+```text
+ユーザー -> ブラウザ -> React -> Spring Boot -> データベース
+```
+
+まず覚えることは、ReactがDBを直接触らないことです。
+ReactはSpring BootのAPIを呼び、Spring BootがDBとやり取りします。
+
 ## 最初に伝えること
 
 Webアプリ開発では、いきなりコードを書き始めるより先に「役割分担」を理解することが大事。
@@ -82,6 +93,11 @@ ReactはSpring BootのAPIを呼び、Spring BootがDBとやり取りする。
 ```text
 React -> API -> Spring Boot -> DB
 ```
+
+![HTTPリクエストとレスポンスの流れ](../images/http-json-flow.png)
+
+ReactからSpring Bootへ送るものをHTTPリクエスト、Spring BootからReactへ返るものをHTTPレスポンスと呼びます。
+レスポンスの中身はJSONとして返します。
 
 ### JSON
 
@@ -238,7 +254,7 @@ ReactはこのURLを使って画像を表示する。
 
 この方式でも、一覧画面に画像付きカードを表示できるため、アプリらしさは十分出せる。
 
-## 入れたい図
+## 使用する図
 
 - ブラウザ -> React -> API -> Spring Boot -> DB の全体図
 - HTTPリクエスト / レスポンスの往復図

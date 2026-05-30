@@ -47,6 +47,17 @@ Controller -> Service -> Repository -> DB
 DTO、Entity、Mapperは後で追加する概念。
 最初から全部覚えようとせず、まずはこの一本道を理解する。
 
+![Spring Bootバックエンドの基本構造](../images/spring-basic-flow.png)
+
+この図では、まずSpring Bootの本線だけを見ます。
+
+```text
+Browser / React -> Controller -> Service -> Repository -> Database
+```
+
+DTO、Entity、Mapperはまだ覚えなくて大丈夫です。
+最初は「APIの入口」「処理を書く場所」「DBとやり取りする場所」の3つに分けて考えます。
+
 ## 役割を日常の言葉で考える
 
 ### Controller
@@ -83,6 +94,17 @@ Reactから送られてくるJSON、Reactへ返すJSONをJavaの形で表す。
 
 Day2では「APIの入出力の形」くらいの理解でよい。
 
+![Spring BootにおけるDTOの位置づけ](../images/spring-dto-flow.png)
+
+DTOはReactとSpring Bootが安全にデータを受け渡すための形です。
+
+```text
+Request DTO   Reactから送られるJSONの形
+Response DTO  Reactへ返すJSONの形
+```
+
+Day2では、DTOを「APIで使うデータの形」として理解できれば十分です。
+
 ## コードを読む順番
 
 Spring Bootのコードを見るときは、次の順番で読むと迷いにくい。
@@ -104,7 +126,7 @@ Spring Bootのコードを見るときは、次の順番で読むと迷いにく
 AIにコードを生成してもらった後も、この順番で読む。
 動いたかどうかだけでなく、どの層に何が書かれているかを見る。
 
-## 入れたい図
+## 使用する図
 
 - Controller / Service / Repository の役割図
 - リクエストがControllerに届いてレスポンスが返るまでの流れ
