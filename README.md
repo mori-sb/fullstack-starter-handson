@@ -24,20 +24,51 @@ Spring Boot と React を使って、グルメ管理アプリを作りながら�
 - Webアプリケーションの全体像を説明できる
 - HTTP / JSON / REST API の基本を理解する
 - Spring BootでCRUD APIを作れる
+- Spring BootのController / Service / Repository / Entityの役割を説明できる
 - Reactで一覧・登録・編集画面を作れる
+- Reactのコンポーネント / props / state / useEffectの役割を説明できる
 - ReactからSpring Boot APIを呼び出せる
 - 画像URLを使って画面に画像を表示できる
+- AIが生成したコードを読み、どこを修正すればよいか判断できる
 - GitHub上で教材とサンプルコードを管理できる
+
+## ハンズオンの考え方
+
+この教材では、コードをすべて手で書くことよりも、アプリの構造を理解することを重視します。
+
+AIを使えば実装は速く進みますが、実務では次の力が必要になります。
+
+- 生成されたコードがどの層のコードなのか分かる
+- APIの入口、処理、DBアクセス、画面表示の流れを追える
+- エラーが起きたときに、フロントエンド側かバックエンド側かを切り分けられる
+- 仕様変更が入ったときに、どのファイルを直すべきか見当をつけられる
+
+そのため、各Dayでは「作る」だけでなく「図で見る」「コードを読む」「少し変える」をセットにします。
 
 ## 進め方
 
 | Day | テーマ | 成果物 |
 | --- | --- | --- |
-| Day 1 | Webアプリの全体像、HTTP、JSON、REST API | グルメ管理アプリの画面・データ・API設計 |
-| Day 2 | Spring Bootの基本、Controller / Service / Repository | お店一覧API |
-| Day 3 | DB接続、Entity、Repository、CRUD API | お店の登録・詳細・編集・削除API |
-| Day 4 | Reactの基本、コンポーネント、State、Effect | 画像付きのお店一覧画面と登録フォーム |
-| Day 5 | ReactとAPI連携、CORS、エラー処理 | 登録・一覧・編集・削除が動くミニアプリ |
+| Day | テーマ | 重視する理解 | 成果物 |
+| --- | --- | --- | --- |
+| Day 1 | Webアプリの全体像、HTTP、JSON、REST API | フロントエンドとバックエンドの境界 | グルメ管理アプリの画面・データ・API設計 |
+| Day 2 | Spring Bootの基本、Controller / Service / Repository | リクエストがバックエンド内をどう流れるか | お店一覧API |
+| Day 3 | DB接続、Entity、Repository、CRUD API | JavaオブジェクトとDBテーブルの関係 | お店の登録・詳細・編集・削除API |
+| Day 4 | Reactの基本、コンポーネント、State、Effect | データが変わると画面が変わる仕組み | 画像付きのお店一覧画面と登録フォーム |
+| Day 5 | ReactとAPI連携、CORS、エラー処理 | 画面操作がAPI呼び出しにつながる流れ | 登録・一覧・編集・削除が動くミニアプリ |
+
+## 図で説明する概念
+
+- ブラウザ、React、Spring Boot、DBの全体構成
+- HTTPリクエストとHTTPレスポンス
+- JSONがAPIと画面の間を流れる様子
+- Spring BootのController / Service / Repository / Entity
+- DBテーブルとEntityの対応
+- CRUDとHTTPメソッドの対応
+- Reactのコンポーネント分割
+- propsとstateの違い
+- useEffectでAPIを呼ぶ流れ
+- 画像URLがDB、API、Reactを通って画像表示される流れ
 
 ## APIの完成イメージ
 

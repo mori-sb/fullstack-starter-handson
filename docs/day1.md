@@ -7,6 +7,7 @@
 - JSONがどこで使われるかを理解する
 - REST APIの基本を知る
 - グルメ管理アプリの画面、データ、APIをざっくり設計できる
+- AIで実装する前に、何を作るのかを言葉と図で説明できる
 
 ## 扱う内容
 
@@ -18,6 +19,17 @@
 - JSON
 - REST API
 - 画像URLを使った画像表示の考え方
+
+## 今日の大事な考え方
+
+AIを使うとコードはすぐに作れるが、次のことが分からないと実務では詰まりやすい。
+
+- 画面の処理なのか、APIの処理なのか
+- データはどこから来て、どこに保存されるのか
+- ボタンを押したときに、どのAPIが呼ばれるのか
+- APIが返したJSONをReactがどう表示するのか
+
+Day 1では、コードを書き始める前にこの地図を作る。
 
 ## 作るアプリ
 
@@ -105,6 +117,36 @@ GET /api/restaurants?status=WANT_TO_GO
 - JSONデータが画面に表示されるまでの流れ
 - 画像URLが画面に表示されるまでの流れ
 
+## 図の説明メモ
+
+全体図:
+
+```text
+ユーザー
+  ↓ 操作する
+ブラウザ
+  ↓ 画面を表示する
+React
+  ↓ HTTPでAPIを呼ぶ
+Spring Boot
+  ↓ 必要に応じてDBへアクセスする
+DB
+```
+
+画像URLの流れ:
+
+```text
+DB: image_url = "https://example.com/cafe.jpg"
+  ↓
+Spring Boot API: imageUrlとしてJSONに入れて返す
+  ↓
+React: restaurant.imageUrlを受け取る
+  ↓
+imgタグ: <img src={restaurant.imageUrl}>
+  ↓
+ブラウザ: 画像を表示する
+```
+
 ## ハンズオン
 
 まだコードを書き始めず、完成するアプリの画面、データ、APIを設計する。
@@ -116,6 +158,7 @@ GET /api/restaurants?status=WANT_TO_GO
 - APIの一覧を確認する
 - JSONの形を読む
 - フロントエンドとバックエンドの境界を確認する
+- AIに実装を依頼するとしたら、どんな指示を出すか考える
 
 ## メモ
 

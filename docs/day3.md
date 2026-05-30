@@ -7,6 +7,7 @@
 - CRUD APIを作れる
 - APIの正常系と簡単な異常系を確認できる
 - 地域・ジャンル・ステータスで絞り込む考え方を理解する
+- 仕様変更時にどの層を直すか判断できる
 
 ## 扱う内容
 
@@ -17,11 +18,34 @@
 - エラーレスポンス
 - クエリパラメータ
 
+## 今日の大事な考え方
+
+CRUDは多くの業務アプリの基本になる。
+
+```text
+Create  登録する
+Read    一覧・詳細を見る
+Update  編集する
+Delete  削除する
+```
+
+この4つを一度作ると、申請管理、台帳管理、レビュー管理など多くのアプリに応用できる。
+
 ## 入れたい図
 
 - CRUDとHTTPメソッドの対応図
 - DBテーブルとEntityの対応図
 - クエリパラメータで一覧を絞り込む流れ
+
+## 図の説明メモ
+
+```text
+POST   /api/restaurants       登録
+GET    /api/restaurants       一覧
+GET    /api/restaurants/{id}  詳細
+PUT    /api/restaurants/{id}  編集
+DELETE /api/restaurants/{id}  削除
+```
 
 ## ハンズオン
 

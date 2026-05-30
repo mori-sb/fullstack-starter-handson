@@ -7,6 +7,7 @@
 - Serviceの役割を理解する
 - Repositoryの役割を理解する
 - お店一覧APIを作ってJSONで返せる
+- 生成されたSpring Bootコードを層ごとに読める
 
 ## 扱う内容
 
@@ -16,11 +17,41 @@
 - APIの動作確認
 - 画像URLを含むレスポンス
 
+## 今日の大事な考え方
+
+Spring Bootでは、処理を役割ごとに分けて書く。
+
+```text
+Controller  APIの入口
+Service     業務処理を書く場所
+Repository  DBアクセスを書く場所
+Entity      DBに保存するデータの形
+DTO         APIで受け渡しするデータの形
+```
+
+AIがコードを生成した場合も、まず「このコードはどの役割か」を見る。
+
 ## 入れたい図
 
 - Controller / Service / Repository の役割図
 - リクエストがControllerに届いてレスポンスが返るまでの流れ
 - お店データがJSONとして返る流れ
+
+## 図の説明メモ
+
+```text
+GET /api/restaurants
+  ↓
+RestaurantController
+  ↓
+RestaurantService
+  ↓
+RestaurantRepository
+  ↓
+DB
+  ↓
+JSONでレスポンス
+```
 
 ## ハンズオン
 
