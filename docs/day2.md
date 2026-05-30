@@ -67,6 +67,8 @@ DTO、Entity、Mapperはまだ覚えなくて大丈夫です。
 外から来たリクエストを受け取る。
 URLとHTTPメソッドを見て、どの処理を呼ぶか決める。
 
+![Controllerの役割](../images/controller-role.png)
+
 ```text
 GET /api/restaurants が来た
   -> RestaurantServiceに一覧取得をお願いする
@@ -79,12 +81,16 @@ GET /api/restaurants が来た
 アプリとして何をするかを書く場所。
 登録する、一覧を取得する、編集する、削除するなどの処理の中心。
 
+![Serviceの役割](../images/service-role.png)
+
 ### Repository
 
 DB係。
 
 DBに保存する、DBから取得する、DBから削除するなどを担当する。
 ServiceはRepositoryを通してDBにアクセスする。
+
+![Repositoryの役割](../images/repository-role.png)
 
 ### DTO
 

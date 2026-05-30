@@ -42,6 +42,12 @@
 - `spring-dto-flow.png`: Spring BootにおけるDTOの位置づけ
 - `spring-entity-flow.png`: Spring BootにおけるEntityの位置づけ
 - `spring-mapper-flow.png`: DTO、Mapper、Entityの関係
+- `screen-api-map.png`: グルメ管理アプリの画面操作とAPIの対応
+- `controller-role.png`: Controllerの役割
+- `service-role.png`: Serviceの役割
+- `repository-role.png`: Repositoryの役割
+- `entity-table-map.png`: EntityとDBテーブルの対応
+- `query-param-flow.png`: クエリパラメータで一覧を絞り込む流れ
 
 ## Spring Boot画像の使う順番
 

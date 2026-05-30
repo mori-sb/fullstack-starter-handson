@@ -68,6 +68,8 @@ Restaurant Entity
 
 DBのテーブルに近い考え方。
 
+![EntityとDBテーブルの対応](../images/entity-table-map.png)
+
 ```text
 JavaのEntity  <->  DBのテーブル
 Restaurant    <->  restaurants
@@ -156,6 +158,8 @@ DELETE /api/restaurants/{id}
 ```
 
 余裕があれば、一覧APIにフィルタを追加する。
+
+![クエリパラメータで一覧を絞り込む流れ](../images/query-param-flow.png)
 
 ```text
 GET /api/restaurants?area=新宿

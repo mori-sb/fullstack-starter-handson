@@ -210,6 +210,8 @@ GET /api/restaurants?status=WANT_TO_GO
 
 画面でやりたい操作からAPIを考える。
 
+![画面操作とAPIの対応](../images/screen-api-map.png)
+
 ```text
 お店一覧を見たい
   -> GET /api/restaurants
