@@ -24,6 +24,30 @@
 
 Reactでは、画面を部品に分けて考える。
 
+Reactは、HTML、CSS、JavaScriptを組み合わせて画面を作りやすくするものとして見ると分かりやすいです。
+
+```text
+HTML        画面の構造
+CSS         見た目
+JavaScript  動き
+React       構造・見た目・動きをコンポーネントとしてまとめる
+Tailwind CSS classNameに見た目を書く
+```
+
+今回のハンズオンでは、Tailwind CSSを使います。
+CSSファイルに細かいスタイルを書き足すよりも、JSXの `className` に見た目の指定を書いていきます。
+
+```jsx
+<article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+  <h3 className="text-lg font-semibold text-slate-900">
+    Cafe Sakura
+  </h3>
+</article>
+```
+
+このように、Reactでは画面構造と見た目の指定が同じコンポーネント内にまとまります。
+「この部品の見た目はこのファイルを見れば分かる」と考えると追いやすくなります。
+
 ```text
 App
   RestaurantFilter
@@ -65,6 +89,7 @@ React側は `frontend/` に作ります。
 
 画面を部品ごとに分けるため、`components/` にコンポーネントを置きます。
 APIを呼ぶ処理は `api/` にまとめます。
+Tailwind CSSを使うため、見た目の多くは各コンポーネントの `className` に書きます。
 
 ```text
 frontend/
@@ -92,7 +117,7 @@ RestaurantFilter.jsx     地域・ジャンル・ステータスの絞り込み
 RestaurantForm.jsx       お店の登録・編集フォーム
 RestaurantList.jsx       お店カードを並べる
 RestaurantCard.jsx       お店1件を表示する
-app.css                  見た目のスタイル
+app.css                  全体に共通する最低限のスタイル
 ```
 
 最初に読む順番:
@@ -107,6 +132,42 @@ app.css                  見た目のスタイル
 ```
 
 Reactでは、ファイルを分けることで「どの部品が何を担当しているか」を見つけやすくします。
+
+Tailwind CSSを使う場合、コンポーネント内に次の3つがまとまりやすくなります。
+
+```text
+JSXのタグ       画面の構造
+className       見た目
+イベント処理     ボタンを押したときの動き
+```
+
+例:
+
+```jsx
+export function RestaurantCard({ restaurant }) {
+  return (
+    <article className="rounded-lg border bg-white p-4 shadow-sm">
+      <img
+        className="h-40 w-full rounded object-cover"
+        src={restaurant.imageUrl}
+        alt={restaurant.name}
+      />
+      <h3 className="mt-3 text-lg font-semibold">
+        {restaurant.name}
+      </h3>
+      <p className="text-sm text-slate-600">
+        {restaurant.area} / {restaurant.genre}
+      </p>
+    </article>
+  );
+}
+```
+
+見るポイント:
+
+- `<article>` や `<img>` はHTMLに近い画面構造
+- `className` はTailwind CSSで見た目を指定している
+- `{restaurant.name}` はJavaScriptの値を画面に表示している
 
 ## propsとstate
 
@@ -231,12 +292,20 @@ RestaurantCard
 ```jsx
 export function RestaurantCard({ restaurant }) {
   return (
-    <article className="restaurant-card">
-      <img src={restaurant.imageUrl} alt={restaurant.name} />
-      <h3>{restaurant.name}</h3>
-      <p>{restaurant.area} / {restaurant.genre}</p>
-      <p>{restaurant.memo}</p>
-      <span>{restaurant.status}</span>
+    <article className="rounded-lg border bg-white p-4 shadow-sm">
+      <img
+        className="h-40 w-full rounded object-cover"
+        src={restaurant.imageUrl}
+        alt={restaurant.name}
+      />
+      <h3 className="mt-3 text-lg font-semibold">{restaurant.name}</h3>
+      <p className="text-sm text-slate-600">
+        {restaurant.area} / {restaurant.genre}
+      </p>
+      <p className="mt-2 text-sm">{restaurant.memo}</p>
+      <span className="mt-3 inline-block rounded bg-slate-100 px-2 py-1 text-xs">
+        {restaurant.status}
+      </span>
     </article>
   );
 }
@@ -246,6 +315,7 @@ export function RestaurantCard({ restaurant }) {
 
 - `restaurant` はpropsとして受け取っている
 - `imageUrl` を `img` の `src` に入れている
+- `className` にTailwind CSSのクラスを書いて見た目を整えている
 - このコンポーネントは1件分の表示だけを担当する
 
 ## 今日の確認ポイント

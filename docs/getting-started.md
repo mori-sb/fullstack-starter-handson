@@ -119,6 +119,33 @@ RestaurantMapper.java
 
 Reactは、画面を部品に分けて作ります。
 
+Reactを読む前に、HTML、CSS、JavaScriptとの関係を押さえておきます。
+
+```text
+HTML        画面の構造を作る
+CSS         見た目を整える
+JavaScript  動きをつける
+React       画面を部品として作り、データに応じて更新する
+Tailwind CSS 見た目の指定をclassNameに書く
+```
+
+Reactでは、JSXという書き方を使って、JavaScriptの中にHTMLに近い見た目のコードを書きます。
+今回はTailwind CSSを使うため、見た目の指定も `className` としてコンポーネントの中に書きます。
+
+```jsx
+<button className="rounded bg-blue-600 px-4 py-2 text-white">
+  登録する
+</button>
+```
+
+このコードでは、次の要素がまとまっています。
+
+```text
+button      HTMLに近い画面構造
+className   Tailwind CSSによる見た目
+登録する     画面に表示する文字
+```
+
 今回のアプリでは、次のように分けます。
 
 ```text

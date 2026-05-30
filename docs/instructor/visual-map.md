@@ -391,7 +391,78 @@ app.css: 見た目
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、Reactらしいシアンとネイビーを使った読みやすい図にしてください。
 ```
 
-### 17. Reactコンポーネント分割図
+### 17. HTML / CSS / JavaScript / React / Tailwind の関係図
+
+ファイル名:
+
+```text
+images/react-html-css-js-tailwind.png
+```
+
+伝えること:
+
+- HTMLは画面の構造
+- CSSは見た目
+- JavaScriptは動き
+- Reactは構造・見た目・動きをコンポーネントとしてまとめる
+- Tailwind CSSは見た目を`className`に書く
+
+生成依頼文:
+
+```text
+モダンなSaaS技術資料風に、HTML、CSS、JavaScript、React、Tailwind CSSの関係を説明する図を作ってください。
+
+左側に従来のWebページとして、HTML、CSS、JavaScriptの3つのカードを縦に並べてください。
+HTML: 画面の構造
+CSS: 見た目
+JavaScript: 動き
+
+右側にReactコンポーネントのカードを置き、その中にJSXの例を表示してください。
+例として、buttonタグ、className、onClickのような要素を含めてください。
+
+Reactカードの横にTailwind CSSカードを置き、「classNameに見た目を書く」と表示してください。
+
+下部に「Reactでは、画面の構造・見た目・動きをコンポーネント単位でまとめて考える」と補足してください。
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ReactらしいシアンとTailwindらしいブルーを使った読みやすい図にしてください。
+```
+
+### 18. JSXとTailwindの読み方
+
+ファイル名:
+
+```text
+images/jsx-tailwind-reading.png
+```
+
+伝えること:
+
+- JSXはHTMLに近いがJavaScriptの中に書く
+- `className` が見た目
+- `{restaurant.name}` がJavaScriptの値
+- `onClick` が動き
+
+生成依頼文:
+
+```text
+モダンな技術資料風に、ReactのJSXとTailwind CSSの読み方を説明する図を作ってください。
+
+中央にRestaurantCardの短いJSXコードカードを表示してください。
+コードには次の要素を含めてください。
+<article className="rounded-lg border bg-white p-4">
+<img className="h-40 w-full object-cover" src={restaurant.imageUrl} />
+<h3>{restaurant.name}</h3>
+<button onClick={onDelete}>削除</button>
+
+コードの各部分に吹き出しを付けてください。
+article / img / h3: HTMLに近い画面構造
+className: Tailwind CSSで見た目を指定
+{restaurant.name}: JavaScriptの値を表示
+onClick: クリック時の処理
+
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアン・ブルー・オレンジを使った読みやすい図にしてください。
+```
+
+### 19. Reactコンポーネント分割図
 
 ファイル名:
 
@@ -399,7 +470,7 @@ app.css: 見た目
 images/react-components.png
 ```
 
-### 18. propsの流れ
+### 20. propsの流れ
 
 ファイル名:
 
@@ -422,7 +493,7 @@ propsカードには「親から子へ渡すデータ」と表示してくださ
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、Reactらしいシアンを中心にしたモダンな教材図にしてください。
 ```
 
-### 19. stateの流れ
+### 21. stateの流れ
 
 ファイル名:
 
@@ -430,7 +501,7 @@ propsカードには「親から子へ渡すデータ」と表示してくださ
 images/react-state-flow.png
 ```
 
-### 20. フォーム入力とstate
+### 22. フォーム入力とstate
 
 ファイル名:
 
@@ -451,7 +522,7 @@ Reactのフォーム入力とstateの関係を説明する図を作ってくだ�
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアンとオレンジを使ったモダンな教材図にしてください。
 ```
 
-### 21. 画像URLとimgタグ
+### 23. 画像URLとimgタグ
 
 ファイル名:
 
@@ -475,7 +546,7 @@ Reactで画像URLをimgタグに渡して画像を表示する流れを説明す
 
 ## Day 5: API連携とデバッグ
 
-### 22. useEffectでAPIを呼ぶ流れ
+### 24. useEffectでAPIを呼ぶ流れ
 
 ファイル名:
 
@@ -495,7 +566,7 @@ useEffect、fetch、state更新のカードを少し強調してください。
 白または薄いグレー背景、シアン・グリーン・オレンジを使ったモダンな教材図にしてください。
 ```
 
-### 23. fetchの中身
+### 25. fetchの中身
 
 ファイル名:
 
@@ -521,7 +592,7 @@ body -> 送信するJSON
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアンとグリーンを使ったモダンな教材図にしてください。
 ```
 
-### 24. CORSの図
+### 26. CORSの図
 
 ファイル名:
 
@@ -544,7 +615,7 @@ Spring Boot側に「CORS設定でReactからのアクセスを許可」と表示
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアン・グリーン・オレンジを使ったモダンな教材図にしてください。
 ```
 
-### 25. エラー切り分けマップ
+### 27. エラー切り分けマップ
 
 ファイル名:
 
@@ -552,7 +623,7 @@ Spring Boot側に「CORS設定でReactからのアクセスを許可」と表示
 images/debugging-map.png
 ```
 
-### 26. 開発の進め方
+### 28. 開発の進め方
 
 ファイル名:
 

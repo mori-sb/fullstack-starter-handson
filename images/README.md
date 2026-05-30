@@ -23,6 +23,8 @@
 - `list-api-flow.png`: 一覧取得APIでDBからReact表示まで戻る流れ
 - `query-param-flow.png`: クエリパラメータで一覧を絞り込む流れ
 - `react-directory-structure.png`: Reactのディレクトリ構造
+- `react-html-css-js-tailwind.png`: HTML、CSS、JavaScript、React、Tailwind CSSの関係
+- `jsx-tailwind-reading.png`: JSXとTailwind CSSの読み方
 - `react-components.png`: Reactコンポーネントの分割
 - `react-props-flow.png`: propsが親から子へ渡る流れ
 - `react-state-flow.png`: state変更から画面更新までの流れ
