@@ -110,6 +110,66 @@ RestaurantCard    お店1件を表示する
 
 AIがReactコードを生成した場合も、まずコンポーネント単位で読む。
 
+## コンポーネントに分ける目的
+
+ここはReactでかなり重要です。
+
+Reactでは、画面を1つの大きなファイルに全部書くのではなく、役割ごとに小さなコンポーネントへ分けます。
+コンポーネントに分ける目的は、ファイル数を増やすことではありません。
+「どこに何を書くか」を決めて、コードを読みやすくするためです。
+
+グルメ管理アプリでは、画面を次のように分けます。
+
+```text
+App
+  画面全体の親。
+  restaurants、form、filterなど、画面全体で使う状態を管理する。
+
+RestaurantList
+  お店の配列を受け取り、RestaurantCardを複数並べる。
+
+RestaurantCard
+  お店1件分だけを表示する。
+  画像、店名、地域、ジャンル、メモ、ステータスを表示する。
+
+RestaurantForm
+  登録・編集フォームを担当する。
+  入力値をstateで管理する。
+
+RestaurantFilter
+  地域、ジャンル、ステータスの絞り込み条件を担当する。
+```
+
+大事なのは、1つのコンポーネントに複数の責任を詰め込みすぎないことです。
+
+```text
+RestaurantCardは、一覧全体の並べ方を知らなくてよい。
+RestaurantListは、フォーム入力の管理を知らなくてよい。
+RestaurantFormは、カードの見た目を知らなくてよい。
+```
+
+役割を分けると、コードを読むときも修正するときも迷いにくくなります。
+
+```text
+カードの見た目を変えたい
+  -> RestaurantCard.jsx
+
+一覧の並べ方を変えたい
+  -> RestaurantList.jsx
+
+フォーム項目を増やしたい
+  -> RestaurantForm.jsx
+
+絞り込み条件を増やしたい
+  -> RestaurantFilter.jsx
+
+APIのURLやfetch処理を変えたい
+  -> api/restaurants.js
+```
+
+AIが生成したReactコードを見るときも、まず「このコンポーネントは何を担当しているか」を確認します。
+動くかどうかだけでなく、役割が混ざりすぎていないかを見ることが大事です。
+
 ## Reactのディレクトリ構造
 
 React側は `frontend/` に作ります。
@@ -151,11 +211,28 @@ app.css                  全体に共通する最低限のスタイル
 
 ```text
 1. App.jsx
+   画面全体でどのstateを持っているかを見る。
+   どのコンポーネントに何を渡しているかを見る。
+
 2. RestaurantList.jsx
+   restaurants配列をどう並べているかを見る。
+   RestaurantCardへ1件ずつ渡していることを見る。
+
 3. RestaurantCard.jsx
+   お店1件分をどう表示しているかを見る。
+   imageUrlをimgタグに渡していることを見る。
+
 4. RestaurantForm.jsx
+   入力値をどうstateで管理しているかを見る。
+   登録ボタンで何を呼ぶかを見る。
+
 5. RestaurantFilter.jsx
+   絞り込み条件をどう選ばせているかを見る。
+   選択値を親へどう渡すかを見る。
+
 6. api/restaurants.js
+   Spring Boot APIをどう呼んでいるかを見る。
+   API連携はDay5で詳しく扱う。
 ```
 
 Reactでは、ファイルを分けることで「どの部品が何を担当しているか」を見つけやすくします。
