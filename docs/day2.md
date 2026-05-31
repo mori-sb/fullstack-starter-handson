@@ -703,6 +703,30 @@ return movieService.findAll();
   一覧取得の処理をServiceへ任せる。
 ```
 
+ここで一度APIを確認します。
+Serviceへ処理を移しても、ReactやBrunoから見えるAPIの結果は変わらないことを確認します。
+
+```text
+GET http://localhost:8080/api/movies
+```
+
+確認すること:
+
+```text
+ステータスコードが200になる
+JSON配列が返る
+title, genre, memo, imageUrl, status が含まれている
+Controllerに直接データを書いていたときと同じ形で返る
+```
+
+ここで分かること:
+
+```text
+APIの入口はControllerのまま
+データを用意する処理だけServiceへ移った
+外から見えるAPIの形は変わっていない
+```
+
 この分け方を早めに覚えておくと、後で登録、編集、削除を追加しやすくなります。
 
 ライブコーディングで作るファイル:
