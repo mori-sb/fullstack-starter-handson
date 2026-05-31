@@ -645,16 +645,18 @@ title       -> name
 メモ          ______
 ```
 
-記入例:
+Movieの例:
 
 ```text
 画像          imageUrl
-店名          name
-地域          area
+タイトル      title
 ジャンル      genre
 ステータス    status
 メモ          memo
 ```
+
+Movieでは `title` だった項目が、Restaurantでは何に変わるかを考えます。
+Restaurantの欄は、講師と答え合わせします。
 
 ### 4. ワークシート: Restaurantの登録フォーム項目
 
@@ -681,16 +683,17 @@ title       -> name
 ステータス    ______
 ```
 
-記入例:
+Movieの例:
 
 ```text
-店名          name
-地域          area
+タイトル      title
 ジャンル      genre
 メモ          memo
 画像URL       imageUrl
 ステータス    status
 ```
+
+Movieのフォーム項目を見て、Restaurantの登録フォームには何が必要かを書きます。
 
 ### 5. ワークシート: 画面操作とAPIの対応
 
@@ -704,15 +707,17 @@ Day1では、まず一覧表示と登録を確実に対応させます。
   -> ______
 ```
 
-記入例:
+Movieの例:
 
 ```text
-お店一覧を見る
-  -> GET /api/restaurants
+映画一覧を見る
+  -> GET /api/movies
 
-お店を登録する
-  -> POST /api/restaurants
+映画を登録する
+  -> POST /api/movies
 ```
+
+MovieのURLをそのまま写すのではなく、RestaurantではURLと操作名がどう変わるかを考えます。
 
 編集、削除、フィルタは後続Dayで扱います。
 Day1では「APIは画面操作に対応している」と分かれば十分です。
@@ -727,19 +732,20 @@ RestaurantのJSON例を自分で書きます。
 }
 ```
 
-記入例:
+Movieの例:
 
 ```json
 {
   "id": 1,
-  "name": "Cafe Sakura",
-  "area": "新宿",
-  "genre": "カフェ",
-  "memo": "落ち着いて作業できそう",
-  "imageUrl": "https://example.com/cafe.jpg",
-  "status": "WANT_TO_GO"
+  "title": "Inception",
+  "genre": "SF",
+  "memo": "夢の中に入っていく映画",
+  "imageUrl": "https://example.com/inception.jpg",
+  "status": "WATCHED"
 }
 ```
+
+RestaurantのJSONは、Movieの `title` が何に変わるか、地域の情報をどこに足すかを考えて書きます。
 
 確認すること:
 
