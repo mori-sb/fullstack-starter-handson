@@ -5,6 +5,7 @@
 ## 作成予定の図
 
 - `app-overview.png`: ブラウザ、React、Spring Boot、DBの全体構成
+- `app-screen-mock.png`: グルメ管理アプリの完成画面モック
 - `app-screen-mock.svg`: グルメ管理アプリの画面完成イメージ
 - `http-json-flow.png`: HTTPリクエスト、HTTPレスポンス、JSONの流れ
 - `screen-api-map.png`: 画面操作とAPIの対応
