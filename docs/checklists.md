@@ -9,6 +9,17 @@
 - 今日出てくる用語を確認した
 - どのファイルを触るか確認した
 
+## 事前学習チェック
+
+- WebアプリがReact、API、DBに分かれることを説明できる
+- JSONがデータの受け渡し形式だと分かる
+- GET、POST、PUT、DELETEの大まかな違いが分かる
+- Javaのclassとmethodの違いが何となく分かる
+- Spring BootのController、Service、Repositoryの役割を見たことがある
+- JavaScriptのobjectとarrayを見たことがある
+- Reactのcomponent、props、stateという言葉を見たことがある
+- 分からない用語を `glossary.md` で探せる
+
 ## 環境チェック
 
 - IntelliJ IDEAで `backend/` を開ける

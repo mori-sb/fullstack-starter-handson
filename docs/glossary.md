@@ -47,6 +47,65 @@ PUT     更新
 DELETE  削除
 ```
 
+## Java
+
+### class
+
+Javaで処理やデータのまとまりを定義するもの。
+
+例:
+
+```java
+public class MovieService {
+}
+```
+
+### method
+
+classの中に書く処理。
+
+例:
+
+```java
+public List<MovieResponse> findAll() {
+    return List.of();
+}
+```
+
+### field
+
+classが持つ値。
+
+例:
+
+```java
+private final MovieService movieService;
+```
+
+### constructor
+
+classを作るときに呼ばれる入口。
+Spring Bootでは、DIでServiceなどを受け取るときによく使う。
+
+例:
+
+```java
+public MovieController(MovieService movieService) {
+    this.movieService = movieService;
+}
+```
+
+### record
+
+値をまとめて持つためのJavaの書き方。
+この教材では、Response DTOやRequest DTOで使う。
+
+### List
+
+複数件のデータを扱う入れ物。
+
+`List<MovieResponse>` は、`MovieResponse` が複数件入るという意味。
+
 ## Spring Boot
 
 ### Class
@@ -122,6 +181,59 @@ DTOとEntityを変換するもの。
 
 - 店名が空ではない
 - ステータスが正しい値である
+
+## JavaScript / TypeScript
+
+### const
+
+値を入れる変数を定義する。
+
+```jsx
+const name = "Cafe Sakura";
+```
+
+### function
+
+処理をまとめる。
+
+```jsx
+function handleClick() {
+  console.log("clicked");
+}
+```
+
+### object
+
+複数の値を名前付きでまとめる。
+
+```jsx
+const restaurant = {
+  name: "Cafe Sakura",
+  area: "新宿",
+};
+```
+
+### array
+
+複数件のデータを並べたもの。
+
+```jsx
+const restaurants = [
+  { id: 1, name: "Cafe Sakura" },
+  { id: 2, name: "Ginza Kitchen" },
+];
+```
+
+### map
+
+配列を1件ずつ取り出して、別の形に変換する。
+Reactでは、配列を画面表示に変換するときによく使う。
+
+### type
+
+値の形を表す考え方。
+
+TypeScriptでは、`string`、`number`、`boolean`、配列、オブジェクトの形などを扱う。
 
 ## React
 

@@ -5,14 +5,17 @@
 まずは、次の順番で読んでください。
 
 ```text
-1. curriculum.md
-2. getting-started.md
+1. getting-started.md
+2. curriculum.md
 3. day1.md
 4. day2.md
 5. day3.md
 6. day4.md
 7. day5.md
 ```
+
+`getting-started.md` には、事前学習項目と参考サイトもまとめています。
+Java、JavaScript、TypeScriptに慣れていない場合は、Day1の前にそこだけ軽く読んでおきます。
 
 分からない言葉が出てきたら `glossary.md`、作業確認をしたいときは `checklists.md` を見ます。
 

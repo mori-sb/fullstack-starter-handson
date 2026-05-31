@@ -13,6 +13,147 @@
 3. 小さな変更を自分で試せる
 ```
 
+## 参加前に知っておくと楽になること
+
+このハンズオンでは、Java、JavaScript、TypeScriptを深く知っている前提にはしません。
+ただし、次の言葉を少しだけ見ておくと、当日の説明が追いやすくなります。
+
+完璧に覚える必要はありません。
+「聞いたことがある」「コードを見たときに何となく役割が分かる」くらいで十分です。
+
+### Webアプリの最低限
+
+知っておきたいこと:
+
+```text
+ブラウザ       ユーザーが操作する画面
+フロントエンド Reactで作る画面側
+バックエンド   Spring Bootで作るAPI側
+API           画面とバックエンドの窓口
+HTTPメソッド   GET、POST、PUT、DELETE
+JSON          ReactとSpring Bootが受け渡すデータ形式
+DB            データを保存する場所
+```
+
+まず大事なのは、ReactがDBを直接触らないことです。
+ReactはAPIを呼び、Spring BootがDBとやり取りします。
+
+### Javaの最低限
+
+Spring Boot側ではJavaを書きます。
+
+知っておきたいこと:
+
+```text
+class       処理やデータのまとまり
+method      classの中に書く処理
+field       classが持つ値
+constructor classを作るときに呼ばれる入口
+record      値をまとめて持つための書き方
+List        複数件のデータを扱う入れ物
+```
+
+このハンズオンで特に大事なのは `class` と `method` です。
+
+例:
+
+```java
+public class MovieService {
+
+    public List<MovieResponse> findAll() {
+        return List.of();
+    }
+}
+```
+
+読み方:
+
+```text
+MovieService
+  映画に関する処理を書くclass
+
+findAll()
+  一覧取得をするmethod
+
+List<MovieResponse>
+  MovieResponseを複数件返す
+```
+
+### JavaScript / TypeScriptの最低限
+
+React側では、JavaScriptまたはTypeScriptに近い書き方を使います。
+この教材では `.jsx` を中心に扱いますが、TypeScriptの考え方も少し出てきます。
+
+知っておきたいこと:
+
+```text
+const        変数を定義する
+function     処理をまとめる
+object       nameやareaなどのまとまり
+array        複数件のデータ
+map          配列を1件ずつ画面表示へ変換する
+props        親から子コンポーネントへ渡すデータ
+state        画面の中で変化するデータ
+type         値の形を表す考え方
+```
+
+Reactでよく見る形:
+
+```jsx
+const restaurants = [
+  { id: 1, name: "Cafe Sakura", area: "新宿" },
+];
+
+restaurants.map((restaurant) => (
+  <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+));
+```
+
+読み方:
+
+```text
+restaurants
+  お店の配列
+
+map
+  配列を1件ずつ取り出す
+
+restaurant
+  取り出した1件分のお店
+
+RestaurantCard
+  お店1件を表示するコンポーネント
+```
+
+### 事前学習の目安
+
+時間がある場合は、次の順番で軽く見ておきます。
+
+```text
+1. Webアプリの全体像
+2. JSONとHTTPメソッド
+3. Javaのclassとmethod
+4. JavaScriptのobject、array、function
+5. Reactのcomponent、props、state
+6. TypeScriptの基本的な型
+```
+
+全部を先に理解しようとしなくて大丈夫です。
+ハンズオン中に、必要なところだけ戻って確認します。
+
+### 参考サイト
+
+公式ドキュメントを中心に、必要なところだけ見ます。
+
+- [Java Tutorials: Classes and Objects](https://docs.oracle.com/javase/tutorial/java/javaOO/index.html)
+- [Spring Boot: Spring Beans and Dependency Injection](https://docs.spring.io/spring-boot/reference/using/spring-beans-and-dependency-injection.html)
+- [Spring Framework: Dependency Injection](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html)
+- [MDN: JavaScript Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions)
+- [MDN: JavaScript Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)
+- [TypeScript Handbook: Everyday Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html)
+- [React: Passing Props to a Component](https://react.dev/learn/passing-props-to-a-component)
+- [React: State: A Component's Memory](https://react.dev/learn/state-a-components-memory)
+
 ## 事前に準備するもの
 
 このハンズオンでは、次のツールを使います。
