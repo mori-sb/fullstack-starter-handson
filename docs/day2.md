@@ -210,24 +210,60 @@ Day2では、DTOを「APIで使うデータの形」として理解できれば�
 
 ## コードを読む順番
 
-Spring Bootのコードを見るときは、次の順番で読むと迷いにくい。
+Spring Bootのコードは、ファイル一覧の上から順に読むよりも、リクエストが通る順番で読むと理解しやすくなります。
+
+ここはかなり重要です。
+AIが生成したコードを確認するときも、自分で機能を追加するときも、まずこの順番で読みます。
 
 ```text
 1. Controllerを見る
-   どのURLとHTTPメソッドを受け取るか確認する
+   確認すること:
+   - どのURLを受け取るか
+   - GET / POST / PUT / DELETE のどれか
+   - Serviceのどのメソッドを呼んでいるか
+
+   例:
+   GET /api/restaurants が list() に入ってくる
 
 2. Serviceを見る
-   実際に何をしているか確認する
+   確認すること:
+   - 一覧取得、登録、編集、削除のどの処理か
+   - 条件分岐やデータの加工があるか
+   - Repositoryのどのメソッドを呼んでいるか
+
+   例:
+   findAll() で全件取得して、Response DTOに変換して返す
 
 3. Repositoryを見る
-   DBとどうやり取りしているか確認する
+   確認すること:
+   - DBから取得しているのか
+   - DBへ保存しているのか
+   - 条件付き検索をしているのか
+
+   例:
+   findAll() で restaurants テーブルのデータを取得する
 
 4. DTOを見る
-   APIでどんなJSONを受け渡しするか確認する
+   確認すること:
+   - Reactから受け取るJSONの形
+   - Reactへ返すJSONの形
+   - 画面に必要な項目が入っているか
+
+   例:
+   RestaurantResponse に name, area, genre, memo, imageUrl, status がある
 ```
 
 AIにコードを生成してもらった後も、この順番で読む。
 動いたかどうかだけでなく、どの層に何が書かれているかを見る。
+
+覚え方:
+
+```text
+Controller  どのAPIかを見る
+Service     何をする処理かを見る
+Repository  DBとどうやり取りするかを見る
+DTO         JSONの形を見る
+```
 
 ## 変更したい内容と見るファイル
 
