@@ -472,6 +472,23 @@ GET /api/movies
 ## 実装の進め方
 
 一気に全部作らず、次の順番で作ります。
+小さく作って、毎回動作確認してから次へ進みます。
+
+```text
+1. 文字列を返す
+   APIに届いていることだけ確認する
+
+2. DTOを作る
+   JSONの形を決める
+
+3. DTOのリストを返す
+   Reactへ返すデータの形を確認する
+
+4. Serviceへ移す
+   ControllerとServiceの役割を分ける
+```
+
+一度に完成形を貼るよりも、途中で止める方が「今どこを作っているのか」が分かりやすくなります。
 
 ### 1. Controllerだけで固定文字列を返す
 
@@ -700,6 +717,14 @@ dto/movie/MovieResponse.java
 
 ライブコーディングでは、最初から完璧に手入力しなくて大丈夫です。
 まず貼って動かし、その後で1行ずつ読みます。
+できれば、次の順番で1ファイルずつ貼ります。
+
+```text
+1. MovieResponse
+2. MovieService
+3. MovieController
+4. BrunoまたはブラウザでGET /api/moviesを確認
+```
 
 ### dto/movie/MovieResponse.java
 
