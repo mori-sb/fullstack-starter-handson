@@ -912,7 +912,8 @@ API接続はまだ入れず、コンポーネント分割、props、stateを確�
 まずは、Movieで見た構造をRestaurantへ置き換えるために、自分で穴埋めします。
 
 ```text
-Reactでグルメ管理アプリの ______ と ______ を作ってください。
+MovieCardとMovieListを参考にして、Restaurantのカードと一覧を作りたいです。
+まず、下の穴埋めが正しいか確認してください。
 
 作るファイル:
 - frontend/src/components/__________.jsx
@@ -925,30 +926,28 @@ Reactでグルメ管理アプリの ______ と ______ を作ってください�
 - Listコンポーネントは ______ 配列を受け取り、mapでCardを表示する
 - API接続はまだ入れない
 
-作成後に、propsがどのように渡っているか説明してください。
+コードを出す前に、propsがどのように渡っているか説明してください。
 ```
 
-記入例:
+講師と答え合わせする観点:
 
 ```text
-お店カードとお店一覧
-
-RestaurantCard.jsx
-RestaurantList.jsx
-
-Cardコンポーネントはpropsとしてrestaurantを受け取る
-表示する項目はname, area, genre, memo, imageUrl, status
-imageUrlはimgタグのsrcに渡す
-Listコンポーネントはrestaurants配列を受け取り、mapでCardを表示する
+Movie側で見たもの          Restaurant側で作るもの
+MovieCard                  RestaurantCard
+MovieList                  RestaurantList
+movie                      restaurant
+movies                     restaurants
+title                      name
 ```
 
 フォームの依頼例:
 
 ```text
-Reactでグルメ管理アプリの ______ フォームを作ってください。
+MovieFormを参考にして、Restaurantのフォームを作りたいです。
+まず、下の穴埋めが正しいか確認してください。
 
 作るファイル:
-frontend/src/components/RestaurantForm.jsx
+frontend/src/components/__________.jsx
 
 入力項目:
 ______, ______, ______, ______, ______, ______
@@ -959,7 +958,7 @@ ______, ______, ______, ______, ______, ______
 - 送信時にどのpropsへ値を渡すか: ______
 - API呼び出しはまだ書かないでください
 
-作成後に、form stateがどのように更新されるか説明してください。
+コードを出す前に、form stateがどのように更新されるか説明してください。
 ```
 
 AIの回答を確認するときのポイント:

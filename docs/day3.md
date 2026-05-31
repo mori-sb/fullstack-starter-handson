@@ -478,6 +478,60 @@ return movieMapper.toResponse(savedMovie);
   保存した結果をResponse DTOに変換してReactへ返す。
 ```
 
+Controllerでは、URLとHTTPメソッドを受け取り、Serviceへ処理を依頼します。
+
+```java
+@RestController
+@RequestMapping("/api/movies")
+public class MovieController {
+
+    private final MovieService movieService;
+
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
+
+    @PostMapping
+    public MovieResponse create(@RequestBody MovieRequest request) {
+        return movieService.create(request);
+    }
+}
+```
+
+1行ずつ読む:
+
+```text
+@RestController
+  このクラスがREST APIのControllerであることを表す。
+  戻り値はJSONとして返される。
+
+@RequestMapping("/api/movies")
+  このControllerのAPI URLの共通部分を指定する。
+  この中のAPIは /api/movies から始まる。
+
+private final MovieService movieService;
+  実際の登録処理をServiceへ任せるために、MovieServiceを持つ。
+
+public MovieController(MovieService movieService)
+  Spring BootがMovieServiceを渡してくれる。
+  これがDIの基本形。
+
+@PostMapping
+  POST /api/movies が来たときに、このメソッドを動かす。
+
+public MovieResponse create(...)
+  登録結果としてMovieResponseを返す。
+  JSONでは1件分の映画データとして返る。
+
+@RequestBody MovieRequest request
+  リクエストボディのJSONをMovieRequestとして受け取る。
+  Reactから送られたtitle、genre、memoなどが入る。
+
+return movieService.create(request);
+  Controller自身では保存処理を書かない。
+  Serviceに依頼し、返ってきたResponse DTOをそのまま返す。
+```
+
 ### 5. 一覧APIをDBから返す
 
 固定データではなく、DBから取得したデータを返します。
@@ -490,6 +544,62 @@ Entityのリスト
 Response DTOのリスト
   ↓
 JSONレスポンス
+```
+
+Serviceに一覧取得の処理を追加します。
+
+```java
+public List<MovieResponse> findAll() {
+    return movieRepository.findAll()
+            .stream()
+            .map(movieMapper::toResponse)
+            .toList();
+}
+```
+
+1行ずつ読む:
+
+```text
+public List<MovieResponse> findAll()
+  MovieResponseを複数件返すメソッド。
+  JSONでは配列として返る。
+
+movieRepository.findAll()
+  DBに保存されているMovie Entityをすべて取得する。
+
+.stream()
+  取得したリストを、1件ずつ変換できる流れにする。
+
+.map(movieMapper::toResponse)
+  Movie EntityをMovieResponseへ1件ずつ変換する。
+  EntityをそのままReactへ返さないためにMapperを使う。
+
+.toList()
+  変換したMovieResponseをListに戻す。
+```
+
+Controllerでは、GETリクエストを受け取ってServiceへ渡します。
+
+```java
+@GetMapping
+public List<MovieResponse> findAll() {
+    return movieService.findAll();
+}
+```
+
+1行ずつ読む:
+
+```text
+@GetMapping
+  GET /api/movies が来たときに、このメソッドを動かす。
+
+public List<MovieResponse> findAll()
+  MovieResponseを複数件返すメソッド。
+  JSONでは配列として返る。
+
+return movieService.findAll();
+  ControllerではDB取得処理を書かない。
+  一覧取得の処理はServiceへ任せる。
 ```
 
 ### 6. 詳細、更新、削除を追加する
@@ -542,72 +652,54 @@ Day3では、DB保存とCRUD APIを作ります。
 一度に全部依頼せず、登録と一覧から始めます。
 
 最初に、自分で穴埋めしてからAIへ渡します。
+ここでも、作るものを全部説明しすぎず、Movieで見た構造から置き換える前提にします。
 
 ```text
-Spring Bootでグルメ管理アプリの ______ データをDBに保存できるようにしてください。
+MovieのDB保存APIを参考にして、RestaurantのDB保存APIを作りたいです。
+まず、下の穴埋めが正しいか確認してください。
 
 まず作るもの:
-- ______ Entity
-- ______Repository
-- ______Request
-- ______Response
-- ______Mapper
-- POST /api/__________
-- GET /api/__________
+- ______
+- ______
+- ______
+- ______
+- ______
+- ______ /api/__________
+- ______ /api/__________
 
 項目:
-id, ______, ______, ______, ______, imageUrl, status
+id, ______, ______, ______, ______, ______, ______
 
 条件:
-- Entityは何の形か: ______
-- Request DTOはどこから受け取る形か: ______
-- Response DTOはどこへ返す形か: ______
-- Mapperは何を変換するか: ______
-- Serviceは何を書く場所か: ______
-- Controllerは何をする場所か: ______
+- Movie EntityのどこをRestaurant Entityへ置き換えるか: ______
+- MovieRequestのどこをRestaurantRequestへ置き換えるか: ______
+- MovieResponseのどこをRestaurantResponseへ置き換えるか: ______
+- MovieMapperのどこをRestaurantMapperへ置き換えるか: ______
+- MovieServiceのどこをRestaurantServiceへ置き換えるか: ______
+- MovieControllerのどこをRestaurantControllerへ置き換えるか: ______
 
-作成後に、Request DTO、Entity、Response DTOの違いを説明してください。
+コードを出す前に、Request DTO、Entity、Response DTO、Mapperの役割を短く説明してください。
 ```
 
-記入例:
+講師と答え合わせする観点:
 
 ```text
-グルメ管理アプリのお店データ
-
-Restaurant Entity
-RestaurantRepository
-RestaurantRequest
-RestaurantResponse
-RestaurantMapper
-POST /api/restaurants
-GET /api/restaurants
-
-項目:
-id, name, area, genre, memo, imageUrl, status
-
-Entity:
-DBに保存する形
-
-Request DTO:
-登録時にReactから受け取る形
-
-Response DTO:
-Reactへ返す形
-
-Mapper:
-DTOとEntityを変換する
-
-Service:
-登録や一覧取得の処理を書く
-
-Controller:
-APIの入口としてServiceを呼ぶ
+Movie                    Restaurant
+Movie Entity             Restaurant Entity
+MovieRepository          RestaurantRepository
+MovieRequest             RestaurantRequest
+MovieResponse            RestaurantResponse
+MovieMapper              RestaurantMapper
+POST /api/movies         POST /api/restaurants
+GET /api/movies          GET /api/restaurants
+title                    name
 ```
 
 次の依頼例:
 
 ```text
-既存のRestaurant APIに、______、______、______ を追加してください。
+Movieの詳細、更新、削除APIを参考にして、
+Restaurant APIに同じ構造の ______、______、______ を追加したいです。
 
 追加するAPI:
 ______ /api/restaurants/{id}
@@ -619,26 +711,7 @@ ______ /api/restaurants/{id}
 - 更新ではどのidを使って対象データを探すか: ______
 - 削除後のレスポンスボディは必要か: ______
 
-作成後に、各APIがServiceとRepositoryで何をしているか説明してください。
-```
-
-記入例:
-
-```text
-詳細、更新、削除
-
-GET /api/restaurants/{id}
-PUT /api/restaurants/{id}
-DELETE /api/restaurants/{id}
-
-存在しないIDの場合:
-404として扱う
-
-更新で使うid:
-URLのidを使う
-
-削除後のレスポンスボディ:
-不要
+コードを出す前に、ServiceでfindById、save、deleteByIdのどれを使うか説明してください。
 ```
 
 AIの回答を確認するときのポイント:

@@ -899,51 +899,43 @@ title            -> name
 Day2では、まず固定データを返す一覧APIを作ります。
 AIには、答えを全部丸投げするのではなく、Movieで見た構造をRestaurantへ置き換えるための補助を依頼します。
 
-まず自分で穴埋めします。
+最初から詳しく書きすぎると、考える場所がなくなります。
+まずは自分で次のメモを埋めます。
 
 ```text
-Spring Bootでグルメ管理アプリの ______ APIを作ってください。
+Movieの一覧APIを参考にして、Restaurantの一覧APIを作りたいです。
+まず、下の穴埋めが正しいか確認してください。
 
 作るAPI:
 ______ /api/__________
 
 返す項目:
-id, ______, ______, ______, ______, imageUrl, status
+id, ______, ______, ______, ______, ______, ______
 
 作るファイル:
-controller/RestaurantController.java
-service/RestaurantService.java
-dto/restaurant/RestaurantResponse.java
+controller/____________________.java
+service/____________________.java
+dto/restaurant/____________________.java
 
 条件:
-- Controllerは何を担当するか: ______
-- Serviceは何を担当するか: ______
+- Controllerに書くこと: ______
+- Serviceに書くこと: ______
 - DB接続は使うか: ______
 - レスポンスは配列か1件か: ______
 
-作成後に、ControllerとServiceの役割の違いを説明してください。
+MovieController、MovieService、MovieResponseのどこをRestaurantへ置き換えればよいか、
+差分が分かるように説明してください。
 ```
 
-記入例:
+講師と答え合わせする観点:
 
 ```text
-作るAPI:
-GET /api/restaurants
-
-返す項目:
-id, name, area, genre, memo, imageUrl, status
-
-Controllerは何を担当するか:
-APIの入口としてリクエストを受け取る
-
-Serviceは何を担当するか:
-固定のお店データを用意する
-
-DB接続は使うか:
-まだ使わない
-
-レスポンスは配列か1件か:
-配列
+Movie側で見たもの          Restaurant側で作るもの
+MovieController            RestaurantController
+MovieService               RestaurantService
+MovieResponse              RestaurantResponse
+GET /api/movies            GET /api/restaurants
+title                      name
 ```
 
 AIの回答を確認するときのポイント:

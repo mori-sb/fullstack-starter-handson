@@ -95,8 +95,8 @@ ReactからAPIを呼ぶには `fetch` を使う。
 一覧取得の例:
 
 ```jsx
-export async function fetchRestaurants() {
-  const response = await fetch("http://localhost:8080/api/restaurants");
+export async function fetchMovies() {
+  const response = await fetch("http://localhost:8080/api/movies");
   return response.json();
 }
 ```
@@ -104,13 +104,13 @@ export async function fetchRestaurants() {
 登録の例:
 
 ```jsx
-export async function createRestaurant(restaurant) {
-  const response = await fetch("http://localhost:8080/api/restaurants", {
+export async function createMovie(movie) {
+  const response = await fetch("http://localhost:8080/api/movies", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(restaurant),
+    body: JSON.stringify(movie),
   });
 
   return response.json();
@@ -132,12 +132,12 @@ export async function createRestaurant(restaurant) {
 
 ```jsx
 useEffect(() => {
-  async function loadRestaurants() {
-    const data = await fetchRestaurants();
-    setRestaurants(data);
+  async function loadMovies() {
+    const data = await fetchMovies();
+    setMovies(data);
   }
 
-  loadRestaurants();
+  loadMovies();
 }, []);
 ```
 
@@ -148,13 +148,13 @@ useEffect(() => {
   ↓
 useEffectが動く
   ↓
-GET /api/restaurants を呼ぶ
+GET /api/movies を呼ぶ
   ↓
 JSONを受け取る
   ↓
-setRestaurantsでstateを更新する
+setMoviesでstateを更新する
   ↓
-お店一覧が表示される
+映画一覧が表示される
 ```
 
 ![useEffectでAPIを呼ぶ流れ](../images/useeffect-api-flow.png)
@@ -206,12 +206,13 @@ ReactとSpring Bootをつなぐときは、1つずつ確認します。
 
 ### 1. API呼び出し用のファイルを作る
 
-APIを呼ぶ処理は `frontend/src/api/restaurants.js` にまとめます。
+ライブコーディングではMovie題材で確認します。
+APIを呼ぶ処理は `frontend/src/api/movies.js` にまとめます。
 
 ```jsx
-const API_BASE_URL = "http://localhost:8080/api/restaurants";
+const API_BASE_URL = "http://localhost:8080/api/movies";
 
-export async function fetchRestaurants() {
+export async function fetchMovies() {
   const response = await fetch(API_BASE_URL);
   return response.json();
 }
@@ -220,12 +221,12 @@ export async function fetchRestaurants() {
 1行ずつ読む:
 
 ```text
-const API_BASE_URL = "http://localhost:8080/api/restaurants";
+const API_BASE_URL = "http://localhost:8080/api/movies";
   APIのURLを定数としてまとめている。
   URLを毎回直接書くより、後で変更しやすい。
 
-export async function fetchRestaurants()
-  お店一覧を取得する関数。
+export async function fetchMovies()
+  映画一覧を取得する関数。
   exportしているので、App.jsxなど別ファイルから呼び出せる。
   asyncは、API通信のような時間がかかる処理を書くために使う。
 
@@ -235,14 +236,14 @@ const response = await fetch(API_BASE_URL);
 
 return response.json();
   レスポンスのJSONをJavaScriptのデータとして取り出す。
-  この結果がrestaurants stateに入る。
+  この結果がmovies stateに入る。
 ```
 
 見るポイント:
 
 - Reactコンポーネントの中にURLを何度も書かない
 - APIを呼ぶ関数は `api/` にまとめる
-- 画面側は `fetchRestaurants()` を呼ぶだけにする
+- 画面側は `fetchMovies()` を呼ぶだけにする
 
 ### 2. 一覧取得だけをつなぐ
 
@@ -250,12 +251,12 @@ return response.json();
 
 ```jsx
 useEffect(() => {
-  async function loadRestaurants() {
-    const data = await fetchRestaurants();
-    setRestaurants(data);
+  async function loadMovies() {
+    const data = await fetchMovies();
+    setMovies(data);
   }
 
-  loadRestaurants();
+  loadMovies();
 }, []);
 ```
 
@@ -266,40 +267,40 @@ useEffect(() => { ... }, [])
   画面が表示された後に処理を実行する。
   最後の [] は、初回表示時だけ実行するという意味。
 
-async function loadRestaurants()
-  APIからお店一覧を読み込むための関数。
+async function loadMovies()
+  APIから映画一覧を読み込むための関数。
   useEffectの中でasync処理を扱うために関数として分けている。
 
-const data = await fetchRestaurants();
-  api/restaurants.js の fetchRestaurants を呼び、お店一覧を取得する。
+const data = await fetchMovies();
+  api/movies.js の fetchMovies を呼び、映画一覧を取得する。
   dataにはAPIレスポンスのJSONが入る。
 
-setRestaurants(data);
-  取得したデータをrestaurants stateに入れる。
-  stateが変わると、画面のお店一覧が更新される。
+setMovies(data);
+  取得したデータをmovies stateに入れる。
+  stateが変わると、画面の映画一覧が更新される。
 
-loadRestaurants();
+loadMovies();
   定義した読み込み関数を実行する。
 ```
 
 確認すること:
 
-- Networkで `GET /api/restaurants` が呼ばれている
-- レスポンスJSONにお店データが入っている
-- `setRestaurants(data)` の後に画面が表示される
+- Networkで `GET /api/movies` が呼ばれている
+- レスポンスJSONに映画データが入っている
+- `setMovies(data)` の後に画面が表示される
 
 ### 3. 登録APIをつなぐ
 
 フォーム送信時にPOSTします。
 
 ```jsx
-export async function createRestaurant(restaurant) {
+export async function createMovie(movie) {
   const response = await fetch(API_BASE_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(restaurant),
+    body: JSON.stringify(movie),
   });
 
   return response.json();
@@ -309,9 +310,9 @@ export async function createRestaurant(restaurant) {
 1行ずつ読む:
 
 ```text
-export async function createRestaurant(restaurant)
-  お店を新規登録する関数。
-  restaurantにはフォームで入力した値が入る。
+export async function createMovie(movie)
+  映画を新規登録する関数。
+  movieにはフォームで入力した値が入る。
 
 const response = await fetch(API_BASE_URL, { ... })
   Spring Boot APIへリクエストを送る。
@@ -323,7 +324,7 @@ method: "POST"
 headers: { "Content-Type": "application/json" }
   送るデータがJSONであることをSpring Bootへ伝える。
 
-body: JSON.stringify(restaurant)
+body: JSON.stringify(movie)
   JavaScriptのオブジェクトをJSON文字列に変換して送る。
   fetchのbodyには、そのままオブジェクトを渡せない。
 
@@ -360,55 +361,58 @@ Day5では、ReactとSpring Boot APIを接続します。
 一覧取得の依頼例は、まず穴埋めしてから使います。
 
 ```text
-Reactのグルメ管理アプリで、Spring Bootの ______ APIを呼ぶ処理を追加してください。
+MovieのAPI連携を参考にして、Restaurantの一覧取得をAPIへつなぎたいです。
+まず、下の穴埋めが正しいか確認してください。
 
 対象ファイル:
-- frontend/src/api/restaurants.js
-- frontend/src/App.jsx
+- frontend/src/api/__________.js
+- frontend/src/__________.jsx
 
 API:
 ______ http://localhost:8080/api/__________
 
 条件:
-- API呼び出し関数を書くファイル: ______
+- MovieのfetchMoviesに対応する関数名: ______
 - 初回表示時に使うReactの機能: ______
 - 取得したJSONを入れるstate: ______
 - 一覧表示へ渡すコンポーネント: ______
 
-作成後に、useEffect、fetch、setRestaurantsの流れを説明してください。
+コードを出す前に、useEffect、fetch、setRestaurantsの流れを説明してください。
 ```
 
-記入例:
+講師と答え合わせする観点:
 
 ```text
-一覧API
-GET http://localhost:8080/api/restaurants
-API呼び出し関数を書くファイル: frontend/src/api/restaurants.js
-初回表示時に使うReactの機能: useEffect
-取得したJSONを入れるstate: restaurants
-一覧表示へ渡すコンポーネント: RestaurantList
+Movie側で見たもの          Restaurant側で作るもの
+api/movies.js              api/restaurants.js
+fetchMovies                fetchRestaurants
+movies state               restaurants state
+setMovies                  setRestaurants
+MovieList                  RestaurantList
+GET /api/movies            GET /api/restaurants
 ```
 
 登録APIの依頼例:
 
 ```text
-Reactの登録フォームからSpring Bootの ______ APIを呼べるようにしてください。
+Movieの登録API連携を参考にして、Restaurantの登録フォームからAPIを呼べるようにしたいです。
+まず、下の穴埋めが正しいか確認してください。
 
 API:
 ______ http://localhost:8080/api/__________
 
 対象ファイル:
-- frontend/src/api/restaurants.js
-- frontend/src/App.jsx
-- frontend/src/components/RestaurantForm.jsx
+- frontend/src/api/__________.js
+- frontend/src/__________.jsx
+- frontend/src/components/__________.jsx
 
 条件:
-- APIを呼ぶ関数名: ______
+- MovieのcreateMovieに対応する関数名: ______
 - フォーム送信時に呼ぶ関数: ______
 - 登録後に何をするか: ______
 - 送信するJSONの項目: ______
 
-作成後に、送信するJSONとレスポンスJSONの違いを説明してください。
+コードを出す前に、送信するJSONとレスポンスJSONの違いを説明してください。
 ```
 
 AIの回答を確認するときのポイント:
