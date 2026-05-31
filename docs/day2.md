@@ -207,6 +207,12 @@ Spring Bootが必要なServiceを渡してくれる
 
 つまり、DIは「必要な部品をSpring Bootに渡してもらう仕組み」です。
 
+![Spring Boot ContainerとDIの関係](../images/spring-di-container.png)
+
+図では、`MovieController` が `MovieService` を使いたい場面を表しています。
+Controllerが `new MovieService()` で自分で作るのではなく、Spring Boot Containerが管理しているServiceを渡してくれます。
+この「必要な部品を渡してもらう」流れがDIです。
+
 ### DIを使わない書き方
 
 ```java

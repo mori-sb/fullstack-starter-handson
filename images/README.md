@@ -12,6 +12,7 @@
 - `screen-api-map.png`: 画面操作とAPIの対応
 - `spring-directory-structure.png`: Spring Bootのディレクトリ構造
 - `spring-basic-flow.png`: Browser / React、Controller、Service、Repository、DBの基本の流れ
+- `spring-di-container.png`: Spring Boot ContainerとDIの関係
 - `spring-class-map.png`: Spring Bootの役割名とクラス名の対応
 - `controller-role.png`: Controllerの役割
 - `service-role.png`: Serviceの役割
@@ -48,6 +49,7 @@
 - `app-screen-mock.svg`: グルメ管理アプリの画面完成イメージ
 - `gourmet-app-complete.png`: グルメ管理アプリの完成イメージ
 - `spring-basic-flow.png`: Spring Bootバックエンドの基本構造
+- `spring-di-container.png`: Spring Boot ContainerとDIの関係
 - `spring-dto-flow.png`: Spring BootにおけるDTOの位置づけ
 - `spring-entity-flow.png`: Spring BootにおけるEntityの位置づけ
 - `spring-mapper-flow.png`: DTO、Mapper、Entityの関係
@@ -75,13 +77,16 @@ Spring Bootの説明では、次の順番で見せます。
 1. spring-basic-flow.png
    Controller -> Service -> Repository -> Database の本線を理解する
 
-2. spring-dto-flow.png
+2. spring-di-container.png
+   ControllerがServiceをnewせず、Spring Bootから受け取るDIを理解する
+
+3. spring-dto-flow.png
    ReactとControllerの間で受け渡すデータの形としてDTOを理解する
 
-3. spring-entity-flow.png
+4. spring-entity-flow.png
    DBに保存するデータの形としてEntityを理解する
 
-4. spring-mapper-flow.png
+5. spring-mapper-flow.png
    DTOとEntityを変換する役割としてMapperを理解する
 ```
 
