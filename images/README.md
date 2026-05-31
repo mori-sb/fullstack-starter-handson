@@ -5,6 +5,7 @@
 ## 作成予定の図
 
 - `app-overview.png`: ブラウザ、React、Spring Boot、DBの全体構成
+- `gourmet-app-complete.png`: グルメ管理アプリの完成イメージ
 - `app-screen-mock.png`: グルメ管理アプリの完成画面モック
 - `app-screen-mock.svg`: グルメ管理アプリの画面完成イメージ
 - `http-json-flow.png`: HTTPリクエスト、HTTPレスポンス、JSONの流れ
@@ -45,6 +46,7 @@
 ## 作成済み
 
 - `app-screen-mock.svg`: グルメ管理アプリの画面完成イメージ
+- `gourmet-app-complete.png`: グルメ管理アプリの完成イメージ
 - `spring-basic-flow.png`: Spring Bootバックエンドの基本構造
 - `spring-dto-flow.png`: Spring BootにおけるDTOの位置づけ
 - `spring-entity-flow.png`: Spring BootにおけるEntityの位置づけ
