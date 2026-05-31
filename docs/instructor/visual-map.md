@@ -111,26 +111,6 @@ images/screen-api-map.png
 - 編集するときはPUT
 - 削除するときはDELETE
 
-生成依頼文:
-
-```text
-モダンなSaaS技術資料風に、グルメ管理アプリの画面操作とAPIの対応図を作ってください。
-
-左にReact画面の操作カードを縦に並べ、右に対応するAPIカードを縦に並べてください。
-
-対応は次の通りです。
-一覧を見る -> GET /api/restaurants
-お店を登録する -> POST /api/restaurants
-お店を編集する -> PUT /api/restaurants/{id}
-お店を削除する -> DELETE /api/restaurants/{id}
-地域で絞り込む -> GET /api/restaurants?area=新宿
-
-左から右へ矢印でつないでください。
-HTTPメソッドは小さなカラーバッジで表示してください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアン・グリーン・オレンジ・レッドをアクセントに使ってください。
-「画面操作とAPIは対応している」と一目で分かる図にしてください。
-```
-
 ### 5. 画像URL表示の流れ
 
 ファイル名:
@@ -228,21 +208,6 @@ images/spring-class-map.png
 images/controller-role.png
 ```
 
-生成依頼文:
-
-```text
-Spring BootのControllerの役割を説明するモダンな図を作ってください。
-
-左にReact、中央にRestaurantController、右にRestaurantServiceを配置してください。
-ReactからRestaurantControllerへ「GET /api/restaurants」「POST /api/restaurants」のリクエストが入るようにしてください。
-RestaurantControllerからRestaurantServiceへ「処理を依頼」という矢印を描いてください。
-
-Controllerカードには「APIの入口」「URLとHTTPメソッドを受け取る」「細かい処理はServiceに任せる」と表示してください。
-
-この図ではRepository、Entity、DTO、Mapperは出さないでください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアンとグリーンを使ったモダンな教材図にしてください。
-```
-
 ### 9. Serviceの役割図
 
 ファイル名:
@@ -251,41 +216,12 @@ Controllerカードには「APIの入口」「URLとHTTPメソッドを受け取
 images/service-role.png
 ```
 
-生成依頼文:
-
-```text
-Spring BootのServiceの役割を説明するモダンな図を作ってください。
-
-左にRestaurantController、中央にRestaurantService、右にRestaurantRepositoryを配置してください。
-ControllerからServiceへ「一覧取得を依頼」「登録を依頼」「削除を依頼」という矢印を描いてください。
-ServiceからRepositoryへ「DB操作を依頼」という矢印を描いてください。
-
-Serviceカードには「処理を書く場所」「アプリとして何をするかを決める」「ControllerとRepositoryの間に立つ」と表示してください。
-
-この図ではDTO、Entity、Mapperは出さないでください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、グリーンを中心にしたモダンな教材図にしてください。
-```
-
 ### 10. Repositoryの役割図
 
 ファイル名:
 
 ```text
 images/repository-role.png
-```
-
-生成依頼文:
-
-```text
-Spring BootのRepositoryの役割を説明するモダンな図を作ってください。
-
-左にRestaurantService、中央にRestaurantRepository、右にDatabaseを配置してください。
-ServiceからRepositoryへ「保存して」「一覧を取って」「削除して」という依頼が来るようにしてください。
-RepositoryからDatabaseへ「SELECT」「INSERT」「UPDATE」「DELETE」の矢印を描いてください。
-
-Repositoryカードには「DBとやり取りする場所」「Serviceから呼ばれる」「基本的なCRUDを担当」と表示してください。
-
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、グリーンとパープルを使ったモダンな教材図にしてください。
 ```
 
 ## Day 3: DBとCRUD
@@ -314,36 +250,6 @@ images/spring-entity-flow.png
 
 まず `spring-entity-flow.png` でEntityの位置づけを説明し、その後でEntityとDBテーブルの対応を説明する。
 
-生成依頼文:
-
-```text
-Spring BootのEntityとDBテーブルの対応を説明する図を作ってください。
-
-左にJavaのRestaurant Entityカード、右にDBのrestaurants tableカードを配置してください。
-対応する項目を線でつないでください。
-
-Restaurant Entity:
-id
-name
-area
-genre
-memo
-imageUrl
-status
-
-restaurants table:
-id
-name
-area
-genre
-memo
-image_url
-status
-
-下部に「EntityはDBに保存するデータの形をJavaで表したもの」と表示してください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、グリーンとパープルを使ったモダンな教材図にしてください。
-```
-
 ### 13. 登録APIの流れ
 
 ファイル名:
@@ -368,24 +274,6 @@ images/list-api-flow.png
 images/query-param-flow.png
 ```
 
-生成依頼文:
-
-```text
-クエリパラメータで一覧を絞り込む流れを説明する図を作ってください。
-
-左にReactのフィルタUIカードを置き、「地域: 新宿」を選択している状態にしてください。
-中央にURLカードとして「GET /api/restaurants?area=新宿」を表示してください。
-右にSpring Boot APIカード、さらに右にDatabaseカードを配置してください。
-
-ReactからAPIへ「条件付きで一覧取得」
-APIからDBへ「area = 新宿 で検索」
-DBからReactへ「新宿のお店だけ返す」
-という流れを矢印で表してください。
-
-下部に「?area=新宿 のようにURLに条件を付ける」と補足してください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアン・グリーン・パープルを使ったモダンな教材図にしてください。
-```
-
 ## Day 4: Reactの基本
 
 ### 16. Reactディレクトリ構造図
@@ -403,35 +291,6 @@ images/react-directory-structure.png
 - `api/` にAPI呼び出しをまとめる
 - まず読むのはApp、List、Card
 
-生成依頼文:
-
-```text
-モダンなSaaS技術資料風に、Reactプロジェクトのディレクトリ構造図を作ってください。
-
-左側に frontend/src のツリーを表示してください。
-次の構成を入れてください。
-main.jsx
-App.jsx
-api/restaurants.js
-components/RestaurantFilter.jsx
-components/RestaurantForm.jsx
-components/RestaurantList.jsx
-components/RestaurantCard.jsx
-styles/app.css
-
-右側に、各ファイルの役割をカードで表示してください。
-App.jsx: 画面全体の親
-api/restaurants.js: Spring Boot APIを呼ぶ
-RestaurantFilter.jsx: 絞り込み
-RestaurantForm.jsx: 登録・編集フォーム
-RestaurantList.jsx: 一覧
-RestaurantCard.jsx: お店カード
-app.css: 見た目
-
-「まず読む順番」として、App -> RestaurantList -> RestaurantCard -> RestaurantForm -> api/restaurants.js を表示してください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、Reactらしいシアンとネイビーを使った読みやすい図にしてください。
-```
-
 ### 17. HTML / CSS / JavaScript / React / Tailwind の関係図
 
 ファイル名:
@@ -448,25 +307,6 @@ images/react-html-css-js-tailwind.png
 - Reactは構造・見た目・動きをコンポーネントとしてまとめる
 - Tailwind CSSは見た目を`className`に書く
 
-生成依頼文:
-
-```text
-モダンなSaaS技術資料風に、HTML、CSS、JavaScript、React、Tailwind CSSの関係を説明する図を作ってください。
-
-左側に従来のWebページとして、HTML、CSS、JavaScriptの3つのカードを縦に並べてください。
-HTML: 画面の構造
-CSS: 見た目
-JavaScript: 動き
-
-右側にReactコンポーネントのカードを置き、その中にJSXの例を表示してください。
-例として、buttonタグ、className、onClickのような要素を含めてください。
-
-Reactカードの横にTailwind CSSカードを置き、「classNameに見た目を書く」と表示してください。
-
-下部に「Reactでは、画面の構造・見た目・動きをコンポーネント単位でまとめて考える」と補足してください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ReactらしいシアンとTailwindらしいブルーを使った読みやすい図にしてください。
-```
-
 ### 18. JSXとTailwindの読み方
 
 ファイル名:
@@ -482,27 +322,6 @@ images/jsx-tailwind-reading.png
 - `{restaurant.name}` がJavaScriptの値
 - `onClick` が動き
 
-生成依頼文:
-
-```text
-モダンな技術資料風に、ReactのJSXとTailwind CSSの読み方を説明する図を作ってください。
-
-中央にRestaurantCardの短いJSXコードカードを表示してください。
-コードには次の要素を含めてください。
-<article className="rounded-lg border bg-white p-4">
-<img className="h-40 w-full object-cover" src={restaurant.imageUrl} />
-<h3>{restaurant.name}</h3>
-<button onClick={onDelete}>削除</button>
-
-コードの各部分に吹き出しを付けてください。
-article / img / h3: HTMLに近い画面構造
-className: Tailwind CSSで見た目を指定
-{restaurant.name}: JavaScriptの値を表示
-onClick: クリック時の処理
-
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアン・ブルー・オレンジを使った読みやすい図にしてください。
-```
-
 ### 19. Reactコンポーネント分割図
 
 ファイル名:
@@ -517,21 +336,6 @@ images/react-components.png
 
 ```text
 images/react-props-flow.png
-```
-
-生成依頼文:
-
-```text
-Reactのpropsの流れを説明するモダンな図を作ってください。
-
-上にAppコンポーネントを配置し、下にRestaurantList、さらにその下にRestaurantCardを複数配置してください。
-AppからRestaurantListへ「restaurantsを渡す」
-RestaurantListからRestaurantCardへ「restaurantを1件ずつ渡す」
-という矢印を描いてください。
-
-propsカードには「親から子へ渡すデータ」と表示してください。
-この図ではstateやuseEffectは出さず、propsだけに集中してください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、Reactらしいシアンを中心にしたモダンな教材図にしてください。
 ```
 
 ### 21. stateの流れ
@@ -550,39 +354,12 @@ images/react-state-flow.png
 images/form-state-flow.png
 ```
 
-生成依頼文:
-
-```text
-Reactのフォーム入力とstateの関係を説明する図を作ってください。
-
-左に入力フォームを置き、店名、地域、ジャンル、メモ、画像URLの入力欄を表示してください。
-右にform stateカードを置き、name、area、genre、memo、imageUrlが入っている様子を表示してください。
-
-入力欄からform stateへ矢印を描き、「入力するとstateが変わる」と表示してください。
-下部に「stateが現在の入力内容を覚えている」と補足してください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアンとオレンジを使ったモダンな教材図にしてください。
-```
-
 ### 23. 画像URLとimgタグ
 
 ファイル名:
 
 ```text
 images/react-image-tag.png
-```
-
-生成依頼文:
-
-```text
-Reactで画像URLをimgタグに渡して画像を表示する流れを説明する図を作ってください。
-
-左にrestaurantデータカードを置き、imageUrl: "https://..." を表示してください。
-中央にReactコードカードとして <img src={restaurant.imageUrl} alt={restaurant.name} /> を表示してください。
-右にブラウザ上のお店カードUIを置き、画像が表示されている様子にしてください。
-
-矢印には「imageUrlを受け取る」「srcに渡す」「画像が表示される」と表示してください。
-下部に「画像ファイルではなく、画像URLを使う」と補足してください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアンとコーラルを使ったモダンな教材図にしてください。
 ```
 
 ## Day 5: API連携とデバッグ
@@ -595,18 +372,6 @@ Reactで画像URLをimgタグに渡して画像を表示する流れを説明す
 images/useeffect-api-flow.png
 ```
 
-生成依頼文:
-
-```text
-ReactのuseEffectでAPIを呼ぶ流れを説明する図を作ってください。
-
-左から右に、画面を開く、useEffectが動く、fetchでGET /api/restaurantsを呼ぶ、JSONを受け取る、setRestaurantsでstate更新、カード一覧が表示される、の6ステップを並べてください。
-
-各ステップを角丸カードにし、細い矢印でつないでください。
-useEffect、fetch、state更新のカードを少し強調してください。
-白または薄いグレー背景、シアン・グリーン・オレンジを使ったモダンな教材図にしてください。
-```
-
 ### 25. fetchの中身
 
 ファイル名:
@@ -615,45 +380,12 @@ useEffect、fetch、state更新のカードを少し強調してください。
 images/fetch-request-map.png
 ```
 
-生成依頼文:
-
-```text
-ReactのfetchでAPIを呼ぶときの中身を説明する図を作ってください。
-
-左にfetchコードカード、右にHTTPリクエストカードを配置してください。
-fetchコードカードには、URL、method、headers、bodyを表示してください。
-HTTPリクエストカードには、POST /api/restaurants、Content-Type: application/json、JSON bodyを表示してください。
-
-対応する要素を線でつないでください。
-URL -> APIのURL
-method -> HTTPメソッド
-headers -> JSONを送る設定
-body -> 送信するJSON
-
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアンとグリーンを使ったモダンな教材図にしてください。
-```
-
 ### 26. CORSの図
 
 ファイル名:
 
 ```text
 images/cors-basic.png
-```
-
-生成依頼文:
-
-```text
-CORSの基本を説明する図を作ってください。
-
-左にReact開発サーバー http://localhost:5173、右にSpring Boot API http://localhost:8080 を配置してください。
-ReactからSpring BootへAPIリクエストの矢印を描いてください。
-
-中央にブラウザの安全チェックとして「別のオリジンへの通信なので許可が必要」と表示してください。
-Spring Boot側に「CORS設定でReactからのアクセスを許可」と表示してください。
-
-難しくしすぎず、「ポートが違うとブラウザが確認する」ということが分かる図にしてください。
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、シアン・グリーン・オレンジを使ったモダンな教材図にしてください。
 ```
 
 ### 27. エラー切り分けマップ
