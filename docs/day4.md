@@ -649,6 +649,57 @@ MovieListに渡す配列が変わる
 画面が更新される
 ```
 
+### 7. 編集・削除ボタンの考え方を確認する
+
+カードに編集・削除ボタンを置く場合、カード自身が一覧全体を変更するのではありません。
+カードは「この映画を編集したい」「この映画を削除したい」と親へ伝えます。
+
+```jsx
+export function MovieCard({ movie, onEdit, onDelete }) {
+  return (
+    <article>
+      <h3>{movie.title}</h3>
+      <button type="button" onClick={() => onEdit(movie)}>
+        編集
+      </button>
+      <button type="button" onClick={() => onDelete(movie.id)}>
+        削除
+      </button>
+    </article>
+  );
+}
+```
+
+1行ずつ読む:
+
+```text
+onEdit
+  親コンポーネントから受け取る関数。
+  編集ボタンを押したときに呼ぶ。
+
+onDelete
+  親コンポーネントから受け取る関数。
+  削除ボタンを押したときに呼ぶ。
+
+onClick={() => onEdit(movie)}
+  クリックされたら、編集したい1件分のmovieを親へ渡す。
+
+onClick={() => onDelete(movie.id)}
+  クリックされたら、削除したいmovieのidを親へ渡す。
+```
+
+編集では、どのデータを編集中かをstateで持ちます。
+
+```text
+編集ボタンを押す
+  ↓
+editingMovie stateに1件分のデータを入れる
+  ↓
+フォームに値を表示する
+  ↓
+保存ボタンで一覧を更新する
+```
+
 ライブコーディングで作るファイル:
 
 ```text

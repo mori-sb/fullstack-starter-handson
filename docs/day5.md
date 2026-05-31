@@ -186,8 +186,8 @@ CORSは、まず「ブラウザの安全機能」と考える。
 削除      DELETE /api/restaurants/{id}
 ```
 
-Day5で実装するのは、一覧表示と登録です。
-編集、削除はAPIとの対応だけ確認し、実装演習には含めません。
+Day5では、まず一覧表示と登録をつなぎます。
+その後、同じ考え方で編集、削除、フィルタをつなぎます。
 
 ## ハンズオン
 
@@ -197,8 +197,11 @@ React画面とSpring Boot APIを接続し、ミニアプリとして完成させ
 
 - お店を登録できる
 - お店一覧を見られる
+- お店を編集できる
+- お店を削除できる
+- 地域、ジャンル、ステータスで絞り込める
 - 画像を表示できる
-- 登録後に一覧を更新できる
+- 操作後に一覧を更新できる
 
 ## 実装の進め方
 
@@ -245,6 +248,32 @@ return response.json();
 - APIを呼ぶ関数は `api/` にまとめる
 - 画面側は `fetchMovies()` を呼ぶだけにする
 
+API通信では、成功だけでなく失敗も考えます。
+最初は次のように、HTTPステータスを見てエラーにできます。
+
+```jsx
+export async function fetchMovies() {
+  const response = await fetch(API_BASE_URL);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch movies");
+  }
+
+  return response.json();
+}
+```
+
+1行ずつ読む:
+
+```text
+response.ok
+  HTTPステータスが成功かどうかを表す。
+  200番台ならtrueになる。
+
+throw new Error(...)
+  API呼び出しに失敗したことを、呼び出し元へ伝える。
+```
+
 ### 2. 一覧取得だけをつなぐ
 
 最初に固定データをやめて、APIから取得したデータをstateに入れます。
@@ -283,11 +312,56 @@ loadMovies();
   定義した読み込み関数を実行する。
 ```
 
+画面では、読み込み中とエラーもstateで持ちます。
+
+```jsx
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+```
+
+```jsx
+async function loadMovies() {
+  try {
+    setLoading(true);
+    setError("");
+    const data = await fetchMovies();
+    setMovies(data);
+  } catch (error) {
+    setError("映画一覧の取得に失敗しました");
+  } finally {
+    setLoading(false);
+  }
+}
+```
+
+1行ずつ読む:
+
+```text
+loading
+  API通信中かどうかを表すstate。
+  trueなら「読み込み中」と表示できる。
+
+error
+  エラーメッセージを入れるstate。
+  空文字ならエラーなしとして扱える。
+
+try
+  成功するかもしれない処理を書く。
+
+catch
+  API通信に失敗したときの処理を書く。
+
+finally
+  成功しても失敗しても最後に実行する。
+  読み込み中表示を止める処理に使いやすい。
+```
+
 確認すること:
 
 - Networkで `GET /api/movies` が呼ばれている
 - レスポンスJSONに映画データが入っている
 - `setMovies(data)` の後に画面が表示される
+- APIが失敗したときにエラー表示へ切り替えられる
 
 ### 3. 登録APIをつなぐ
 
@@ -335,6 +409,107 @@ return response.json();
 画面側では、登録後に一覧を再取得するか、返ってきたデータをstateに追加します。
 最初は分かりやすさを優先して、登録後に一覧を再取得してもよいです。
 
+### 4. 編集APIをつなぐ
+
+編集では、URLにidを入れてPUTします。
+
+```jsx
+export async function updateMovie(id, movie) {
+  const response = await fetch(`${API_BASE_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(movie),
+  });
+
+  return response.json();
+}
+```
+
+1行ずつ読む:
+
+```text
+updateMovie(id, movie)
+  更新したいidと、フォームで入力した値を受け取る。
+
+`${API_BASE_URL}/${id}`
+  /api/movies/1 のようなURLを作る。
+  どのデータを更新するかをURLで指定する。
+
+method: "PUT"
+  既存データを更新するため、PUTを指定する。
+
+body: JSON.stringify(movie)
+  更新後の内容をJSONとして送る。
+```
+
+画面側では、編集保存後に一覧を再取得すると流れを理解しやすいです。
+
+### 5. 削除APIをつなぐ
+
+削除では、URLにidを入れてDELETEします。
+
+```jsx
+export async function deleteMovie(id) {
+  await fetch(`${API_BASE_URL}/${id}`, {
+    method: "DELETE",
+  });
+}
+```
+
+1行ずつ読む:
+
+```text
+deleteMovie(id)
+  削除したいデータのidを受け取る。
+
+method: "DELETE"
+  データを削除するため、DELETEを指定する。
+
+レスポンスJSONを受け取らない
+  削除APIは、返すデータがない設計にすることがある。
+```
+
+削除後も、一覧を再取得すると画面とDBの状態を揃えやすいです。
+
+### 6. フィルタ条件をAPIへ渡す
+
+地域やジャンルで絞り込む場合は、クエリパラメータをURLにつけます。
+
+```jsx
+export async function fetchMovies(filters = {}) {
+  const params = new URLSearchParams(filters);
+  const response = await fetch(`${API_BASE_URL}?${params.toString()}`);
+  return response.json();
+}
+```
+
+1行ずつ読む:
+
+```text
+filters = {}
+  絞り込み条件をオブジェクトで受け取る。
+  条件がない場合は空のオブジェクトにする。
+
+new URLSearchParams(filters)
+  { genre: "SF" } のような条件を、genre=SF というURL用の文字列に変換する。
+
+`${API_BASE_URL}?${params.toString()}`
+  /api/movies?genre=SF のようなURLを作る。
+```
+
+空の条件を送ると `?` だけが付くことがあります。
+実装では、条件があるときだけクエリパラメータを付ける書き方にしてもよいです。
+
+最初からこの形で書いてもよいですが、理解を優先するなら次の順番で育てます。
+
+```text
+1. fetchMovies() で全件取得する
+2. fetchMovies(filters) に変更する
+3. 画面のフィルタstateをfiltersとして渡す
+```
+
 ## 演習
 
 次の順番でReactとAPIを接続します。
@@ -342,6 +517,9 @@ return response.json();
 ```text
 1. 一覧取得をAPIにつなぐ
 2. 登録をAPIにつなぐ
+3. 編集をAPIにつなぐ
+4. 削除をAPIにつなぐ
+5. フィルタ条件をAPIにつなぐ
 ```
 
 各機能で確認すること:
@@ -417,6 +595,30 @@ ______ http://localhost:8080/api/__________
 コードを出す前に、送信するJSONとレスポンスJSONの違いを説明してください。
 ```
 
+編集、削除、フィルタの依頼例:
+
+```text
+MovieのAPI連携を参考にして、Restaurantの編集、削除、フィルタを追加したいです。
+まず、下の穴埋めが正しいか確認してください。
+
+編集API:
+______ http://localhost:8080/api/__________/{id}
+
+削除API:
+______ http://localhost:8080/api/__________/{id}
+
+フィルタAPI:
+______ http://localhost:8080/api/__________?______=______
+
+条件:
+- MovieのupdateMovieに対応する関数名: ______
+- MovieのdeleteMovieに対応する関数名: ______
+- URLにidを入れる理由: ______
+- フィルタ条件をURLに入れる方法: ______
+
+コードを出す前に、PUT、DELETE、クエリパラメータの違いを説明してください。
+```
+
 AIの回答を確認するときのポイント:
 
 - APIのURLが正しいか
@@ -425,6 +627,8 @@ AIの回答を確認するときのポイント:
 - `JSON.stringify` で送信しているか
 - API結果をstateに反映しているか
 - Networkでリクエストを確認できるか
+- 編集、削除、フィルタを一度に入れず、1つずつ確認しているか
+- loading、errorのstateが必要な箇所にあるか
 
 ## 動作確認の順番
 

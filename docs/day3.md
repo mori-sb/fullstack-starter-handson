@@ -614,6 +614,88 @@ DELETE /api/restaurants/{id}
 
 IDを使うAPIでは、まず「そのIDのデータが存在するか」を確認します。
 
+Serviceでは、`findById` で対象データを探してから処理します。
+
+```java
+public MovieResponse findById(Long id) {
+    Movie movie = movieRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Movie not found"));
+
+    return movieMapper.toResponse(movie);
+}
+
+public MovieResponse update(Long id, MovieRequest request) {
+    Movie movie = movieRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Movie not found"));
+
+    movie.setTitle(request.title());
+    movie.setGenre(request.genre());
+    movie.setMemo(request.memo());
+    movie.setImageUrl(request.imageUrl());
+    movie.setStatus(request.status());
+
+    Movie savedMovie = movieRepository.save(movie);
+    return movieMapper.toResponse(savedMovie);
+}
+
+public void delete(Long id) {
+    Movie movie = movieRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Movie not found"));
+
+    movieRepository.delete(movie);
+}
+```
+
+1行ずつ読む:
+
+```text
+movieRepository.findById(id)
+  URLで指定されたidのデータをDBから探す。
+
+.orElseThrow(...)
+  データが見つからない場合はエラーにする。
+  存在しないidを更新・削除しないために必要。
+
+movie.setTitle(request.title())
+  リクエストで受け取った値を、既存のEntityへ上書きする。
+
+movieRepository.save(movie)
+  上書きしたEntityをDBへ保存する。
+  新規登録でも更新でもsaveを使う。
+
+movieRepository.delete(movie)
+  見つかったEntityをDBから削除する。
+
+public void delete(Long id)
+  削除では返すデータが不要な場合があるため、戻り値をvoidにできる。
+```
+
+Controllerでは、URLの `{id}` を `@PathVariable` で受け取ります。
+
+```java
+@GetMapping("/{id}")
+public MovieResponse findById(@PathVariable Long id) {
+    return movieService.findById(id);
+}
+
+@PutMapping("/{id}")
+public MovieResponse update(@PathVariable Long id, @RequestBody MovieRequest request) {
+    return movieService.update(id, request);
+}
+
+@DeleteMapping("/{id}")
+public void delete(@PathVariable Long id) {
+    movieService.delete(id);
+}
+```
+
+見るポイント:
+
+- `{id}` はURLの一部
+- `@PathVariable Long id` でURLのidを受け取る
+- 更新ではURLのidとリクエストJSONの両方を使う
+- 削除ではidだけで対象を探せる
+
 ### 7. クエリパラメータで絞り込む
 
 一覧が動いた後に、条件付きの一覧取得を追加します。
@@ -624,6 +706,34 @@ GET /api/restaurants?area=新宿
 
 最初から複雑な検索にしすぎず、まずは地域だけで絞り込みます。
 その後、ジャンルやステータスを追加します。
+
+クエリパラメータは、URLの後ろにつける検索条件です。
+
+```text
+/api/restaurants?area=新宿
+```
+
+この場合、`area` が条件名で、`新宿` が条件の値です。
+Spring Bootでは `@RequestParam` で受け取ります。
+
+```java
+@GetMapping
+public List<MovieResponse> findAll(@RequestParam(required = false) String genre) {
+    return movieService.findAll(genre);
+}
+```
+
+1行ずつ読む:
+
+```text
+@RequestParam(required = false) String genre
+  URLの ?genre=SF の値を受け取る。
+  required = false なので、条件なしの一覧取得もできる。
+
+movieService.findAll(genre)
+  絞り込み条件をServiceへ渡す。
+  Controllerでは検索処理そのものを書かない。
+```
 
 ## 演習
 
