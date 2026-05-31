@@ -412,127 +412,125 @@ Reactへ返すデータはResponse DTOにする
 Reactから受け取るデータはRequest DTOにする
 ```
 
-## ライブ設計で一緒に作るもの
+## Day1ハンズオン: MovieをRestaurantへ置き換える
 
-次の3つを順番に作ります。
+Day1のハンズオンでは、新しい機能を考えません。
+Movieの例で見た構造を、Restaurantへ置き換えます。
 
-### 1. 画面でできることの一覧
+目的は、自由に設計することではなく、次の対応を理解することです。
+
+```text
+画面に表示する項目
+  ↓
+JSONのキー
+  ↓
+APIのURL
+  ↓
+Controllerのメソッド
+```
+
+### 1. Movieの例を確認する
+
+まず、ライブでMovieの構造を見ます。
+
+```text
+映画一覧を見る
+  -> GET /api/movies
+
+映画を登録する
+  -> POST /api/movies
+```
+
+MovieのJSON:
+
+```json
+{
+  "id": 1,
+  "title": "The Matrix",
+  "genre": "SF",
+  "memo": "仮想世界を扱う映画",
+  "imageUrl": "https://example.com/matrix.jpg",
+  "status": "WATCHED"
+}
+```
+
+MovieのController対応:
+
+```text
+GET /api/movies
+  -> @GetMapping
+
+POST /api/movies
+  -> @PostMapping
+```
+
+### 2. Restaurantに置き換える
+
+Movieで見た名前をRestaurantへ置き換えます。
+
+```text
+Movie       -> Restaurant
+movies      -> restaurants
+title       -> name
+/api/movies -> /api/restaurants
+```
+
+### 3. Restaurantの表示項目を埋める
+
+画面に表示する項目と、JSONのキーを対応させます。
+
+```text
+画像          -> imageUrl
+店名          -> name
+地域          -> area
+ジャンル      -> genre
+メモ          -> memo
+ステータス    -> status
+```
+
+### 4. RestaurantのAPI対応を埋める
+
+Day1では、まず一覧表示と登録だけを対応させます。
 
 ```text
 お店一覧を見る
+  -> GET /api/restaurants
+  -> @GetMapping
+
 お店を登録する
-お店を編集する
-お店を削除する
-地域で絞り込む
-ジャンルで絞り込む
-ステータスで絞り込む
+  -> POST /api/restaurants
+  -> @PostMapping
 ```
 
-### 2. データ項目の一覧
+編集、削除、フィルタは後続Dayで扱います。
+Day1の演習では、説明していないAPIを追加しません。
+
+### 5. RestaurantのJSONを書く
+
+MovieのJSONを参考にして、RestaurantのJSONを書きます。
+
+```json
+{
+  "id": 1,
+  "name": "Cafe Sakura",
+  "area": "新宿",
+  "genre": "カフェ",
+  "memo": "落ち着いて作業できそう",
+  "imageUrl": "https://example.com/cafe.jpg",
+  "status": "WANT_TO_GO"
+}
+```
+
+### Day1の完成ライン
+
+次の4つを説明できればOKです。
 
 ```text
-id        お店を区別する番号
-name      店名
-area      地域
-genre     ジャンル
-memo      メモ
-imageUrl  画像URL
-status    行きたい、行った、お気に入り
+1. MovieとRestaurantの置き換え
+2. 画面項目とJSONキーの対応
+3. 一覧表示と登録のAPI
+4. APIとControllerアノテーションの対応
 ```
-
-### 3. 画面操作とAPIの対応表
-
-```text
-一覧を見る      GET    /api/restaurants
-登録する        POST   /api/restaurants
-編集する        PUT    /api/restaurants/{id}
-削除する        DELETE /api/restaurants/{id}
-地域で絞り込む  GET    /api/restaurants?area=新宿
-```
-
-この3つができると、AIに依頼するときも、実装後にコードを読むときも迷いにくくなります。
-
-## 演習で書くもの
-
-Movieの例を参考にして、Restaurantの設計を同じ構造で書きます。
-
-- Restaurantの画面項目
-- Restaurantの登録フォーム項目
-- 画面操作とAPIの対応
-- RestaurantのJSON例
-
-説明していない新しい機能は追加しません。
-まずは、説明で見た構造をRestaurantへ置き換えることを優先します。
-
-## 実装前に書く仕様メモ
-
-これは、AIにアプリを丸ごと作らせるための指示ではありません。
-これから作るものを自分たちで確認するための仕様メモです。
-
-```text
-グルメ管理アプリを作ります。
-お店には、店名、地域、ジャンル、メモ、画像URL、ステータスがあります。
-一覧表示、登録、編集、削除、地域での絞り込みができるようにします。
-Reactは画面を担当し、Spring BootはAPIを担当します。
-APIは /api/restaurants 配下に作ります。
-```
-
-この文章をそのままAIへ渡して完成アプリを作らせると、ハンズオンで考える部分が減ります。
-実装では、この仕様を小さな作業に分けます。
-
-```text
-Day2  固定データを返す一覧APIだけ作る
-Day3  DB保存とCRUD APIを作る
-Day4  固定データでReact画面を作る
-Day5  ReactとAPIをつなぐ
-```
-
-Day1では、AIにコードを作らせるよりも、まず仕様の整理に使います。
-
-AIへの依頼例:
-
-```text
-グルメ管理アプリの仕様を整理したいです。
-機能は、お店一覧、登録、編集、削除、地域フィルタ、ジャンルフィルタ、ステータスフィルタ、画像URL表示です。
-React、Spring Boot、DBのどこが何を担当するかを表にしてください。
-また、画面操作とAPIの対応表も作ってください。
-```
-
-AIの回答を確認するときのポイント:
-
-- ReactがDBを直接触る説明になっていないか
-- APIのURLが `/api/restaurants` 配下に揃っているか
-- JSONに `imageUrl` が含まれているか
-- 登録、一覧、編集、削除のHTTPメソッドが合っているか
-
-## ライブで作る範囲と演習で作る範囲
-
-完成形を最初から全部作ると、コードを読む練習になりにくくなります。
-そのため、ライブでは最小の流れだけを作り、残りは演習で完成させます。
-
-ライブで扱う範囲:
-
-```text
-Day1  画面、データ、APIの設計
-Day2  GET /api/restaurants の固定データ
-Day3  登録と一覧のDB保存
-Day4  お店カードと一覧表示
-Day5  Reactから一覧APIを呼ぶ
-```
-
-演習で完成させる範囲:
-
-```text
-編集
-削除
-地域フィルタ
-ジャンルフィルタ
-ステータスフィルタ
-画像URLが空のときの表示
-エラー表示
-```
-
-演習で残す部分があることで、参加者は資料を見ながら「どのファイルを直すか」「どのAPIを呼ぶか」を自分で判断できます。
 
 ## 画像URLの扱い
 
