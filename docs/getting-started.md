@@ -55,14 +55,46 @@ Gitのバージョンが表示される
 ## Brunoの準備
 
 Brunoは、React画面を作る前にAPIを直接確認するために使います。
+このハンズオンでは、APIの動作確認はBrunoで行います。
 
 確認すること:
 
 - Brunoを起動できる
+- WorkspaceまたはCollectionを作成できる
 - 新しいリクエストを作成できる
 - HTTPメソッドを `GET`、`POST` などに変更できる
 - URLに `http://localhost:8080/api/restaurants` を入力できる
 - API実行後にステータスコードとJSONレスポンスを確認できる
+
+最初に作っておくリクエスト:
+
+```text
+Name: Get restaurants
+Method: GET
+URL: http://localhost:8080/api/restaurants
+```
+
+POSTを確認するときは、BodyをJSONにして送ります。
+
+```text
+Name: Create restaurant
+Method: POST
+URL: http://localhost:8080/api/restaurants
+Body: JSON
+```
+
+Bodyの例:
+
+```json
+{
+  "name": "Cafe Sakura",
+  "area": "新宿",
+  "genre": "カフェ",
+  "memo": "落ち着いて作業できそう",
+  "imageUrl": "https://example.com/cafe.jpg",
+  "status": "WANT_TO_GO"
+}
+```
 
 Brunoで確認する流れ:
 

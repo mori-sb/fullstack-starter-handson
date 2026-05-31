@@ -19,6 +19,9 @@
 - `git --version` が表示される
 - Rancher Desktopが起動している
 - Brunoを起動できる
+- BrunoでWorkspaceまたはCollectionを作成できる
+- BrunoでGETリクエストを作成できる
+- BrunoでPOSTリクエストのJSON Bodyを設定できる
 - `docker --version` が表示される
 - `docker ps` を実行できる
 - DBコンテナが起動している

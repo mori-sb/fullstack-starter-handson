@@ -503,17 +503,176 @@ http://localhost:8080
 
 ## ハンズオン
 
-まだコードを書き始めず、完成するアプリの画面、データ、APIを設計する。
+まだコードを書き始めません。
+Movieの例を見たあと、同じ構造でRestaurantの設計ワークシートを埋めます。
 
-やること:
+目的は、Day2以降に作るAPIや画面の地図を先に作ることです。
 
-- 画面に表示したい項目を決める
-- 登録フォームに必要な項目を決める
-- APIの一覧を確認する
-- JSONの形を読む
-- BrunoでAPIとJSONの流れを見る
-- フロントエンドとバックエンドの境界を確認する
-- AIに実装を依頼するとしたら、どんな指示を出すか考える
+### 1. Movieの例を見る
+
+まずMovie題材で、画面操作、API、JSONの対応を見ます。
+
+```text
+映画一覧を見る    GET  /api/movies
+映画を登録する    POST /api/movies
+```
+
+MovieのJSON:
+
+```json
+{
+  "id": 1,
+  "title": "The Matrix",
+  "genre": "SF",
+  "memo": "仮想世界を扱う映画",
+  "imageUrl": "https://example.com/matrix.jpg",
+  "status": "WATCHED"
+}
+```
+
+見るポイント:
+
+```text
+画面に表示する項目
+  title, genre, memo, imageUrl, status
+
+APIのURL
+  /api/movies
+
+Reactで使う形
+  movie.title
+  movie.genre
+  movie.imageUrl
+```
+
+### 2. Restaurantへ置き換える
+
+Movieで見た構造を、Restaurantに置き換えます。
+
+```text
+Movie       -> Restaurant
+movies      -> restaurants
+title       -> name
+/api/movies -> /api/restaurants
+```
+
+### 3. Restaurantの画面項目を書く
+
+完成画面に表示する項目を書きます。
+
+```text
+表示する項目:
+- 画像
+- 店名
+- 地域
+- ジャンル
+- ステータス
+- メモ
+```
+
+対応するJSONのキー:
+
+```text
+画像          imageUrl
+店名          name
+地域          area
+ジャンル      genre
+ステータス    status
+メモ          memo
+```
+
+### 4. Restaurantの登録フォーム項目を書く
+
+登録フォームで入力する項目を書きます。
+
+```text
+入力する項目:
+- 店名
+- 地域
+- ジャンル
+- メモ
+- 画像URL
+- ステータス
+```
+
+対応するJSONのキー:
+
+```text
+店名          name
+地域          area
+ジャンル      genre
+メモ          memo
+画像URL       imageUrl
+ステータス    status
+```
+
+### 5. 画面操作とAPIの対応を書く
+
+Day1では、まず一覧表示と登録を確実に対応させます。
+
+```text
+お店一覧を見る
+  -> GET /api/restaurants
+
+お店を登録する
+  -> POST /api/restaurants
+```
+
+編集、削除、フィルタは後続Dayで扱います。
+Day1では「APIは画面操作に対応している」と分かれば十分です。
+
+### 6. RestaurantのJSONを書く
+
+RestaurantのJSON例を自分で書きます。
+
+```json
+{
+  "id": 1,
+  "name": "Cafe Sakura",
+  "area": "新宿",
+  "genre": "カフェ",
+  "memo": "落ち着いて作業できそう",
+  "imageUrl": "https://example.com/cafe.jpg",
+  "status": "WANT_TO_GO"
+}
+```
+
+確認すること:
+
+```text
+画面に表示する項目とJSONのキーが対応している
+登録フォームの項目とJSONのキーが対応している
+GETとPOSTのAPI URLを説明できる
+```
+
+### 7. BrunoでAPIとJSONを見る
+
+Spring Boot APIが用意されている場合は、Brunoで次のリクエストを送ります。
+
+```http
+GET http://localhost:8080/api/restaurants
+```
+
+まだAPIが存在しない場合は、Day2でこのAPIを作ることを確認します。
+
+Day1で理解したいこと:
+
+```text
+ReactはAPIを呼ぶ
+APIはJSONを返す
+ReactはJSONを画面に表示する
+```
+
+### Day1の提出物
+
+Day1の最後に、次の4つを書けていればOKです。
+
+```text
+1. Restaurantの画面項目
+2. Restaurantの登録フォーム項目
+3. 画面操作とAPIの対応
+4. RestaurantのJSON例
+```
 
 ## 今日の確認ポイント
 
