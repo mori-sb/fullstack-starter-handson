@@ -681,19 +681,20 @@ id, ______, ______, ______, ______, ______, ______
 コードを出す前に、Request DTO、Entity、Response DTO、Mapperの役割を短く説明してください。
 ```
 
-講師と答え合わせする観点:
+参考にするMovie側の例:
 
 ```text
-Movie                    Restaurant
-Movie Entity             Restaurant Entity
-MovieRepository          RestaurantRepository
-MovieRequest             RestaurantRequest
-MovieResponse            RestaurantResponse
-MovieMapper              RestaurantMapper
-POST /api/movies         POST /api/restaurants
-GET /api/movies          GET /api/restaurants
-title                    name
+Entity          Movie
+Repository      MovieRepository
+Request DTO     MovieRequest
+Response DTO    MovieResponse
+Mapper          MovieMapper
+Create API      POST /api/movies
+List API        GET /api/movies
+JSON keys       id, title, genre, memo, imageUrl, status
 ```
+
+Restaurant側のクラス名、API、JSONキーは、Movieの例を見ながら自分で埋めます。
 
 次の依頼例:
 

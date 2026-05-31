@@ -21,18 +21,19 @@ Restaurant題材で同じ構造を演習
 演習では `Restaurant` を使います。
 
 参加者は、Movieの実装を見ながら、クラス名、ファイル名、項目名、APIのURLをRestaurantへ置き換えて実装します。
+資料ではMovie側の英語名を例として見せ、Restaurant側の名前は演習で埋めます。
 
 ```text
-controller/MovieController.java     -> controller/RestaurantController.java
-service/MovieService.java           -> service/RestaurantService.java
-repository/MovieRepository.java     -> repository/RestaurantRepository.java
-entity/Movie.java                   -> entity/Restaurant.java
-dto/movie/MovieRequest.java         -> dto/restaurant/RestaurantRequest.java
-dto/movie/MovieResponse.java        -> dto/restaurant/RestaurantResponse.java
-MovieCard           -> RestaurantCard
-MovieList           -> RestaurantList
-MovieForm           -> RestaurantForm
-/api/movies         -> /api/restaurants
+controller/MovieController.java
+service/MovieService.java
+repository/MovieRepository.java
+entity/Movie.java
+dto/movie/MovieRequest.java
+dto/movie/MovieResponse.java
+MovieCard
+MovieList
+MovieForm
+/api/movies
 ```
 
 ## 演習の出し方
@@ -427,25 +428,26 @@ API:
 GET /api/restaurants
 ```
 
-演習では、Movieの次の対応をRestaurantへ置き換えます。
+演習では、Movieの構造をRestaurantへ置き換えます。
+資料上ではMovie側の例だけを見せ、Restaurant側は参加者が考えて埋めます。
 
 ```text
-MovieController  -> RestaurantController
-MovieService     -> RestaurantService
-MovieResponse    -> RestaurantResponse
-/api/movies      -> /api/restaurants
-title            -> name
+Controller      MovieController
+Service         MovieService
+Response DTO    MovieResponse
+API             GET /api/movies
+JSON keys       id, title, genre, memo, imageUrl, status
 ```
 
 ### ライブコーディングと演習の対応表
 
-| ライブコーディング | 演習 |
+| Movie側で見たもの | Restaurant側で考えること |
 | --- | --- |
-| `MovieController` | `RestaurantController` |
-| `MovieService` | `RestaurantService` |
-| `MovieResponse` | `RestaurantResponse` |
-| `GET /api/movies` | `GET /api/restaurants` |
-| `title` | `name` |
+| `MovieController` | Controller名 |
+| `MovieService` | Service名 |
+| `MovieResponse` | Response DTO名 |
+| `GET /api/movies` | 一覧APIのURL |
+| `title` | 店名にあたるJSONキー |
 
 ### 完成コードのゴール
 
@@ -634,15 +636,15 @@ Movieで説明していない検索条件や複雑なバリデーションは出
 
 ### ライブコーディングと演習の対応表
 
-| ライブコーディング | 演習 |
+| Movie側で見たもの | Restaurant側で考えること |
 | --- | --- |
-| `Movie` | `Restaurant` |
-| `MovieRepository` | `RestaurantRepository` |
-| `MovieRequest` | `RestaurantRequest` |
-| `MovieResponse` | `RestaurantResponse` |
-| `MovieMapper` | `RestaurantMapper` |
-| `/api/movies/{id}` | `/api/restaurants/{id}` |
-| `title` | `name` |
+| `Movie` | Entity名 |
+| `MovieRepository` | Repository名 |
+| `MovieRequest` | Request DTO名 |
+| `MovieResponse` | Response DTO名 |
+| `MovieMapper` | Mapper名 |
+| `/api/movies/{id}` | ID付きAPIのURL |
+| `title` | 店名にあたるJSONキー |
 
 ### 完成コードのゴール
 
@@ -794,27 +796,27 @@ RestaurantList.jsx
 RestaurantForm.jsx
 ```
 
-MovieからRestaurantへの置き換え:
+参考にするMovie側の名前:
 
 ```text
-MovieCard      -> RestaurantCard
-MovieList      -> RestaurantList
-MovieForm      -> RestaurantForm
-movie          -> restaurant
-movies         -> restaurants
-title          -> name
+MovieCard
+MovieList
+MovieForm
+movie
+movies
+title
 ```
 
 ### ライブコーディングと演習の対応表
 
-| ライブコーディング | 演習 |
+| Movie側で見たもの | Restaurant側で考えること |
 | --- | --- |
-| `MovieCard` | `RestaurantCard` |
-| `MovieList` | `RestaurantList` |
-| `MovieForm` | `RestaurantForm` |
-| `movie` | `restaurant` |
-| `movies` | `restaurants` |
-| `title` | `name` |
+| `MovieCard` | カードコンポーネント名 |
+| `MovieList` | 一覧コンポーネント名 |
+| `MovieForm` | フォームコンポーネント名 |
+| `movie` | 1件分のprops名 |
+| `movies` | 配列state名 |
+| `title` | 店名にあたる表示キー |
 
 ### 完成コードのゴール
 
@@ -977,14 +979,14 @@ Day5の演習では、一覧取得と登録に絞ります。
 
 ### ライブコーディングと演習の対応表
 
-| ライブコーディング | 演習 |
+| Movie側で見たもの | Restaurant側で考えること |
 | --- | --- |
-| `api/movies.js` | `api/restaurants.js` |
-| `fetchMovies` | `fetchRestaurants` |
-| `createMovie` | `createRestaurant` |
-| `movies` state | `restaurants` state |
-| `setMovies` | `setRestaurants` |
-| `/api/movies` | `/api/restaurants` |
+| `api/movies.js` | API呼び出しファイル名 |
+| `fetchMovies` | 一覧取得関数名 |
+| `createMovie` | 登録関数名 |
+| `movies` state | 一覧state名 |
+| `setMovies` | 一覧stateの更新関数名 |
+| `/api/movies` | APIのURL |
 
 ### 完成コードのゴール
 

@@ -871,18 +871,18 @@ setMovies([...movies, { id: Date.now(), ...movie }])
   stateが変わるので画面が更新される。
 ```
 
-## ライブコーディングと演習の対応
+## 演習前に見るMovie側の例
 
 演習では、Movieで作った構造をRestaurantへ置き換えます。
+答えを先に写すのではなく、まずMovie側の名前を見て、Restaurant側の名前を自分で考えます。
 
 ```text
-MovieCard      -> RestaurantCard
-MovieList      -> RestaurantList
-MovieForm      -> RestaurantForm
-movies         -> restaurants
-movie          -> restaurant
-title          -> name
-映画データ      -> お店データ
+Card component    MovieCard
+List component    MovieList
+Form component    MovieForm
+Array state       movies
+Single prop       movie
+Display keys      title, genre, memo, imageUrl, status
 ```
 
 ## 演習
@@ -936,16 +936,17 @@ MovieCardとMovieListを参考にして、Restaurantのカードと一覧を作�
 コードを出す前に、propsがどのように渡っているか説明してください。
 ```
 
-講師と答え合わせする観点:
+参考にするMovie側の例:
 
 ```text
-Movie側で見たもの          Restaurant側で作るもの
-MovieCard                  RestaurantCard
-MovieList                  RestaurantList
-movie                      restaurant
-movies                     restaurants
-title                      name
+Card component    MovieCard
+List component    MovieList
+Single prop       movie
+Array prop        movies
+Display keys      title, genre, memo, imageUrl, status
 ```
+
+Restaurant側のコンポーネント名、props名、表示項目は、Movieの例を見ながら自分で埋めます。
 
 フォームの依頼例:
 

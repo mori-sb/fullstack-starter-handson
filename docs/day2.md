@@ -867,16 +867,17 @@ service/RestaurantService.java
 dto/restaurant/RestaurantResponse.java
 ```
 
-置き換えるもの:
+参考にするMovie側の名前:
 
 ```text
-MovieController  -> RestaurantController
-MovieService     -> RestaurantService
-MovieResponse    -> RestaurantResponse
-GET /api/movies  -> GET /api/restaurants
-title            -> name
-映画データ        -> お店データ
+Controller      MovieController
+Service         MovieService
+Response DTO    MovieResponse
+API             GET /api/movies
+JSON keys       id, title, genre, memo, imageUrl, status
 ```
+
+Restaurant側では、上のMovie例に対応するクラス名、URL、JSONキーを自分で決めます。
 
 固定データを3件返します。
 
@@ -927,16 +928,18 @@ MovieController、MovieService、MovieResponseのどこをRestaurantへ置き換
 差分が分かるように説明してください。
 ```
 
-講師と答え合わせする観点:
+参考にするMovie側の例:
 
 ```text
-Movie側で見たもの          Restaurant側で作るもの
-MovieController            RestaurantController
-MovieService               RestaurantService
-MovieResponse              RestaurantResponse
-GET /api/movies            GET /api/restaurants
-title                      name
+API path        /api/movies
+HTTP method     GET
+Controller      MovieController
+Service         MovieService
+Response DTO    MovieResponse
+JSON keys       id, title, genre, memo, imageUrl, status
 ```
+
+Restaurant側の名前、URL、JSONキーは、Movieの例を見ながら自分で埋めます。
 
 AIの回答を確認するときのポイント:
 

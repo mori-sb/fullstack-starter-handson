@@ -380,17 +380,19 @@ ______ http://localhost:8080/api/__________
 コードを出す前に、useEffect、fetch、setRestaurantsの流れを説明してください。
 ```
 
-講師と答え合わせする観点:
+参考にするMovie側の例:
 
 ```text
-Movie側で見たもの          Restaurant側で作るもの
-api/movies.js              api/restaurants.js
-fetchMovies                fetchRestaurants
-movies state               restaurants state
-setMovies                  setRestaurants
-MovieList                  RestaurantList
-GET /api/movies            GET /api/restaurants
+API file        api/movies.js
+Fetch function  fetchMovies
+Create function createMovie
+State name      movies
+Setter name     setMovies
+List component  MovieList
+API path        /api/movies
 ```
+
+Restaurant側のファイル名、関数名、state名、APIパスは、Movieの例を見ながら自分で埋めます。
 
 登録APIの依頼例:
 
