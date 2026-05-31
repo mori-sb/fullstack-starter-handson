@@ -696,6 +696,109 @@ service/MovieService.java
 dto/movie/MovieResponse.java
 ```
 
+## ライブコーディング用コピペコード
+
+ライブコーディングでは、最初から完璧に手入力しなくて大丈夫です。
+まず貼って動かし、その後で1行ずつ読みます。
+
+### dto/movie/MovieResponse.java
+
+```java
+package com.example.gourmet.dto.movie;
+
+public record MovieResponse(
+        Long id,
+        String title,
+        String genre,
+        String memo,
+        String imageUrl,
+        String status
+) {
+}
+```
+
+### service/MovieService.java
+
+```java
+package com.example.gourmet.service;
+
+import com.example.gourmet.dto.movie.MovieResponse;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class MovieService {
+
+    public List<MovieResponse> findAll() {
+        return List.of(
+                new MovieResponse(
+                        1L,
+                        "The Matrix",
+                        "SF",
+                        "仮想世界を扱う映画",
+                        "https://example.com/images/matrix.jpg",
+                        "WATCHED"
+                ),
+                new MovieResponse(
+                        2L,
+                        "Inception",
+                        "SF",
+                        "夢の中に入っていく映画",
+                        "https://example.com/images/inception.jpg",
+                        "WANT_TO_WATCH"
+                )
+        );
+    }
+}
+```
+
+### controller/MovieController.java
+
+```java
+package com.example.gourmet.controller;
+
+import com.example.gourmet.dto.movie.MovieResponse;
+import com.example.gourmet.service.MovieService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/movies")
+public class MovieController {
+
+    private final MovieService movieService;
+
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
+
+    @GetMapping
+    public List<MovieResponse> findAll() {
+        return movieService.findAll();
+    }
+}
+```
+
+貼った後に見るポイント:
+
+```text
+MovieController
+  /api/movies を受け取る
+  MovieServiceをDIで受け取る
+  findAll()をServiceへ任せる
+
+MovieService
+  固定の映画データを作る
+  List<MovieResponse>として返す
+
+MovieResponse
+  Reactへ返すJSONの形を決める
+```
+
 ## 演習: Restaurant一覧API
 
 Movieで作った一覧APIと同じ構造で、Restaurantの一覧APIを作ります。

@@ -624,9 +624,172 @@ MovieListに渡す配列が変わる
 ライブコーディングで作るファイル:
 
 ```text
+App.jsx
 MovieCard.jsx
 MovieList.jsx
 MovieForm.jsx
+```
+
+## ライブコーディング用コピペコード
+
+ライブコーディングでは、まず貼って動かしてから読みます。
+その後で、どのコンポーネントが何を担当しているかを確認します。
+
+### components/MovieCard.jsx
+
+```jsx
+export function MovieCard({ movie }) {
+  return (
+    <article className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <img
+        className="h-40 w-full object-cover"
+        src={movie.imageUrl}
+        alt={movie.title}
+      />
+      <div className="space-y-2 p-4">
+        <h3 className="text-lg font-semibold text-slate-900">{movie.title}</h3>
+        <p className="text-sm text-slate-600">
+          {movie.genre} / {movie.status}
+        </p>
+        <p className="text-sm text-slate-700">{movie.memo}</p>
+      </div>
+    </article>
+  );
+}
+```
+
+### components/MovieList.jsx
+
+```jsx
+import { MovieCard } from "./MovieCard";
+
+export function MovieList({ movies }) {
+  return (
+    <div className="grid gap-4 md:grid-cols-2">
+      {movies.map((movie) => (
+        <MovieCard key={movie.id} movie={movie} />
+      ))}
+    </div>
+  );
+}
+```
+
+### components/MovieForm.jsx
+
+```jsx
+import { useState } from "react";
+
+const initialForm = {
+  title: "",
+  genre: "",
+  memo: "",
+  imageUrl: "",
+  status: "見たい",
+};
+
+export function MovieForm({ onAddMovie }) {
+  const [form, setForm] = useState(initialForm);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setForm({ ...form, [name]: value });
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    onAddMovie(form);
+    setForm(initialForm);
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="grid gap-3 rounded-lg border border-slate-200 bg-white p-4">
+      <input name="title" value={form.title} onChange={handleChange} placeholder="タイトル" className="rounded border p-2" />
+      <input name="genre" value={form.genre} onChange={handleChange} placeholder="ジャンル" className="rounded border p-2" />
+      <input name="imageUrl" value={form.imageUrl} onChange={handleChange} placeholder="画像URL" className="rounded border p-2" />
+      <textarea name="memo" value={form.memo} onChange={handleChange} placeholder="メモ" className="rounded border p-2" />
+      <select name="status" value={form.status} onChange={handleChange} className="rounded border p-2">
+        <option value="見たい">見たい</option>
+        <option value="見た">見た</option>
+        <option value="お気に入り">お気に入り</option>
+      </select>
+      <button className="rounded bg-cyan-600 px-4 py-2 font-semibold text-white" type="submit">
+        追加する
+      </button>
+    </form>
+  );
+}
+```
+
+### App.jsx
+
+```jsx
+import { useState } from "react";
+import { MovieForm } from "./components/MovieForm";
+import { MovieList } from "./components/MovieList";
+
+const initialMovies = [
+  {
+    id: 1,
+    title: "The Matrix",
+    genre: "SF",
+    memo: "仮想世界を扱う映画",
+    imageUrl: "https://example.com/images/matrix.jpg",
+    status: "見た",
+  },
+  {
+    id: 2,
+    title: "Inception",
+    genre: "SF",
+    memo: "夢の中に入っていく映画",
+    imageUrl: "https://example.com/images/inception.jpg",
+    status: "見たい",
+  },
+];
+
+export default function App() {
+  const [movies, setMovies] = useState(initialMovies);
+
+  function handleAddMovie(movie) {
+    setMovies([
+      ...movies,
+      {
+        id: Date.now(),
+        ...movie,
+      },
+    ]);
+  }
+
+  return (
+    <main className="min-h-screen bg-slate-50 p-6">
+      <div className="mx-auto grid max-w-5xl gap-6">
+        <h1 className="text-2xl font-bold text-slate-900">映画メモ</h1>
+        <MovieForm onAddMovie={handleAddMovie} />
+        <MovieList movies={movies} />
+      </div>
+    </main>
+  );
+}
+```
+
+貼った後に見るポイント:
+
+```text
+App.jsx
+  movies stateを持つ
+  MovieFormへonAddMovieを渡す
+  MovieListへmoviesを渡す
+
+MovieForm.jsx
+  form stateを持つ
+  入力値が変わるたびにsetFormする
+  送信時にonAddMovieを呼ぶ
+
+MovieList.jsx
+  movies配列をmapする
+  1件ずつMovieCardへ渡す
+
+MovieCard.jsx
+  movieを受け取って1件分だけ表示する
 ```
 
 ## ライブコーディングと演習の対応
