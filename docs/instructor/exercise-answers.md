@@ -98,9 +98,9 @@ JSON例:
 作るファイル:
 
 ```text
-RestaurantController.java
-RestaurantService.java
-RestaurantResponse.java
+controller/RestaurantController.java
+service/RestaurantService.java
+dto/restaurant/RestaurantResponse.java
 ```
 
 API:
@@ -169,13 +169,13 @@ DB保存を使ったCRUD APIを作る。
 作るファイル:
 
 ```text
-Restaurant.java
-RestaurantRepository.java
-RestaurantRequest.java
-RestaurantResponse.java
-RestaurantMapper.java
-RestaurantService.java
-RestaurantController.java
+entity/Restaurant.java
+repository/RestaurantRepository.java
+dto/restaurant/RestaurantRequest.java
+dto/restaurant/RestaurantResponse.java
+mapper/RestaurantMapper.java
+service/RestaurantService.java
+controller/RestaurantController.java
 ```
 
 API:

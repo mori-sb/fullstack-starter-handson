@@ -138,7 +138,8 @@ images/spring-directory-structure.png
 伝えること:
 
 - Spring Bootのファイルは役割ごとに分かれている
-- `restaurant/` 配下にController、Service、Repository、Entity、DTO、Mapperをまとめる
+- `controller/`、`service/`、`repository/` のように層ごとに置く
+- DTOは `dto/movie/`、`dto/restaurant/` のように題材ごとに分ける
 - まず読むのはController、Service、Repository
 
 生成依頼文:
@@ -147,25 +148,41 @@ images/spring-directory-structure.png
 モダンなSaaS技術資料風に、Spring Bootプロジェクトのディレクトリ構造図を作ってください。
 
 左側に backend/src/main/java/com/example/gourmet のツリーを表示してください。
-restaurant フォルダの中に次のファイルを並べてください。
-RestaurantController.java
-RestaurantService.java
-RestaurantRepository.java
-Restaurant.java
-RestaurantRequest.java
-RestaurantResponse.java
-RestaurantMapper.java
-RestaurantStatus.java
+次のように、役割ごとにディレクトリを分けて表示してください。
+
+controller/
+  MovieController.java
+  RestaurantController.java
+service/
+  MovieService.java
+  RestaurantService.java
+repository/
+  MovieRepository.java
+  RestaurantRepository.java
+entity/
+  Movie.java
+  Restaurant.java
+  RestaurantStatus.java
+dto/
+  movie/
+    MovieRequest.java
+    MovieResponse.java
+  restaurant/
+    RestaurantRequest.java
+    RestaurantResponse.java
+mapper/
+  MovieMapper.java
+  RestaurantMapper.java
 
 右側に、各ファイルの役割をカードで表示してください。
-Controller: APIの入口
-Service: 処理を書く場所
-Repository: DBとやり取りする場所
-Entity: DBに保存するデータ
-Request/Response: APIで受け渡しするデータ
-Mapper: DTOとEntityを変換する
+controller/: APIの入口
+service/: 処理を書く場所
+repository/: DBとやり取りする場所
+entity/: DBに保存するデータ
+dto/: APIで受け渡しするデータ
+mapper/: DTOとEntityを変換する
 
-「まず読む順番」として、Controller -> Service -> Repository を強調してください。
+「まず読む順番」として、controller -> service -> repository を強調してください。
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、グリーンとシアンを使った読みやすい図にしてください。
 ```
 

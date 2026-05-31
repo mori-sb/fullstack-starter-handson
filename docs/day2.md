@@ -96,47 +96,63 @@ backend/
       ├─ java/
       │  └─ com/example/gourmet/
       │     ├─ GourmetApplication.java
-      │     └─ restaurant/
-      │        ├─ RestaurantController.java
-      │        ├─ RestaurantService.java
-      │        ├─ RestaurantRepository.java
-      │        ├─ Restaurant.java
-      │        ├─ RestaurantRequest.java
-      │        ├─ RestaurantResponse.java
-      │        ├─ RestaurantMapper.java
-      │        └─ RestaurantStatus.java
+      │     ├─ controller/
+      │     │  ├─ MovieController.java
+      │     │  └─ RestaurantController.java
+      │     ├─ service/
+      │     │  ├─ MovieService.java
+      │     │  └─ RestaurantService.java
+      │     ├─ repository/
+      │     │  ├─ MovieRepository.java
+      │     │  └─ RestaurantRepository.java
+      │     ├─ entity/
+      │     │  ├─ Movie.java
+      │     │  ├─ Restaurant.java
+      │     │  └─ RestaurantStatus.java
+      │     ├─ dto/
+      │     │  ├─ movie/
+      │     │  │  ├─ MovieRequest.java
+      │     │  │  └─ MovieResponse.java
+      │     │  └─ restaurant/
+      │     │     ├─ RestaurantRequest.java
+      │     │     └─ RestaurantResponse.java
+      │     └─ mapper/
+      │        ├─ MovieMapper.java
+      │        └─ RestaurantMapper.java
       └─ resources/
          └─ application.yml
 ```
 
+この教材では、Controller、Service、Repositoryなどの役割がすぐ見つかるように、層ごとにディレクトリを分けます。
+`dto/` はMovie用とRestaurant用で分け、APIで受け渡しするデータの形を探しやすくします。
+
 最初に見るファイル:
 
 ```text
-RestaurantController.java
-RestaurantService.java
-RestaurantRepository.java
+controller/RestaurantController.java
+service/RestaurantService.java
+repository/RestaurantRepository.java
 ```
 
 あとから見るファイル:
 
 ```text
-Restaurant.java
-RestaurantRequest.java
-RestaurantResponse.java
-RestaurantMapper.java
-RestaurantStatus.java
+entity/Restaurant.java
+dto/restaurant/RestaurantRequest.java
+dto/restaurant/RestaurantResponse.java
+mapper/RestaurantMapper.java
+entity/RestaurantStatus.java
 ```
 
 ファイル名を見るだけでも、おおよその役割が分かるようにしておきます。
 
 ```text
-Controller  APIの入口
-Service     処理を書く場所
-Repository  DBとやり取りする場所
-Request     Reactから受け取るデータ
-Response    Reactへ返すデータ
-Mapper      Request/ResponseとEntityを変換する
-Entity      DBに保存するデータ
+controller/   APIの入口
+service/      処理を書く場所
+repository/   DBとやり取りする場所
+dto/          ReactとAPIで受け渡しするデータ
+mapper/       DTOとEntityを変換する
+entity/       DBに保存するデータ
 ```
 
 ## 役割を日常の言葉で考える
@@ -217,22 +233,22 @@ AIにコードを生成してもらった後も、この順番で読む。
 
 ```text
 APIのURLを確認したい
-  -> RestaurantController.java
+  -> controller/RestaurantController.java
 
 登録や一覧取得の処理を確認したい
-  -> RestaurantService.java
+  -> service/RestaurantService.java
 
 DBへの保存・取得を確認したい
-  -> RestaurantRepository.java
+  -> repository/RestaurantRepository.java
 
 APIで受け取るJSONの形を確認したい
-  -> RestaurantRequest.java
+  -> dto/restaurant/RestaurantRequest.java
 
 APIで返すJSONの形を確認したい
-  -> RestaurantResponse.java
+  -> dto/restaurant/RestaurantResponse.java
 
 DBに保存する項目を確認したい
-  -> Restaurant.java
+  -> entity/Restaurant.java
 ```
 
 ## 図で確認すること
@@ -479,9 +495,9 @@ GET /api/restaurants
 id, name, area, genre, memo, imageUrl, status
 
 作るファイル:
-RestaurantController.java
-RestaurantService.java
-RestaurantResponse.java
+controller/RestaurantController.java
+service/RestaurantService.java
+dto/restaurant/RestaurantResponse.java
 
 条件:
 - ControllerはAPIの入口だけを担当してください

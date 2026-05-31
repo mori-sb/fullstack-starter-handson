@@ -280,36 +280,53 @@ backend/
       ├─ java/
       │  └─ com/example/gourmet/
       │     ├─ GourmetApplication.java
-      │     ├─ restaurant/
-      │     │  ├─ RestaurantController.java
-      │     │  ├─ RestaurantService.java
-      │     │  ├─ RestaurantRepository.java
+      │     ├─ controller/
+      │     │  ├─ MovieController.java
+      │     │  └─ RestaurantController.java
+      │     ├─ service/
+      │     │  ├─ MovieService.java
+      │     │  └─ RestaurantService.java
+      │     ├─ repository/
+      │     │  ├─ MovieRepository.java
+      │     │  └─ RestaurantRepository.java
+      │     ├─ entity/
+      │     │  ├─ Movie.java
       │     │  ├─ Restaurant.java
-      │     │  ├─ RestaurantRequest.java
-      │     │  ├─ RestaurantResponse.java
-      │     │  ├─ RestaurantMapper.java
       │     │  └─ RestaurantStatus.java
+      │     ├─ dto/
+      │     │  ├─ movie/
+      │     │  │  ├─ MovieRequest.java
+      │     │  │  └─ MovieResponse.java
+      │     │  └─ restaurant/
+      │     │     ├─ RestaurantRequest.java
+      │     │     └─ RestaurantResponse.java
+      │     ├─ mapper/
+      │     │  ├─ MovieMapper.java
+      │     │  └─ RestaurantMapper.java
       │     └─ config/
       │        └─ WebConfig.java
       └─ resources/
          └─ application.yml
 ```
 
+この教材では、役割が見つけやすいように層ごとにディレクトリを分けます。
+`controller/` にはController、`service/` にはService、`repository/` にはRepositoryを置きます。
+
 最初に見る場所:
 
 ```text
-RestaurantController.java
-RestaurantService.java
-RestaurantRepository.java
+controller/RestaurantController.java
+service/RestaurantService.java
+repository/RestaurantRepository.java
 ```
 
 慣れてきたら見る場所:
 
 ```text
-Restaurant.java
-RestaurantRequest.java
-RestaurantResponse.java
-RestaurantMapper.java
+entity/Restaurant.java
+dto/restaurant/RestaurantRequest.java
+dto/restaurant/RestaurantResponse.java
+mapper/RestaurantMapper.java
 ```
 
 ## 最初に覚えるReact

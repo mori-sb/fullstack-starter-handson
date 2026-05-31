@@ -23,12 +23,12 @@ Restaurant題材で同じ構造を演習
 参加者は、Movieの実装を見ながら、クラス名、ファイル名、項目名、APIのURLをRestaurantへ置き換えて実装します。
 
 ```text
-MovieController     -> RestaurantController
-MovieService        -> RestaurantService
-MovieRepository     -> RestaurantRepository
-Movie               -> Restaurant
-MovieRequest        -> RestaurantRequest
-MovieResponse       -> RestaurantResponse
+controller/MovieController.java     -> controller/RestaurantController.java
+service/MovieService.java           -> service/RestaurantService.java
+repository/MovieRepository.java     -> repository/RestaurantRepository.java
+entity/Movie.java                   -> entity/Restaurant.java
+dto/movie/MovieRequest.java         -> dto/restaurant/RestaurantRequest.java
+dto/movie/MovieResponse.java        -> dto/restaurant/RestaurantResponse.java
 MovieCard           -> RestaurantCard
 MovieList           -> RestaurantList
 MovieForm           -> RestaurantForm
@@ -278,9 +278,9 @@ Movie題材で一覧APIを作ります。
 作るファイル:
 
 ```text
-MovieController.java
-MovieService.java
-MovieResponse.java
+controller/MovieController.java
+service/MovieService.java
+dto/movie/MovieResponse.java
 ```
 
 API:
@@ -376,9 +376,9 @@ Restaurant題材で同じ構造を作ります。
 作るファイル:
 
 ```text
-RestaurantController.java
-RestaurantService.java
-RestaurantResponse.java
+controller/RestaurantController.java
+service/RestaurantService.java
+dto/restaurant/RestaurantResponse.java
 ```
 
 API:
@@ -482,13 +482,13 @@ Movie題材でCRUD APIを作ります。
 作るファイル:
 
 ```text
-Movie.java
-MovieRepository.java
-MovieRequest.java
-MovieResponse.java
-MovieMapper.java
-MovieService.java
-MovieController.java
+entity/Movie.java
+repository/MovieRepository.java
+dto/movie/MovieRequest.java
+dto/movie/MovieResponse.java
+mapper/MovieMapper.java
+service/MovieService.java
+controller/MovieController.java
 ```
 
 API:
@@ -571,13 +571,13 @@ Restaurant題材で同じCRUD APIを作ります。
 作るファイル:
 
 ```text
-Restaurant.java
-RestaurantRepository.java
-RestaurantRequest.java
-RestaurantResponse.java
-RestaurantMapper.java
-RestaurantService.java
-RestaurantController.java
+entity/Restaurant.java
+repository/RestaurantRepository.java
+dto/restaurant/RestaurantRequest.java
+dto/restaurant/RestaurantResponse.java
+mapper/RestaurantMapper.java
+service/RestaurantService.java
+controller/RestaurantController.java
 ```
 
 API:
