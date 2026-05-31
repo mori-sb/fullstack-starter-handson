@@ -49,6 +49,38 @@ DELETE  削除
 
 ## Spring Boot
 
+### Class
+
+Javaで処理やデータのまとまりを定義するもの。
+
+例:
+
+- `MovieController`
+- `MovieService`
+- `RestaurantController`
+
+### DI
+
+Dependency Injectionの略。
+
+必要な部品を自分で `new` するのではなく、Spring Bootに渡してもらう仕組み。
+
+例:
+
+```java
+public MovieController(MovieService movieService) {
+    this.movieService = movieService;
+}
+```
+
+この例では、`MovieController` が使う `MovieService` をSpring Bootが渡している。
+
+### Bean
+
+Spring Bootが管理している部品のこと。
+
+`@RestController` や `@Service` などを付けたclassは、Spring Bootに見つけてもらいやすくなる。
+
 ### Controller
 
 APIの入口。

@@ -12,6 +12,8 @@
 ## 扱う内容
 
 - Spring Bootのプロジェクト構成
+- Javaのclass
+- Spring BootのDI
 - Controller / Service / Repository
 - DTO
 - APIの動作確認
@@ -32,11 +34,12 @@ Day2の演習では、説明していない詳細APIやDB保存は扱いませ�
 ```text
 1. Day1の全体像を復習し、今日はバックエンドだけを見る
 2. Spring Bootのディレクトリ構造とファイルの役割を確認する
-3. Controller、Service、Repositoryの流れを図で確認する
-4. DTOとJSONレスポンスの形を確認する
-5. 固定データを返す一覧APIを段階的に実装する
-6. ブラウザまたはAPIクライアントで動作確認する
-7. 演習の進め方と確認ポイントを確認する
+3. JavaのclassとSpring BootのDIを確認する
+4. Controller、Service、Repositoryの流れを図で確認する
+5. DTOとJSONレスポンスの形を確認する
+6. 固定データを返す一覧APIを段階的に実装する
+7. ブラウザまたはAPIクライアントで動作確認する
+8. 演習の進め方と確認ポイントを確認する
 ```
 
 Day2では、DB保存までは急ぎません。
@@ -154,6 +157,137 @@ dto/          ReactとAPIで受け渡しするデータ
 mapper/       DTOとEntityを変換する
 entity/       DBに保存するデータ
 ```
+
+## ClassとDIの基本
+
+Spring Bootのコードは、基本的に `class` を役割ごとに作って組み合わせます。
+
+```text
+MovieController  APIの入口を担当するclass
+MovieService     処理を担当するclass
+MovieResponse    APIで返すデータの形を表すrecord
+```
+
+`class` は、処理やデータのまとまりです。
+Controllerに全部の処理を書くのではなく、Controller、Service、Repositoryのように役割ごとのclassに分けます。
+
+### classの読み方
+
+```java
+public class MovieController {
+}
+```
+
+```text
+public
+  他のclassから使える。
+
+class
+  Javaで処理やデータのまとまりを定義するキーワード。
+
+MovieController
+  classの名前。
+  この名前を見ると、MovieのAPI入口を担当すると分かる。
+```
+
+### DIとは
+
+DIは、Dependency Injectionの略です。
+日本語では「依存性の注入」と呼ばれます。
+
+言葉は難しいですが、まずは次のように考えます。
+
+```text
+ControllerはServiceを使いたい
+  ↓
+Controllerが自分でServiceをnewしない
+  ↓
+Spring Bootが必要なServiceを渡してくれる
+```
+
+つまり、DIは「必要な部品をSpring Bootに渡してもらう仕組み」です。
+
+### DIを使わない書き方
+
+```java
+public class MovieController {
+
+    private final MovieService movieService = new MovieService();
+}
+```
+
+この書き方では、Controllerが自分でServiceを作っています。
+小さいサンプルでは動きますが、実際のSpring Bootではこの書き方を避けます。
+
+理由:
+
+- ControllerがServiceの作り方まで知ってしまう
+- テストしにくくなる
+- Spring Bootが管理する機能を使いにくくなる
+
+### DIを使う書き方
+
+```java
+@RestController
+@RequestMapping("/api/movies")
+public class MovieController {
+
+    private final MovieService movieService;
+
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
+}
+```
+
+1行ずつ読む:
+
+```text
+@RestController
+  このclassはAPIのControllerだとSpring Bootに伝える。
+
+@RequestMapping("/api/movies")
+  このControllerのAPIは /api/movies から始まる。
+
+private final MovieService movieService;
+  このControllerはMovieServiceを使う。
+  finalなので、一度受け取ったら差し替えない。
+
+public MovieController(MovieService movieService)
+  コンストラクタ。
+  Spring BootがMovieServiceを渡してくれる入口。
+
+this.movieService = movieService;
+  渡されたMovieServiceを、このControllerの中で使えるように保存する。
+```
+
+### ServiceをSpring Bootに管理してもらう
+
+DIで渡してもらう側のServiceには、Spring Bootが見つけられる目印を付けます。
+
+```java
+@Service
+public class MovieService {
+}
+```
+
+```text
+@Service
+  このclassはServiceとしてSpring Bootが管理する対象だと伝える。
+
+public class MovieService
+  Movieに関する処理を書くclass。
+```
+
+覚え方:
+
+```text
+@RestController  APIの入口として管理してもらう
+@Service         処理を書く部品として管理してもらう
+コンストラクタ     必要な部品を受け取る入口
+```
+
+Day2では、ControllerがServiceを使うためにDIを使うところまで理解できれば十分です。
 
 ## 役割を日常の言葉で考える
 
@@ -489,6 +623,67 @@ Controllerに直接データを書くと、APIの入口と処理が混ざりま�
 ```text
 Controller  リクエストを受け取る
 Service     返すデータを用意する
+```
+
+まずServiceを作ります。
+
+```java
+@Service
+public class MovieService {
+
+    public List<MovieResponse> findAll() {
+        return List.of(
+                new MovieResponse(
+                        1L,
+                        "The Matrix",
+                        "SF",
+                        "仮想世界を扱う映画",
+                        "https://example.com/matrix.jpg",
+                        "WATCHED"
+                )
+        );
+    }
+}
+```
+
+次にControllerからServiceを呼びます。
+ここでDIを使います。
+
+```java
+@RestController
+@RequestMapping("/api/movies")
+public class MovieController {
+
+    private final MovieService movieService;
+
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
+
+    @GetMapping
+    public List<MovieResponse> findAll() {
+        return movieService.findAll();
+    }
+}
+```
+
+1行ずつ読む:
+
+```text
+@Service
+  MovieServiceをSpring Bootに管理してもらう。
+
+private final MovieService movieService;
+  MovieControllerがMovieServiceを使うことを表す。
+
+public MovieController(MovieService movieService)
+  Spring BootからMovieServiceを受け取るコンストラクタ。
+
+this.movieService = movieService;
+  受け取ったMovieServiceをController内で使えるようにする。
+
+return movieService.findAll();
+  一覧取得の処理をServiceへ任せる。
 ```
 
 この分け方を早めに覚えておくと、後で登録、編集、削除を追加しやすくなります。

@@ -217,7 +217,51 @@ images/spring-class-map.png
 - Serviceという概念は`RestaurantService`に対応する
 - Repositoryという概念は`RestaurantRepository`に対応する
 
-### 8. Controllerの役割図
+### 8. ClassとDIの関係図
+
+ファイル名:
+
+```text
+images/spring-class-di.png
+```
+
+伝えること:
+
+- ControllerもServiceもJavaのclassである
+- ControllerはServiceを使う
+- Controllerが `new MovieService()` するのではなく、Spring BootがServiceを渡す
+- `@RestController` と `@Service` はSpring Bootに管理してもらうための目印
+- コンストラクタで必要な部品を受け取る
+
+生成依頼文:
+
+```text
+モダンなSaaS技術資料風に、Spring BootのClassとDIの関係図を作ってください。
+
+左側に「MovieController class」、右側に「MovieService class」をカードで配置してください。
+中央上に「Spring Boot Container」という大きめの枠を置き、Spring BootがMovieControllerとMovieServiceを管理しているように表現してください。
+
+MovieControllerカードには次の要素を入れてください。
+@RestController
+private final MovieService movieService
+public MovieController(MovieService movieService)
+
+MovieServiceカードには次の要素を入れてください。
+@Service
+public class MovieService
+
+MovieControllerからMovieServiceへ「使いたい」という矢印を出してください。
+Spring Boot ContainerからMovieControllerへ「MovieServiceを渡す」という矢印を出してください。
+
+下部に短いまとめとして、
+「DI = 必要な部品をSpring Bootに渡してもらう仕組み」
+「ControllerはServiceをnewしない」
+を表示してください。
+
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ネイビー・グリーン・シアンを使って、難しい言葉が怖く見えないように読みやすくしてください。
+```
+
+### 9. Controllerの役割図
 
 ファイル名:
 
@@ -225,7 +269,7 @@ images/spring-class-map.png
 images/controller-role.png
 ```
 
-### 9. Serviceの役割図
+### 10. Serviceの役割図
 
 ファイル名:
 
@@ -233,7 +277,7 @@ images/controller-role.png
 images/service-role.png
 ```
 
-### 10. Repositoryの役割図
+### 11. Repositoryの役割図
 
 ファイル名:
 
@@ -243,7 +287,7 @@ images/repository-role.png
 
 ## Day 3: DBとCRUD
 
-### 11. CRUDとHTTPメソッド対応図
+### 12. CRUDとHTTPメソッド対応図
 
 ファイル名:
 
@@ -251,7 +295,7 @@ images/repository-role.png
 images/crud-api-map.png
 ```
 
-### 12. EntityとDBテーブル対応図
+### 13. EntityとDBテーブル対応図
 
 ファイル名:
 
@@ -267,7 +311,7 @@ images/spring-entity-flow.png
 
 まず `spring-entity-flow.png` でEntityの位置づけを説明し、その後でEntityとDBテーブルの対応を説明する。
 
-### 13. 登録APIの流れ
+### 14. 登録APIの流れ
 
 ファイル名:
 
@@ -275,7 +319,7 @@ images/spring-entity-flow.png
 images/create-api-flow.png
 ```
 
-### 14. 一覧取得APIの流れ
+### 15. 一覧取得APIの流れ
 
 ファイル名:
 
@@ -283,7 +327,7 @@ images/create-api-flow.png
 images/list-api-flow.png
 ```
 
-### 15. クエリパラメータの図
+### 16. クエリパラメータの図
 
 ファイル名:
 
@@ -293,7 +337,7 @@ images/query-param-flow.png
 
 ## Day 4: Reactの基本
 
-### 16. Reactディレクトリ構造図
+### 17. Reactディレクトリ構造図
 
 ファイル名:
 
@@ -308,7 +352,7 @@ images/react-directory-structure.png
 - `api/` にAPI呼び出しをまとめる
 - まず読むのはApp、List、Card
 
-### 17. HTML / CSS / JavaScript / React / Tailwind の関係図
+### 18. HTML / CSS / JavaScript / React / Tailwind の関係図
 
 ファイル名:
 
