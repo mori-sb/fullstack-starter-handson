@@ -198,6 +198,9 @@ Reactが <img> で画像を表示する
 
 ## データの完成イメージ
 
+APIからReactへ返すデータは、JSONという形になります。
+このJSONのキーが、Reactで画面に表示するときのプロパティ名になります。
+
 ```json
 {
   "id": 1,
@@ -210,7 +213,50 @@ Reactが <img> で画像を表示する
 }
 ```
 
+各項目の意味:
+
+```text
+id
+  お店を区別する番号。
+  編集、削除、詳細表示で「どのお店か」を指定するときに使う。
+
+name
+  店名。
+  Reactでは restaurant.name のように取り出して表示する。
+
+area
+  地域。
+  画面の表示にも、地域フィルタにも使う。
+
+genre
+  ジャンル。
+  カフェ、和食、洋食など。
+
+memo
+  お店に関するメモ。
+
+imageUrl
+  画像URL。
+  Reactでは img タグの src に渡す。
+
+status
+  行きたい、行った、お気に入りなどの状態。
+```
+
+画面との対応:
+
+```text
+JSONの name      -> 画面の店名
+JSONの area      -> 画面の地域
+JSONの genre     -> 画面のジャンル
+JSONの memo      -> 画面のメモ
+JSONの imageUrl  -> 画面の画像
+JSONの status    -> 画面のステータス
+```
+
 ## APIの完成イメージ
+
+APIは「画面から何をしたいか」に対応して作ります。
 
 ```text
 GET    /api/restaurants
@@ -226,6 +272,34 @@ DELETE /api/restaurants/{id}
 GET /api/restaurants?area=新宿
 GET /api/restaurants?genre=カフェ
 GET /api/restaurants?status=WANT_TO_GO
+```
+
+それぞれの意味:
+
+```text
+GET /api/restaurants
+  お店一覧を取得する。
+  一覧画面を開いたときに使う。
+
+GET /api/restaurants/{id}
+  お店1件を取得する。
+  {id} には 1 や 2 などのお店IDが入る。
+
+POST /api/restaurants
+  お店を新しく登録する。
+  登録フォームの内容をJSONで送る。
+
+PUT /api/restaurants/{id}
+  既存のお店を更新する。
+  {id} で更新対象のお店を指定する。
+
+DELETE /api/restaurants/{id}
+  お店を削除する。
+  {id} で削除対象のお店を指定する。
+
+GET /api/restaurants?area=新宿
+  地域が新宿のお店だけを取得する。
+  ?area=新宿 の部分をクエリパラメータと呼ぶ。
 ```
 
 ## API設計の考え方
@@ -253,6 +327,90 @@ GET /api/restaurants?status=WANT_TO_GO
 
 最初はURLを暗記する必要はない。
 大事なのは「画面操作」と「API」が対応していることを理解すること。
+
+## Controllerのコードを先に見る
+
+Day1ではまだ実装しません。
+ただし、APIのURLがSpring BootのControllerコードにどう対応するかを先に見ておくと、Day2以降の理解が楽になります。
+
+```java
+@RestController
+@RequestMapping("/api/restaurants")
+public class RestaurantController {
+
+    private final RestaurantService restaurantService;
+
+    public RestaurantController(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
+
+    @GetMapping
+    public List<RestaurantResponse> findAll() {
+        return restaurantService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public RestaurantResponse findById(@PathVariable Long id) {
+        return restaurantService.findById(id);
+    }
+
+    @PostMapping
+    public RestaurantResponse create(@RequestBody RestaurantRequest request) {
+        return restaurantService.create(request);
+    }
+
+    @PutMapping("/{id}")
+    public RestaurantResponse update(
+            @PathVariable Long id,
+            @RequestBody RestaurantRequest request
+    ) {
+        return restaurantService.update(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        restaurantService.delete(id);
+    }
+}
+```
+
+今は全部を理解しなくて大丈夫です。
+まず、URLとControllerの対応だけ見ます。
+
+```text
+@RequestMapping("/api/restaurants")
+  このControllerで扱うAPIの基本URL。
+
+private final RestaurantService restaurantService;
+  実際の処理をServiceへ任せるために持っている。
+
+public RestaurantController(RestaurantService restaurantService)
+  Spring BootがRestaurantServiceを渡してくれる。
+
+@GetMapping
+  GET /api/restaurants に対応する。
+
+@GetMapping("/{id}")
+  GET /api/restaurants/1 のようなURLに対応する。
+
+@PostMapping
+  POST /api/restaurants に対応する。
+
+@PutMapping("/{id}")
+  PUT /api/restaurants/1 のようなURLに対応する。
+
+@DeleteMapping("/{id}")
+  DELETE /api/restaurants/1 のようなURLに対応する。
+```
+
+Controllerで覚えること:
+
+```text
+URLとHTTPメソッドを受け取る
+細かい処理はServiceに任せる
+Reactへ返すデータはResponse DTOにする
+Reactから受け取るデータはRequest DTOにする
+```
 
 ## ライブ設計で一緒に作るもの
 
@@ -294,24 +452,17 @@ status    行きたい、行った、お気に入り
 
 この3つができると、AIに依頼するときも、実装後にコードを読むときも迷いにくくなります。
 
-## 演習
+## 演習で書くもの
 
-自分で1つ機能を追加するつもりで、画面操作、データ項目、APIを考えます。
+Movieの例を参考にして、Restaurantの設計を同じ構造で書きます。
 
-例:
+- Restaurantの画面項目
+- Restaurantの登録フォーム項目
+- 画面操作とAPIの対応
+- RestaurantのJSON例
 
-```text
-お気に入りだけ表示する
-メモにキーワードを含むお店を探す
-地域とジャンルを同時に指定して絞り込む
-```
-
-演習で書くもの:
-
-- 画面で何をしたいか
-- 必要なデータ項目
-- 呼び出すAPI
-- 返ってくるJSONの例
+説明していない新しい機能は追加しません。
+まずは、説明で見た構造をRestaurantへ置き換えることを優先します。
 
 ## 実装前に書く仕様メモ
 
