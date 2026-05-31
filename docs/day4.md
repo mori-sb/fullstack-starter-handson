@@ -374,23 +374,24 @@ RestaurantCard
 <img src={restaurant.imageUrl}>
 ```
 
-## ハンズオン
+## ライブコーディング: Movie画面
 
-固定データを使って一覧画面と登録フォームを作成する。
+ここからは、講師がMovie題材でReact画面を作ります。
+参加者は、コンポーネントをどう分けるか、propsとstateがどこで使われるかを見ながら確認します。
+
+固定データを使って一覧画面と登録フォームを作成します。
 
 画面に表示する項目:
 
 - 画像
-- 店名
-- 地域
+- タイトル
 - ジャンル
 - ステータス
 - メモ
 
 フォームで入力する項目:
 
-- 店名
-- 地域
+- タイトル
 - ジャンル
 - メモ
 - 画像URL
@@ -400,20 +401,19 @@ RestaurantCard
 
 Reactはファイルが分かれるため、次の順番で作ると迷いにくいです。
 
-### 1. 固定データを用意する
+### 1. Movieの固定データを用意する
 
-まず `App.jsx` にお店データを直接書きます。
+まず `App.jsx` に映画データを直接書きます。
 
 ```jsx
-const initialRestaurants = [
+const initialMovies = [
   {
     id: 1,
-    name: "新宿うまい店",
-    area: "新宿",
-    genre: "和食",
-    memo: "落ち着いた雰囲気でランチがおすすめです。",
-    imageUrl: "https://example.com/images/shinjuku-umai.jpg",
-    status: "行きたい",
+    title: "The Matrix",
+    genre: "SF",
+    memo: "仮想世界を扱う映画",
+    imageUrl: "https://example.com/images/matrix.jpg",
+    status: "見た",
   },
 ];
 ```
@@ -421,59 +421,56 @@ const initialRestaurants = [
 1行ずつ読む:
 
 ```text
-const initialRestaurants = [
-  固定のお店データを配列として用意している。
+const initialMovies = [
+  固定の映画データを配列として用意している。
   API接続前は、この配列を画面表示に使う。
 
 {
-  ここから1件分のお店データ。
+  ここから1件分の映画データ。
 
 id: 1
   Reactが一覧表示で1件を区別するためのID。
 
-name: "新宿うまい店"
-  店名。
+title: "The Matrix"
+  映画タイトル。
 
-area: "新宿"
-  地域。
-
-genre: "和食"
+genre: "SF"
   ジャンル。
 
-memo: "落ち着いた雰囲気でランチがおすすめです。"
+memo: "仮想世界を扱う映画"
   カードに表示するメモ。
 
-imageUrl: "https://example.com/images/shinjuku-umai.jpg"
+imageUrl: "https://example.com/images/matrix.jpg"
   imgタグで表示する画像URL。
 
-status: "行きたい"
-  お店の状態。
+status: "見た"
+  映画の状態。
 ```
 
 この時点ではAPIを呼びません。
 まず画面に出したいデータの形を確認します。
 
-### 2. RestaurantCardを作る
+### 2. MovieCardを作る
 
-1件分のお店を表示します。
+1件分の映画を表示します。
 
 見るポイント:
 
-- propsで `restaurant` を受け取る
-- `restaurant.name` などを画面に表示する
-- `restaurant.imageUrl` を `img` の `src` に渡す
+- propsで `movie` を受け取る
+- `movie.title` などを画面に表示する
+- `movie.imageUrl` を `img` の `src` に渡す
 - `className` で見た目を整える
 
-### 3. RestaurantListを作る
+### 3. MovieListを作る
 
-複数件のお店を並べます。
+複数件の映画を並べます。
 
 ```jsx
-export function RestaurantList({ restaurants }) {
+export function MovieList({ movies }) {
   return (
     <div className="grid gap-4">
-      {restaurants.map((restaurant) => (
-        <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+      {movies.map((movie) => (
+        <MovieCard key={movie.id} movie={movie} />
       ))}
     </div>
   );
@@ -483,44 +480,43 @@ export function RestaurantList({ restaurants }) {
 1行ずつ読む:
 
 ```text
-export function RestaurantList({ restaurants })
-  RestaurantListコンポーネントを定義している。
-  restaurantsは親コンポーネントからpropsとして受け取る配列。
+export function MovieList({ movies })
+  MovieListコンポーネントを定義している。
+  moviesは親コンポーネントからpropsとして受け取る配列。
 
 return (...)
   画面に表示するJSXを返す。
 
 <div className="grid gap-4">
-  お店カードを並べる外側の箱。
+  映画カードを並べる外側の箱。
   classNameはTailwind CSSの見た目指定。
 
-restaurants.map((restaurant) => (...))
-  restaurants配列を1件ずつ取り出して、RestaurantCardに変換する。
+movies.map((movie) => (...))
+  movies配列を1件ずつ取り出して、MovieCardに変換する。
 
-<RestaurantCard key={restaurant.id} restaurant={restaurant} />
-  お店1件分をRestaurantCardへ渡して表示する。
+<MovieCard key={movie.id} movie={movie} />
+  映画1件分をMovieCardへ渡して表示する。
   keyはReactがリストの各要素を区別するために使う。
-  restaurant={restaurant} で子コンポーネントへデータを渡している。
+  movie={movie} で子コンポーネントへデータを渡している。
 ```
 
 見るポイント:
 
-- `restaurants` は配列
-- `map` で1件ずつ `RestaurantCard` に渡す
+- `movies` は配列
+- `map` で1件ずつ `MovieCard` に渡す
 - `key` はReactがリストを管理するために必要
 
-### 4. RestaurantFormを作る
+### 4. MovieFormを作る
 
 フォームの入力値をstateで管理します。
 
 ```jsx
 const [form, setForm] = useState({
-  name: "",
-  area: "",
+  title: "",
   genre: "",
   memo: "",
   imageUrl: "",
-  status: "行きたい",
+  status: "見たい",
 });
 ```
 
@@ -531,11 +527,8 @@ const [form, setForm] = useState(...)
   フォームの入力値をstateとして持つ。
   formは現在の入力値、setFormは入力値を更新する関数。
 
-name: ""
-  店名の初期値。まだ入力されていないので空文字。
-
-area: ""
-  地域の初期値。
+title: ""
+  映画タイトルの初期値。まだ入力されていないので空文字。
 
 genre: ""
   ジャンルの初期値。
@@ -546,7 +539,7 @@ memo: ""
 imageUrl: ""
   画像URLの初期値。
 
-status: "行きたい"
+status: "見たい"
   ステータスの初期値。
 ```
 
@@ -570,7 +563,7 @@ const { name, value } = event.target;
 
 setForm({ ...form, [name]: value });
   既存のformをコピーし、変更された項目だけ新しい値に更新する。
-  [name] と書くことで、name、area、genreなどを共通の処理で更新できる。
+  [name] と書くことで、title、genre、memoなどを共通の処理で更新できる。
 ```
 
 ### 5. 登録ボタンで一覧に追加する
@@ -578,8 +571,8 @@ setForm({ ...form, [name]: value });
 API接続前は、stateの配列に追加します。
 
 ```jsx
-setRestaurants([
-  ...restaurants,
+setMovies([
+  ...movies,
   {
     id: Date.now(),
     ...form,
@@ -590,41 +583,64 @@ setRestaurants([
 1行ずつ読む:
 
 ```text
-setRestaurants(...)
-  お店一覧のstateを更新する。
+setMovies(...)
+  映画一覧のstateを更新する。
   stateが変わると、Reactが画面を再描画する。
 
 [
   新しい配列を作っている。
 
-...restaurants
-  既存のお店一覧をそのまま入れる。
+...movies
+  既存の映画一覧をそのまま入れる。
 
 {
-  追加する新しいお店データ。
+  追加する新しい映画データ。
 
 id: Date.now()
   仮のIDを作る。
   API接続後はDBで作られたIDを使う。
 
 ...form
-  フォームに入力された値を新しいお店データとして展開する。
+  フォームに入力された値を新しい映画データとして展開する。
 ```
 
 ここで理解したいのは、登録ボタンを押すとstateが変わり、画面が更新されることです。
 
-### 6. RestaurantFilterを作る
+### 6. MovieFilterの考え方を確認する
 
-地域やジャンルの選択値をstateに持ち、表示する一覧を絞り込みます。
+ジャンルやステータスの選択値をstateに持ち、表示する一覧を絞り込みます。
+Day4のライブでは、絞り込みの考え方まで確認します。
 
 ```text
-selectedAreaが変わる
+selectedGenreが変わる
   ↓
-表示するrestaurantsを絞り込む
+表示するmoviesを絞り込む
   ↓
-RestaurantListに渡す配列が変わる
+MovieListに渡す配列が変わる
   ↓
 画面が更新される
+```
+
+ライブコーディングで作るファイル:
+
+```text
+MovieCard.jsx
+MovieList.jsx
+MovieForm.jsx
+```
+
+## ライブコーディングと演習の対応
+
+演習では、Movieで作った構造をRestaurantへ置き換えます。
+
+```text
+MovieCard      -> RestaurantCard
+MovieList      -> RestaurantList
+MovieForm      -> RestaurantForm
+movies         -> restaurants
+movie          -> restaurant
+title          -> name
+映画データ      -> お店データ
 ```
 
 ## 演習
