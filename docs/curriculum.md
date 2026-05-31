@@ -187,10 +187,10 @@ MovieのJSON例:
 ```json
 {
   "id": 1,
-  "title": "The Matrix",
+  "title": "Inception",
   "genre": "SF",
-  "memo": "仮想世界を扱う映画",
-  "imageUrl": "https://example.com/matrix.jpg",
+  "memo": "夢の中に入っていく映画",
+  "imageUrl": "https://example.com/inception.jpg",
   "status": "WATCHED"
 }
 ```
@@ -207,10 +207,10 @@ GET http://localhost:8080/api/movies
 [
   {
     "id": 1,
-    "title": "The Matrix",
+    "title": "Inception",
     "genre": "SF",
-    "memo": "仮想世界を扱う映画",
-    "imageUrl": "https://example.com/matrix.jpg",
+    "memo": "夢の中に入っていく映画",
+    "imageUrl": "https://example.com/inception.jpg",
     "status": "WATCHED"
   }
 ]
@@ -398,10 +398,10 @@ public class MovieService {
         return List.of(
                 new MovieResponse(
                         1L,
-                        "The Matrix",
+                        "Inception",
                         "SF",
-                        "仮想世界を扱う映画",
-                        "https://example.com/matrix.jpg",
+                        "夢の中に入っていく映画",
+                        "https://example.com/inception.jpg",
                         "WATCHED"
                 )
         );

@@ -431,126 +431,6 @@ Reactへ返すデータはResponse DTOにする
 Reactから受け取るデータはRequest DTOにする
 ```
 
-## Day1ハンズオン: MovieをRestaurantへ置き換える
-
-Day1のハンズオンでは、新しい機能を考えません。
-Movieの例で見た構造を、Restaurantへ置き換えます。
-
-目的は、自由に設計することではなく、次の対応を理解することです。
-
-```text
-画面に表示する項目
-  ↓
-JSONのキー
-  ↓
-APIのURL
-  ↓
-Controllerのメソッド
-```
-
-### 1. Movieの例を確認する
-
-まず、ライブでMovieの構造を見ます。
-
-```text
-映画一覧を見る
-  -> GET /api/movies
-
-映画を登録する
-  -> POST /api/movies
-```
-
-MovieのJSON:
-
-```json
-{
-  "id": 1,
-  "title": "The Matrix",
-  "genre": "SF",
-  "memo": "仮想世界を扱う映画",
-  "imageUrl": "https://example.com/matrix.jpg",
-  "status": "WATCHED"
-}
-```
-
-MovieのController対応:
-
-```text
-GET /api/movies
-  -> @GetMapping
-
-POST /api/movies
-  -> @PostMapping
-```
-
-### 2. Restaurantに置き換える
-
-Movieで見た名前をRestaurantへ置き換えます。
-
-```text
-Movie       -> Restaurant
-movies      -> restaurants
-title       -> name
-/api/movies -> /api/restaurants
-```
-
-### 3. Restaurantの表示項目を埋める
-
-画面に表示する項目と、JSONのキーを対応させます。
-
-```text
-画像          -> imageUrl
-店名          -> name
-地域          -> area
-ジャンル      -> genre
-メモ          -> memo
-ステータス    -> status
-```
-
-### 4. RestaurantのAPI対応を埋める
-
-Day1では、まず一覧表示と登録だけを対応させます。
-
-```text
-お店一覧を見る
-  -> GET /api/restaurants
-  -> @GetMapping
-
-お店を登録する
-  -> POST /api/restaurants
-  -> @PostMapping
-```
-
-編集、削除、フィルタは後続Dayで扱います。
-Day1の演習では、説明していないAPIを追加しません。
-
-### 5. RestaurantのJSONを書く
-
-MovieのJSONを参考にして、RestaurantのJSONを書きます。
-
-```json
-{
-  "id": 1,
-  "name": "Cafe Sakura",
-  "area": "新宿",
-  "genre": "カフェ",
-  "memo": "落ち着いて作業できそう",
-  "imageUrl": "https://example.com/cafe.jpg",
-  "status": "WANT_TO_GO"
-}
-```
-
-### Day1の完成ライン
-
-次の4つを説明できればOKです。
-
-```text
-1. MovieとRestaurantの置き換え
-2. 画面項目とJSONキーの対応
-3. 一覧表示と登録のAPI
-4. APIとControllerアノテーションの対応
-```
-
 ## 画像URLの扱い
 
 画像は `imageUrl` という文字列として扱います。
@@ -669,7 +549,7 @@ http://localhost:8080
 
 この実演を見てからDay2に進むと、「なぜSpring BootでJSONを返すAPIを作るのか」が分かりやすくなります。
 
-## ハンズオン
+## ワークシート: Restaurant設計
 
 まだコードを書き始めません。
 Movieの例を見たあと、同じ構造でRestaurantの設計ワークシートを埋めます。
@@ -705,10 +585,10 @@ MovieのJSON:
 ```json
 {
   "id": 1,
-  "title": "The Matrix",
+  "title": "Inception",
   "genre": "SF",
-  "memo": "仮想世界を扱う映画",
-  "imageUrl": "https://example.com/matrix.jpg",
+  "memo": "夢の中に入っていく映画",
+  "imageUrl": "https://example.com/inception.jpg",
   "status": "WATCHED"
 }
 ```

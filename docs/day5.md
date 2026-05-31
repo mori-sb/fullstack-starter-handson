@@ -357,35 +357,45 @@ return response.json();
 Day5では、ReactとSpring Boot APIを接続します。
 一度に全部つなげず、一覧取得から始めます。
 
-一覧取得の依頼例:
+一覧取得の依頼例は、まず穴埋めしてから使います。
 
 ```text
-Reactのグルメ管理アプリで、Spring Bootの一覧APIを呼ぶ処理を追加してください。
+Reactのグルメ管理アプリで、Spring Bootの ______ APIを呼ぶ処理を追加してください。
 
 対象ファイル:
 - frontend/src/api/restaurants.js
 - frontend/src/App.jsx
 
 API:
-GET http://localhost:8080/api/restaurants
+______ http://localhost:8080/api/__________
 
 条件:
-- API呼び出し関数は api/restaurants.js に書いてください
-- App.jsxではuseEffectで初回表示時に一覧を取得してください
-- 取得したJSONをrestaurants stateに入れてください
-- RestaurantListへrestaurantsを渡してください
-- ローディング中とエラー時の表示も最低限入れてください
+- API呼び出し関数を書くファイル: ______
+- 初回表示時に使うReactの機能: ______
+- 取得したJSONを入れるstate: ______
+- 一覧表示へ渡すコンポーネント: ______
 
 作成後に、useEffect、fetch、setRestaurantsの流れを説明してください。
+```
+
+記入例:
+
+```text
+一覧API
+GET http://localhost:8080/api/restaurants
+API呼び出し関数を書くファイル: frontend/src/api/restaurants.js
+初回表示時に使うReactの機能: useEffect
+取得したJSONを入れるstate: restaurants
+一覧表示へ渡すコンポーネント: RestaurantList
 ```
 
 登録APIの依頼例:
 
 ```text
-Reactの登録フォームからSpring Bootの登録APIを呼べるようにしてください。
+Reactの登録フォームからSpring Bootの ______ APIを呼べるようにしてください。
 
 API:
-POST http://localhost:8080/api/restaurants
+______ http://localhost:8080/api/__________
 
 対象ファイル:
 - frontend/src/api/restaurants.js
@@ -393,10 +403,10 @@ POST http://localhost:8080/api/restaurants
 - frontend/src/components/RestaurantForm.jsx
 
 条件:
-- createRestaurant関数をapi/restaurants.jsに追加してください
-- フォーム送信時にcreateRestaurantを呼んでください
-- 登録後に一覧を再取得してください
-- 送信するJSONにはname, area, genre, memo, imageUrl, statusを含めてください
+- APIを呼ぶ関数名: ______
+- フォーム送信時に呼ぶ関数: ______
+- 登録後に何をするか: ______
+- 送信するJSONの項目: ______
 
 作成後に、送信するJSONとレスポンスJSONの違いを説明してください。
 ```

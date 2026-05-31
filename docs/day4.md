@@ -430,10 +430,10 @@ Reactはファイルが分かれるため、次の順番で作ると迷いにく
 const initialMovies = [
   {
     id: 1,
-    title: "The Matrix",
+    title: "Inception",
     genre: "SF",
-    memo: "仮想世界を扱う映画",
-    imageUrl: "https://example.com/images/matrix.jpg",
+    memo: "夢の中に入っていく映画",
+    imageUrl: "https://example.com/images/inception.jpg",
     status: "見た",
   },
 ];
@@ -452,16 +452,16 @@ const initialMovies = [
 id: 1
   Reactが一覧表示で1件を区別するためのID。
 
-title: "The Matrix"
+title: "Inception"
   映画タイトル。
 
 genre: "SF"
   ジャンル。
 
-memo: "仮想世界を扱う映画"
+memo: "夢の中に入っていく映画"
   カードに表示するメモ。
 
-imageUrl: "https://example.com/images/matrix.jpg"
+imageUrl: "https://example.com/images/inception.jpg"
   imgタグで表示する画像URL。
 
 status: "見た"
@@ -766,19 +766,19 @@ import { MovieList } from "./components/MovieList";
 const initialMovies = [
   {
     id: 1,
-    title: "The Matrix",
-    genre: "SF",
-    memo: "仮想世界を扱う映画",
-    imageUrl: "https://example.com/images/matrix.jpg",
-    status: "見た",
-  },
-  {
-    id: 2,
     title: "Inception",
     genre: "SF",
     memo: "夢の中に入っていく映画",
     imageUrl: "https://example.com/images/inception.jpg",
-    status: "見たい",
+    status: "見た",
+  },
+  {
+    id: 2,
+    title: "Iron Man",
+    genre: "アクション",
+    memo: "スーツを作って戦うヒーロー映画",
+    imageUrl: "https://example.com/images/iron-man.jpg",
+    status: "お気に入り",
   },
 ];
 
@@ -828,6 +828,42 @@ MovieCard.jsx
   movieを受け取って1件分だけ表示する
 ```
 
+特に大事な行を読む:
+
+```text
+export function MovieCard({ movie })
+  MovieCardコンポーネントを定義する。
+  親からmovieをpropsとして受け取る。
+
+src={movie.imageUrl}
+  movieのimageUrlをimgタグのsrcへ渡す。
+  ブラウザがそのURLの画像を表示する。
+
+{movie.title}
+  JavaScriptの値を画面に表示する。
+
+movies.map((movie) => (...))
+  movies配列を1件ずつ取り出して、画面部品に変換する。
+
+<MovieCard key={movie.id} movie={movie} />
+  1件分のmovieをMovieCardへ渡す。
+  keyはReactが一覧の各要素を区別するために使う。
+
+const [form, setForm] = useState(initialForm)
+  フォームの入力値をstateとして管理する。
+
+setForm({ ...form, [name]: value })
+  変更された入力欄だけを更新する。
+  title、genre、memoなどを同じ処理で扱える。
+
+onAddMovie(form)
+  フォームの値を親コンポーネントへ渡す。
+
+setMovies([...movies, { id: Date.now(), ...movie }])
+  既存の映画一覧に、新しい映画を追加する。
+  stateが変わるので画面が更新される。
+```
+
 ## ライブコーディングと演習の対応
 
 演習では、Movieで作った構造をRestaurantへ置き換えます。
@@ -873,40 +909,54 @@ title          -> name
 Day4では、React画面を固定データで作ります。
 API接続はまだ入れず、コンポーネント分割、props、stateを確認します。
 
-最初の依頼例:
+まずは、Movieで見た構造をRestaurantへ置き換えるために、自分で穴埋めします。
 
 ```text
-Reactでグルメ管理アプリのお店カードと一覧を作ってください。
+Reactでグルメ管理アプリの ______ と ______ を作ってください。
 
 作るファイル:
-- frontend/src/components/RestaurantCard.jsx
-- frontend/src/components/RestaurantList.jsx
+- frontend/src/components/__________.jsx
+- frontend/src/components/__________.jsx
 
 条件:
-- RestaurantCardはpropsとしてrestaurantを受け取ってください
-- name, area, genre, memo, imageUrl, statusを表示してください
-- imageUrlはimgタグのsrcに渡してください
-- RestaurantListはrestaurants配列を受け取り、mapでRestaurantCardを表示してください
-- Tailwind CSSで見やすいカードUIにしてください
+- Cardコンポーネントはpropsとして ______ を受け取る
+- 表示する項目は ______
+- imageUrlは ______ タグの ______ に渡す
+- Listコンポーネントは ______ 配列を受け取り、mapでCardを表示する
+- API接続はまだ入れない
 
 作成後に、propsがどのように渡っているか説明してください。
+```
+
+記入例:
+
+```text
+お店カードとお店一覧
+
+RestaurantCard.jsx
+RestaurantList.jsx
+
+Cardコンポーネントはpropsとしてrestaurantを受け取る
+表示する項目はname, area, genre, memo, imageUrl, status
+imageUrlはimgタグのsrcに渡す
+Listコンポーネントはrestaurants配列を受け取り、mapでCardを表示する
 ```
 
 フォームの依頼例:
 
 ```text
-Reactでグルメ管理アプリのお店登録フォームを作ってください。
+Reactでグルメ管理アプリの ______ フォームを作ってください。
 
 作るファイル:
 frontend/src/components/RestaurantForm.jsx
 
 入力項目:
-name, area, genre, memo, imageUrl, status
+______, ______, ______, ______, ______, ______
 
 条件:
-- useStateでフォームの入力値を管理してください
-- 入力値が変わったらstateを更新してください
-- 送信時にonSubmit propsへフォームの値を渡してください
+- useStateで何を管理するか: ______
+- 入力値が変わったら何を呼ぶか: ______
+- 送信時にどのpropsへ値を渡すか: ______
 - API呼び出しはまだ書かないでください
 
 作成後に、form stateがどのように更新されるか説明してください。

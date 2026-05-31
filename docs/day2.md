@@ -460,10 +460,10 @@ GET /api/movies
 [
   {
     "id": 1,
-    "title": "The Matrix",
+    "title": "Inception",
     "genre": "SF",
-    "memo": "仮想世界を扱う映画",
-    "imageUrl": "https://example.com/matrix.jpg",
+    "memo": "夢の中に入っていく映画",
+    "imageUrl": "https://example.com/inception.jpg",
     "status": "WATCHED"
   }
 ]
@@ -579,10 +579,10 @@ public List<MovieResponse> findAll() {
     return List.of(
             new MovieResponse(
                     1L,
-                    "The Matrix",
+                    "Inception",
                     "SF",
-                    "仮想世界を扱う映画",
-                    "https://example.com/matrix.jpg",
+                    "夢の中に入っていく映画",
+                    "https://example.com/inception.jpg",
                     "WATCHED"
             )
     );
@@ -608,16 +608,16 @@ new MovieResponse(...)
 1L
   idの値。Long型なのでLを付けている。
 
-"The Matrix"
+"Inception"
   titleに入る値。
 
 "SF"
   genreに入る値。
 
-"仮想世界を扱う映画"
+"夢の中に入っていく映画"
   memoに入る値。
 
-"https://example.com/matrix.jpg"
+"https://example.com/inception.jpg"
   imageUrlに入る値。
 
 "WATCHED"
@@ -652,10 +652,10 @@ public class MovieService {
         return List.of(
                 new MovieResponse(
                         1L,
-                        "The Matrix",
+                        "Inception",
                         "SF",
-                        "仮想世界を扱う映画",
-                        "https://example.com/matrix.jpg",
+                        "夢の中に入っていく映画",
+                        "https://example.com/inception.jpg",
                         "WATCHED"
                 )
         );
@@ -783,19 +783,19 @@ public class MovieService {
         return List.of(
                 new MovieResponse(
                         1L,
-                        "The Matrix",
-                        "SF",
-                        "仮想世界を扱う映画",
-                        "https://example.com/images/matrix.jpg",
-                        "WATCHED"
-                ),
-                new MovieResponse(
-                        2L,
                         "Inception",
                         "SF",
                         "夢の中に入っていく映画",
                         "https://example.com/images/inception.jpg",
-                        "WANT_TO_WATCH"
+                        "WATCHED"
+                ),
+                new MovieResponse(
+                        2L,
+                        "Iron Man",
+                        "アクション",
+                        "スーツを作って戦うヒーロー映画",
+                        "https://example.com/images/iron-man.jpg",
+                        "FAVORITE"
                 )
         );
     }
@@ -897,16 +897,18 @@ title            -> name
 ## AIへの依頼例
 
 Day2では、まず固定データを返す一覧APIを作ります。
-AIには、役割を分けることと、作るファイルを明確に伝えます。
+AIには、答えを全部丸投げするのではなく、Movieで見た構造をRestaurantへ置き換えるための補助を依頼します。
+
+まず自分で穴埋めします。
 
 ```text
-Spring Bootでグルメ管理アプリのお店一覧APIを作ってください。
+Spring Bootでグルメ管理アプリの ______ APIを作ってください。
 
 作るAPI:
-GET /api/restaurants
+______ /api/__________
 
 返す項目:
-id, name, area, genre, memo, imageUrl, status
+id, ______, ______, ______, ______, imageUrl, status
 
 作るファイル:
 controller/RestaurantController.java
@@ -914,12 +916,34 @@ service/RestaurantService.java
 dto/restaurant/RestaurantResponse.java
 
 条件:
-- ControllerはAPIの入口だけを担当してください
-- 固定データはServiceで作ってください
-- DB接続はまだ使わないでください
-- レスポンスはJSON配列にしてください
+- Controllerは何を担当するか: ______
+- Serviceは何を担当するか: ______
+- DB接続は使うか: ______
+- レスポンスは配列か1件か: ______
 
 作成後に、ControllerとServiceの役割の違いを説明してください。
+```
+
+記入例:
+
+```text
+作るAPI:
+GET /api/restaurants
+
+返す項目:
+id, name, area, genre, memo, imageUrl, status
+
+Controllerは何を担当するか:
+APIの入口としてリクエストを受け取る
+
+Serviceは何を担当するか:
+固定のお店データを用意する
+
+DB接続は使うか:
+まだ使わない
+
+レスポンスは配列か1件か:
+配列
 ```
 
 AIの回答を確認するときのポイント:
@@ -933,23 +957,24 @@ AIの回答を確認するときのポイント:
 ## コードサンプル
 
 最初はDBを使わず、固定データを返して流れを理解する。
+ここは講師のライブコーディング用なので、Movie題材で見ます。
+Restaurantの答えを先に出しすぎないようにします。
 
 ```java
 @RestController
-@RequestMapping("/api/restaurants")
-public class RestaurantController {
+@RequestMapping("/api/movies")
+public class MovieController {
 
     @GetMapping
-    public List<RestaurantResponse> findAll() {
+    public List<MovieResponse> findAll() {
         return List.of(
-                new RestaurantResponse(
+                new MovieResponse(
                         1L,
-                        "Cafe Sakura",
-                        "新宿",
-                        "カフェ",
-                        "落ち着いて作業できそう",
-                        "https://example.com/cafe.jpg",
-                        "WANT_TO_GO"
+                        "Inception",
+                        "SF",
+                        "夢の中に入っていく映画",
+                        "https://example.com/inception.jpg",
+                        "WATCHED"
                 )
         );
     }
@@ -964,13 +989,13 @@ public class RestaurantController {
 ブラウザやAPIクライアントで次のURLにアクセスする。
 
 ```text
-http://localhost:8080/api/restaurants
+http://localhost:8080/api/movies
 ```
 
 確認すること:
 
 - JSONが返ってくる
-- `name`、`area`、`genre`、`memo`、`imageUrl`、`status` が含まれている
+- `title`、`genre`、`memo`、`imageUrl`、`status` が含まれている
 - 画像URLはただの文字列として返っている
 - Reactで表示する前に、API単体で確認できる
 

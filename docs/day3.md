@@ -170,16 +170,24 @@ PUT    /api/restaurants/{id}  編集
 DELETE /api/restaurants/{id}  削除
 ```
 
-## ハンズオン
+## ライブコーディング: MovieのDB保存API
 
-登録、一覧、詳細、更新、削除のAPIを作成する。
+講師がMovie題材で、DB保存を使ったAPIを作ります。
+Day3では量が多いため、最初に登録と一覧を確実に理解します。
+
+まず作るAPI:
 
 ```text
-GET    /api/restaurants
-GET    /api/restaurants/{id}
-POST   /api/restaurants
-PUT    /api/restaurants/{id}
-DELETE /api/restaurants/{id}
+POST /api/movies
+GET  /api/movies
+```
+
+その後、詳細、更新、削除の考え方を確認します。
+
+```text
+GET    /api/movies/{id}
+PUT    /api/movies/{id}
+DELETE /api/movies/{id}
 ```
 
 余裕があれば、一覧APIにフィルタを追加する。
@@ -187,9 +195,8 @@ DELETE /api/restaurants/{id}
 ![クエリパラメータで一覧を絞り込む流れ](../images/query-param-flow.png)
 
 ```text
-GET /api/restaurants?area=新宿
-GET /api/restaurants?genre=カフェ
-GET /api/restaurants?status=WANT_TO_GO
+GET /api/movies?genre=SF
+GET /api/movies?status=WATCHED
 ```
 
 ## 実装の進め方
@@ -202,14 +209,13 @@ CRUDは量が多いため、次の順番で進めます。
 
 ```java
 @Entity
-public class Restaurant {
+public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String area;
+    private String title;
     private String genre;
     private String memo;
     private String imageUrl;
@@ -229,8 +235,8 @@ public class Restaurant {
 @Entity
   このクラスをDBに保存する対象として扱う。
 
-public class Restaurant
-  お店データを表すJavaクラス。
+public class Movie
+  映画データを表すJavaクラス。
 
 @Id
   このフィールドが主キーであることを表す。
@@ -240,13 +246,10 @@ public class Restaurant
   idの値をDBに自動で作ってもらう。
 
 private Long id;
-  お店のID。
+  映画のID。
 
-private String name;
-  店名。
-
-private String area;
-  地域。
+private String title;
+  映画タイトル。
 
 private String genre;
   ジャンル。
@@ -264,25 +267,25 @@ private String status;
 ### 2. Repositoryを作る
 
 ```java
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+public interface MovieRepository extends JpaRepository<Movie, Long> {
 }
 ```
 
 1行ずつ読む:
 
 ```text
-public interface RestaurantRepository
-  Restaurant用のRepositoryを定義している。
+public interface MovieRepository
+  Movie用のRepositoryを定義している。
   RepositoryはDB操作の入口。
 
-extends JpaRepository<Restaurant, Long>
+extends JpaRepository<Movie, Long>
   Spring Data JPAが用意している基本的なDB操作を使えるようにする。
 
-Restaurant
+Movie
   このRepositoryで扱うEntity。
 
 Long
-  RestaurantのIDの型。
+  MovieのIDの型。
 
 { }
   中身が空でも、save、findAll、findById、deleteなどを使える。
@@ -297,14 +300,129 @@ findById   詳細取得
 delete     削除
 ```
 
-### 3. 登録APIを作る
+### 3. Request DTO、Response DTO、Mapperを作る
+
+DBに保存する前に、APIで受け渡しする形を分けます。
+
+```java
+public record MovieRequest(
+        String title,
+        String genre,
+        String memo,
+        String imageUrl,
+        String status
+) {
+}
+```
+
+1行ずつ読む:
+
+```text
+public record MovieRequest(...)
+  Reactから送られてくるJSONの形を表す。
+
+String title
+  登録フォームから送られる映画タイトル。
+
+String genre
+  ジャンル。
+
+String memo
+  メモ。
+
+String imageUrl
+  画像URL。
+
+String status
+  見たい、見た、お気に入りなどの状態。
+```
+
+```java
+public record MovieResponse(
+        Long id,
+        String title,
+        String genre,
+        String memo,
+        String imageUrl,
+        String status
+) {
+}
+```
+
+1行ずつ読む:
+
+```text
+public record MovieResponse(...)
+  Reactへ返すJSONの形を表す。
+
+Long id
+  DBに保存されたあとに付くID。
+
+title, genre, memo, imageUrl, status
+  画面に表示するために返す値。
+```
+
+```java
+@Component
+public class MovieMapper {
+
+    public Movie toEntity(MovieRequest request) {
+        Movie movie = new Movie();
+        movie.setTitle(request.title());
+        movie.setGenre(request.genre());
+        movie.setMemo(request.memo());
+        movie.setImageUrl(request.imageUrl());
+        movie.setStatus(request.status());
+        return movie;
+    }
+
+    public MovieResponse toResponse(Movie movie) {
+        return new MovieResponse(
+                movie.getId(),
+                movie.getTitle(),
+                movie.getGenre(),
+                movie.getMemo(),
+                movie.getImageUrl(),
+                movie.getStatus()
+        );
+    }
+}
+```
+
+1行ずつ読む:
+
+```text
+@Component
+  MovieMapperをSpring Bootに管理してもらう。
+  ServiceへDIできるようにする。
+
+toEntity(MovieRequest request)
+  Reactから受け取ったRequest DTOを、DB保存用のEntityに変換する。
+
+new Movie()
+  DBに保存するためのMovie Entityを作る。
+
+movie.setTitle(request.title())
+  Request DTOのtitleをEntityへ詰め替える。
+
+return movie;
+  Repositoryで保存できる形にして返す。
+
+toResponse(Movie movie)
+  DBから取得したEntityを、Reactへ返すResponse DTOに変換する。
+
+movie.getId()
+  DBで作られたIDをResponse DTOへ入れる。
+```
+
+### 4. 登録APIを作る
 
 登録では、Request DTOをEntityに変換してDBに保存します。
 
 ```text
-RestaurantRequest
+MovieRequest
   ↓ Mapper
-Restaurant Entity
+Movie Entity
   ↓ Repository.save
 DBに保存
 ```
@@ -315,7 +433,52 @@ DBに保存
 - DBに保存される
 - レスポンスに `id` が入る
 
-### 4. 一覧APIをDBから返す
+Serviceでは、Request DTO、Mapper、Repositoryをつなぎます。
+
+```java
+@Service
+public class MovieService {
+
+    private final MovieRepository movieRepository;
+    private final MovieMapper movieMapper;
+
+    public MovieService(MovieRepository movieRepository, MovieMapper movieMapper) {
+        this.movieRepository = movieRepository;
+        this.movieMapper = movieMapper;
+    }
+
+    public MovieResponse create(MovieRequest request) {
+        Movie movie = movieMapper.toEntity(request);
+        Movie savedMovie = movieRepository.save(movie);
+        return movieMapper.toResponse(savedMovie);
+    }
+}
+```
+
+1行ずつ読む:
+
+```text
+private final MovieRepository movieRepository;
+  DB操作を行うRepositoryを使う。
+
+private final MovieMapper movieMapper;
+  DTOとEntityを変換するMapperを使う。
+
+public MovieService(...)
+  Spring BootがRepositoryとMapperを渡してくれる。
+
+Movie movie = movieMapper.toEntity(request);
+  Reactから受け取ったRequest DTOをEntityへ変換する。
+
+Movie savedMovie = movieRepository.save(movie);
+  EntityをDBへ保存する。
+  保存後はidが入ったEntityが返る。
+
+return movieMapper.toResponse(savedMovie);
+  保存した結果をResponse DTOに変換してReactへ返す。
+```
+
+### 5. 一覧APIをDBから返す
 
 固定データではなく、DBから取得したデータを返します。
 
@@ -329,7 +492,7 @@ Response DTOのリスト
 JSONレスポンス
 ```
 
-### 5. 詳細、更新、削除を追加する
+### 6. 詳細、更新、削除を追加する
 
 登録と一覧が動いてから、IDを使うAPIを追加します。
 
@@ -341,7 +504,7 @@ DELETE /api/restaurants/{id}
 
 IDを使うAPIでは、まず「そのIDのデータが存在するか」を確認します。
 
-### 6. クエリパラメータで絞り込む
+### 7. クエリパラメータで絞り込む
 
 一覧が動いた後に、条件付きの一覧取得を追加します。
 
@@ -378,49 +541,104 @@ GET /api/restaurants?area=新宿
 Day3では、DB保存とCRUD APIを作ります。
 一度に全部依頼せず、登録と一覧から始めます。
 
-最初の依頼例:
+最初に、自分で穴埋めしてからAIへ渡します。
 
 ```text
-Spring Bootでグルメ管理アプリのお店データをDBに保存できるようにしてください。
+Spring Bootでグルメ管理アプリの ______ データをDBに保存できるようにしてください。
 
 まず作るもの:
-- Restaurant Entity
-- RestaurantRepository
-- RestaurantRequest
-- RestaurantResponse
-- RestaurantMapper
-- POST /api/restaurants
-- GET /api/restaurants
+- ______ Entity
+- ______Repository
+- ______Request
+- ______Response
+- ______Mapper
+- POST /api/__________
+- GET /api/__________
+
+項目:
+id, ______, ______, ______, ______, imageUrl, status
+
+条件:
+- Entityは何の形か: ______
+- Request DTOはどこから受け取る形か: ______
+- Response DTOはどこへ返す形か: ______
+- Mapperは何を変換するか: ______
+- Serviceは何を書く場所か: ______
+- Controllerは何をする場所か: ______
+
+作成後に、Request DTO、Entity、Response DTOの違いを説明してください。
+```
+
+記入例:
+
+```text
+グルメ管理アプリのお店データ
+
+Restaurant Entity
+RestaurantRepository
+RestaurantRequest
+RestaurantResponse
+RestaurantMapper
+POST /api/restaurants
+GET /api/restaurants
 
 項目:
 id, name, area, genre, memo, imageUrl, status
 
-条件:
-- EntityはDBに保存する形として作ってください
-- Request DTOは登録時にReactから受け取る形にしてください
-- Response DTOはReactへ返す形にしてください
-- MapperでDTOとEntityを変換してください
-- Serviceに処理を書き、ControllerはServiceを呼ぶだけにしてください
+Entity:
+DBに保存する形
 
-作成後に、Request DTO、Entity、Response DTOの違いを説明してください。
+Request DTO:
+登録時にReactから受け取る形
+
+Response DTO:
+Reactへ返す形
+
+Mapper:
+DTOとEntityを変換する
+
+Service:
+登録や一覧取得の処理を書く
+
+Controller:
+APIの入口としてServiceを呼ぶ
 ```
 
 次の依頼例:
 
 ```text
-既存のRestaurant APIに、詳細、更新、削除を追加してください。
+既存のRestaurant APIに、______、______、______ を追加してください。
 
 追加するAPI:
+______ /api/restaurants/{id}
+______ /api/restaurants/{id}
+______ /api/restaurants/{id}
+
+条件:
+- 存在しないIDの場合はどう扱うか: ______
+- 更新ではどのidを使って対象データを探すか: ______
+- 削除後のレスポンスボディは必要か: ______
+
+作成後に、各APIがServiceとRepositoryで何をしているか説明してください。
+```
+
+記入例:
+
+```text
+詳細、更新、削除
+
 GET /api/restaurants/{id}
 PUT /api/restaurants/{id}
 DELETE /api/restaurants/{id}
 
-条件:
-- 存在しないIDの場合は404として扱ってください
-- 更新ではURLのidを使って対象データを探してください
-- 削除後はレスポンスボディなしで返してください
+存在しないIDの場合:
+404として扱う
 
-作成後に、各APIがServiceとRepositoryで何をしているか説明してください。
+更新で使うid:
+URLのidを使う
+
+削除後のレスポンスボディ:
+不要
 ```
 
 AIの回答を確認するときのポイント:
