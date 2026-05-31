@@ -309,12 +309,15 @@ DB
 JSONでレスポンス
 ```
 
-## ハンズオン
+## ライブコーディング: Movie一覧API
 
-固定のお店データを返す一覧APIを作成する。
+ここからは、講師がMovie題材で一覧APIを作ります。
+参加者は、どのファイルに何を書くのか、なぜその順番で作るのかを見ながら確認します。
+
+作るAPI:
 
 ```text
-GET /api/restaurants
+GET /api/movies
 ```
 
 返すJSONの例:
@@ -323,12 +326,11 @@ GET /api/restaurants
 [
   {
     "id": 1,
-    "name": "Cafe Sakura",
-    "area": "新宿",
-    "genre": "カフェ",
-    "memo": "落ち着いて作業できそう",
-    "imageUrl": "https://example.com/cafe.jpg",
-    "status": "WANT_TO_GO"
+    "title": "The Matrix",
+    "genre": "SF",
+    "memo": "仮想世界を扱う映画",
+    "imageUrl": "https://example.com/matrix.jpg",
+    "status": "WATCHED"
   }
 ]
 ```
@@ -344,7 +346,7 @@ GET /api/restaurants
 ```java
 @GetMapping
 public String hello() {
-    return "restaurants api";
+    return "movies api";
 }
 ```
 
@@ -358,27 +360,26 @@ public String hello()
   APIが呼ばれたときに実行されるメソッド。
   Stringを返すので、文字列のレスポンスになる。
 
-return "restaurants api";
+return "movies api";
   ブラウザやAPIクライアントへ返す文字列。
 ```
 
 確認すること:
 
 ```text
-GET /api/restaurants にアクセスできる
+GET /api/movies にアクセスできる
 404ではない
 Spring Bootが起動している
 ```
 
 ### 2. DTOを作ってJSONを返す
 
-次に、Reactへ返したい形を `RestaurantResponse` として作ります。
+次に、Reactへ返したい形を `MovieResponse` として作ります。
 
 ```java
-public record RestaurantResponse(
+public record MovieResponse(
         Long id,
-        String name,
-        String area,
+        String title,
         String genre,
         String memo,
         String imageUrl,
@@ -390,18 +391,15 @@ public record RestaurantResponse(
 1行ずつ読む:
 
 ```text
-public record RestaurantResponse(...)
+public record MovieResponse(...)
   Reactへ返すデータの形を定義している。
   recordは、値をまとめて持つためのJavaの書き方。
 
 Long id
-  お店を区別するID。
+  映画を区別するID。
 
-String name
-  店名。
-
-String area
-  地域。
+String title
+  映画タイトル。
 
 String genre
   ジャンル。
@@ -413,7 +411,7 @@ String imageUrl
   画像URL。画像ファイル本体ではなく、URL文字列を持つ。
 
 String status
-  行きたい、行った、お気に入りなどの状態。
+  見たい、見た、お気に入りなどの状態。
 ```
 
 見るポイント:
@@ -426,16 +424,15 @@ String status
 
 ```java
 @GetMapping
-public List<RestaurantResponse> findAll() {
+public List<MovieResponse> findAll() {
     return List.of(
-            new RestaurantResponse(
+            new MovieResponse(
                     1L,
-                    "Cafe Sakura",
-                    "新宿",
-                    "カフェ",
-                    "落ち着いて作業できそう",
-                    "https://example.com/cafe.jpg",
-                    "WANT_TO_GO"
+                    "The Matrix",
+                    "SF",
+                    "仮想世界を扱う映画",
+                    "https://example.com/matrix.jpg",
+                    "WATCHED"
             )
     );
 }
@@ -445,37 +442,34 @@ public List<RestaurantResponse> findAll() {
 
 ```text
 @GetMapping
-  GET /api/restaurants が来たときに、このメソッドを動かす。
+  GET /api/movies が来たときに、このメソッドを動かす。
 
-public List<RestaurantResponse> findAll()
-  RestaurantResponseを複数件返すメソッド。
+public List<MovieResponse> findAll()
+  MovieResponseを複数件返すメソッド。
   Listなので、JSONでは配列として返る。
 
 return List.of(...)
-  固定のお店データをリストとして返す。
+  固定の映画データをリストとして返す。
 
-new RestaurantResponse(...)
-  Reactへ返す1件分のお店データを作っている。
+new MovieResponse(...)
+  Reactへ返す1件分の映画データを作っている。
 
 1L
   idの値。Long型なのでLを付けている。
 
-"Cafe Sakura"
-  nameに入る値。
+"The Matrix"
+  titleに入る値。
 
-"新宿"
-  areaに入る値。
-
-"カフェ"
+"SF"
   genreに入る値。
 
-"落ち着いて作業できそう"
+"仮想世界を扱う映画"
   memoに入る値。
 
-"https://example.com/cafe.jpg"
+"https://example.com/matrix.jpg"
   imageUrlに入る値。
 
-"WANT_TO_GO"
+"WATCHED"
   statusに入る値。
 ```
 
@@ -483,7 +477,7 @@ new RestaurantResponse(...)
 
 ```text
 レスポンスがJSON配列になっている
-name, area, genre, memo, imageUrl, status が含まれている
+title, genre, memo, imageUrl, status が含まれている
 画像URLが文字列として返っている
 ```
 
@@ -499,9 +493,45 @@ Service     返すデータを用意する
 
 この分け方を早めに覚えておくと、後で登録、編集、削除を追加しやすくなります。
 
-## 演習
+ライブコーディングで作るファイル:
 
-固定データを3件に増やします。
+```text
+controller/MovieController.java
+service/MovieService.java
+dto/movie/MovieResponse.java
+```
+
+## 演習: Restaurant一覧API
+
+Movieで作った一覧APIと同じ構造で、Restaurantの一覧APIを作ります。
+新しい技術を増やす演習ではなく、Movieで見た構造をRestaurantへ置き換える演習です。
+
+作るAPI:
+
+```text
+GET /api/restaurants
+```
+
+作るファイル:
+
+```text
+controller/RestaurantController.java
+service/RestaurantService.java
+dto/restaurant/RestaurantResponse.java
+```
+
+置き換えるもの:
+
+```text
+MovieController  -> RestaurantController
+MovieService     -> RestaurantService
+MovieResponse    -> RestaurantResponse
+GET /api/movies  -> GET /api/restaurants
+title            -> name
+映画データ        -> お店データ
+```
+
+固定データを3件返します。
 
 条件:
 
@@ -515,6 +545,7 @@ Service     返すデータを用意する
 - APIを呼ぶと3件のJSONが返る
 - 各データに必要な項目が入っている
 - ControllerとServiceの役割を説明できる
+- Movieのどの部分をRestaurantへ置き換えたか説明できる
 
 ## AIへの依頼例
 
