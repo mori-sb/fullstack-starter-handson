@@ -63,12 +63,14 @@ Day3は新しい言葉が増えます。
    絞り込み条件がURLに入る流れを見る。
 ```
 
-追加で画像を作る場合は、次の3枚があると説明しやすくなります。
-プロンプトは `docs/instructor/visual-map.md` に置いています。
+Day3では、次の画像を使います。
 
 ```text
-images/mybatis-crud-map.png
-  HTTPメソッド、Repositoryメソッド、SQLの対応を見る図。
+images/crud-api-map.png
+  画面操作、API、SQLの対応を見る図。
+
+images/dbmodel-table-map.png
+  DBモデルとDBテーブルの対応を見る図。
 
 images/dto-dbmodel-flow.png
   Request DTO、DBモデル、Response DTOの違いを見る図。
@@ -178,7 +180,7 @@ Movie           <->  movies
 
 DTOとDBモデルは、持っている項目が似ていても目的が違います。
 
-![DTOの位置づけ](../images/spring-dto-flow.png)
+![Request DTO、DBモデル、Response DTOの使い分け](../images/dto-dbmodel-flow.png)
 
 ```text
 Request DTO
@@ -298,7 +300,7 @@ MyBatisのRepositoryでは、次のようなアノテーションを使います
 
 画面の操作、HTTPメソッド、APIは対応しています。
 
-![画面操作とAPIの対応](../images/screen-api-map.png)
+![CRUD APIの対応](../images/crud-api-map.png)
 
 ```text
 お店を登録する
@@ -406,6 +408,8 @@ CRUDは量が多いため、次の順番で進めます。
 ## 1. テーブルを確認する
 
 Movie題材では、DBに `movies` テーブルがある前提で進めます。
+
+![DBモデルとDBテーブルの対応](../images/dbmodel-table-map.png)
 
 ```sql
 CREATE TABLE movies (
@@ -926,6 +930,11 @@ Controllerに処理を書きすぎると、URLの入口と処理の中身が混�
 そのため、ControllerはServiceを呼ぶだけに近い形にします。
 
 ## 7. Brunoで確認する
+
+登録APIは、リクエストが左から右へ進み、保存後にレスポンスが返ります。
+Brunoで確認するときも、この流れを意識します。
+
+![登録APIの流れ](../images/create-api-mybatis-flow.png)
 
 登録:
 

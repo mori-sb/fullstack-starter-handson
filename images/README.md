@@ -22,8 +22,9 @@
 - `spring-mapper-flow.png`: DTO、Mapper、Entityの変換
 - `dto-entity-mapper.png`: DTO、Entity、Mapperの違い
 - `crud-api-map.png`: CRUDとHTTPメソッドの対応
-- `entity-table-map.png`: EntityとDBテーブルの対応
-- `create-api-flow.png`: 登録APIでReactからDB保存まで進む流れ
+- `dbmodel-table-map.png`: MyBatisで使うDBモデルとDBテーブルの対応
+- `dto-dbmodel-flow.png`: Request DTO、DBモデル、Response DTOの使い分け
+- `create-api-mybatis-flow.png`: 登録APIでRequest DTOからDB保存、Response DTOまで進む流れ
 - `list-api-flow.png`: 一覧取得APIでDBからReact表示まで戻る流れ
 - `query-param-flow.png`: クエリパラメータで一覧を絞り込む流れ
 - `react-directory-structure.png`: Reactのディレクトリ構造
@@ -58,6 +59,10 @@
 - `service-role.png`: Serviceの役割
 - `repository-role.png`: Repositoryの役割
 - `entity-table-map.png`: EntityとDBテーブルの対応
+- `crud-api-map.png`: Spring Boot + MyBatisで作るCRUD APIの対応
+- `dbmodel-table-map.png`: MyBatisで使うDBモデルとDBテーブルの対応
+- `dto-dbmodel-flow.png`: Request DTO、DBモデル、Response DTOの使い分け
+- `create-api-mybatis-flow.png`: Spring Boot + MyBatisの登録APIの流れ
 - `query-param-flow.png`: クエリパラメータで一覧を絞り込む流れ
 - `react-directory-structure.png`: Reactのディレクトリ構造
 - `react-html-css-js-tailwind.png`: HTML、CSS、JavaScript、React、Tailwind CSSの関係
