@@ -183,6 +183,26 @@ public interface RestaurantRepository {
 
 DTOとDBモデルの変換は、この教材ではServiceの中で行う。
 
+### Migration
+
+DBのテーブル作成や変更を、SQLファイルとして履歴管理する仕組み。
+
+この教材ではFlywayを使い、`backend/src/main/resources/db/migration/` にSQLファイルを置く。
+
+例:
+
+```text
+V1__create_movies_table.sql
+```
+
+Spring Bootを起動すると、Flywayがまだ実行されていないmigrationをDBへ反映する。
+
+### Schema
+
+DBの構造。
+
+どんなテーブルがあり、どんなカラムを持つかを表す。
+
 ### Validation
 
 入力値が正しいか確認すること。

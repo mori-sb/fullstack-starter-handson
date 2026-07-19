@@ -334,10 +334,13 @@ Day3ではDBを使うため、Javaファイルを作る前に `backend/pom.xml` 
 
 ```text
 backend/pom.xml
-  MyBatis と DBドライバの依存関係を確認する
+  MyBatis、DBドライバ、migrationの依存関係を確認する
 
 backend/src/main/resources/application.yml
   DB接続先を確認する
+
+backend/src/main/resources/db/migration/
+  テーブルを作るSQLを置く
 ```
 
 Day3で追加する依存関係:
@@ -354,27 +357,47 @@ Day3で追加する依存関係:
     <artifactId>postgresql</artifactId>
     <scope>runtime</scope>
 </dependency>
+
+<dependency>
+    <groupId>org.flywaydb</groupId>
+    <artifactId>flyway-core</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.flywaydb</groupId>
+    <artifactId>flyway-database-postgresql</artifactId>
+</dependency>
 ```
 
 MyBatis Spring Boot Starter 3.0系はSpring Boot 3.2から3.5で使えます。
 この教材のSpring Boot 3系では、`3.0.5` を使います。
 
+`flyway-core` は、DBのテーブル定義をmigrationファイルとして管理するために使います。
+PostgreSQLを使う場合は、`flyway-database-postgresql` も入れておくとDB種別を正しく扱えます。
+Spring Boot起動時に、まだ実行されていないmigration SQLをDBへ反映してくれます。
+
 Day3で作るファイル:
 
 ```text
-com/example/gourmet/
-├─ controller/
-│  └─ MovieController.java   Day2から編集する
-├─ service/
-│  └─ MovieService.java      Day2から編集する
-├─ repository/
-│  └─ MovieRepository.java   新しく作る
-├─ model/
-│  └─ Movie.java             新しく作る
-└─ dto/
-   └─ movie/
-      ├─ MovieRequest.java   新しく作る
-      └─ MovieResponse.java  Day2から編集する
+backend/src/main/
+├─ java/
+│  └─ com/example/gourmet/
+│     ├─ controller/
+│     │  └─ MovieController.java   Day2から編集する
+│     ├─ service/
+│     │  └─ MovieService.java      Day2から編集する
+│     ├─ repository/
+│     │  └─ MovieRepository.java   新しく作る
+│     ├─ model/
+│     │  └─ Movie.java             新しく作る
+│     └─ dto/
+│        └─ movie/
+│           ├─ MovieRequest.java   新しく作る
+│           └─ MovieResponse.java  Day2から編集する
+└─ resources/
+   └─ db/
+      └─ migration/
+         └─ V1__create_movies_table.sql  新しく作る
 ```
 
 説明者は、作る前に次のように説明すると迷いにくくなります。
@@ -393,7 +416,7 @@ ControllerはServiceを呼び出します。
 CRUDは量が多いため、次の順番で進めます。
 
 ```text
-1. テーブルを確認する
+1. migrationでテーブルを作る
 2. DBモデルを作る
 3. Request DTO / Response DTOを作る
 4. RepositoryにSQLを書く
@@ -405,11 +428,64 @@ CRUDは量が多いため、次の順番で進めます。
 ここで大事なのは、いきなり全部を作らないことです。
 まず登録と一覧を動かし、DBに保存できることを確認してから、詳細、更新、削除を追加します。
 
-## 1. テーブルを確認する
+## 1. migrationでテーブルを作る
 
-Movie題材では、DBに `movies` テーブルがある前提で進めます。
+Movie題材では、DBに `movies` テーブルを作ります。
+SQLを手で一度だけ実行するのではなく、migrationファイルとして管理します。
+
+```text
+migration
+  DBのテーブル作成や変更を、SQLファイルとして履歴管理する仕組み。
+
+schema
+  DBのテーブル構造。
+  どんなテーブルがあり、どんなカラムを持つかを表す。
+```
+
+この教材では、Flywayを使ってmigrationを行います。
+Spring Bootを起動すると、Flywayが `db/migration` 配下のSQLを読み、まだDBに反映されていないSQLを実行します。
+
+```text
+Spring Bootを起動する
+  ↓
+Flywayがmigrationファイルを探す
+  ↓
+V1__create_movies_table.sql を実行する
+  ↓
+movies テーブルがDBに作られる
+  ↓
+RepositoryからSQLで読み書きできるようになる
+```
+
+作るファイル:
+
+```text
+backend/src/main/resources/db/migration/V1__create_movies_table.sql
+```
+
+ファイル名の読み方:
+
+```text
+V1
+  1番目のmigration。
+
+__
+  バージョンと説明を分けるための区切り。
+  アンダースコア2つ。
+
+create_movies_table
+  何をするmigrationかを表す説明。
+
+.sql
+  SQLファイル。
+```
+
+Flywayのmigrationファイルは、名前のルールが大事です。
+`V1__create_movies_table.sql` のように、`V数字__説明.sql` の形で書きます。
 
 ![DBモデルとDBテーブルの対応](../images/dbmodel-table-map.png)
+
+`V1__create_movies_table.sql` に、次のSQLを書きます。
 
 ```sql
 CREATE TABLE movies (
@@ -449,6 +525,35 @@ DB
 ```
 
 MyBatisではSQLの中で `image_url AS imageUrl` と書くことで、DBの列名とJavaのフィールド名を対応させます。
+
+### migrationで確認すること
+
+Spring Bootを起動したあと、DBに `movies` テーブルができているか確認します。
+
+確認すること:
+
+```text
+movies テーブルが作られている
+id, title, genre, memo, image_url, status カラムがある
+id が自動採番になっている
+image_url はDBの列名としてsnake_caseになっている
+```
+
+Rancher DesktopでDBコンテナを立ち上げている場合も、考え方は同じです。
+
+```text
+PostgreSQLコンテナ
+  データを保存するDB
+
+Spring Boot
+  DBに接続するアプリ
+
+Flyway
+  Spring Boot起動時にテーブル作成SQLを実行する仕組み
+```
+
+ここで理解したいのは、「Repositoryを書く前に、DB側にテーブルが必要」ということです。
+Repositoryの `SELECT ... FROM movies` は、`movies` テーブルが存在している前提で動きます。
 
 ## 2. DBモデルを作る
 

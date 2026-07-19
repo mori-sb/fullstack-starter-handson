@@ -520,6 +520,14 @@ mybatis-spring-boot-starter
 
 postgresql
   Spring BootからPostgreSQLへ接続するために必要。
+
+flyway-core
+  DBのテーブル定義をmigrationファイルとして管理するために必要。
+  Spring Boot起動時に、まだ実行していないSQLをDBへ反映できる。
+
+flyway-database-postgresql
+  FlywayでPostgreSQLを扱うために必要。
+  PostgreSQLを使うプロジェクトでは入れておく。
 ```
 
 IntelliJ IDEAで `pom.xml` を開いたら、Mavenの読み込みが完了しているか確認します。
