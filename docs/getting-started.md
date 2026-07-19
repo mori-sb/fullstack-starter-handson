@@ -132,20 +132,214 @@ backend/src/main/java/com/example/gourmet/GourmetApplication.java
 backend/src/main/resources/application.yml
 ```
 
-見るポイント:
+Spring Bootプロジェクトを開くときは、どのプロジェクトでもまず次の3つを探します。
 
 ```text
 pom.xml
-  Mavenプロジェクトの設定。
-  Spring Bootの依存関係を書く。
+  このプロジェクトをどうビルドするかを書くファイル。
+  Mavenがこのファイルを読んで、必要なライブラリを取得する。
 
 GourmetApplication.java
   Spring Bootアプリの起動入口。
+  このファイルを実行すると、APIサーバーが起動する。
 
 application.yml
-  アプリの設定を書く。
-  ポート番号やDB接続先などを設定する。
+  アプリの設定を書くファイル。
+  ポート番号、DB接続先、ログ設定などを書く。
 ```
+
+この3つを見ると、別のSpring Bootプロジェクトでも次のことを判断できます。
+
+```text
+どんなライブラリを使っているか
+どのJavaファイルからアプリを起動するか
+どのポートやDBに接続するか
+```
+
+#### pom.xmlを見る理由
+
+`pom.xml` は、Mavenプロジェクトの設定ファイルです。
+Spring Bootでは、必要な機能を依存関係として追加します。
+
+例:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+読み方:
+
+```text
+spring-boot-starter-web
+  Web APIを作るために必要。
+  Controller、HTTPリクエスト、JSONレスポンスなどを扱えるようにする。
+```
+
+Day3でDBを使うときは、次のような依存関係が必要になります。
+
+```text
+spring-boot-starter-data-jpa
+  EntityやRepositoryを使ってDB操作をするために必要。
+
+postgresql
+  Spring BootからPostgreSQLへ接続するために必要。
+```
+
+IntelliJ IDEAで `pom.xml` を開いたら、Mavenの読み込みが完了しているか確認します。
+読み込みが終わっていないと、`@RestController` や `@Service` などのSpring Bootのクラスを正しく認識できません。
+
+よく見る状態:
+
+```text
+Mavenの読み込み中
+  依存関係を取得している途中。
+  少し待つ。
+
+赤いエラーが多い
+  Maven読み込みが終わっていないか、Java SDKが合っていない可能性がある。
+
+pom.xmlを変更した
+  Mavenの再読み込みが必要。
+```
+
+IntelliJ IDEAでの操作の目安:
+
+```text
+pom.xmlを開く
+  -> Mavenとして読み込むか聞かれたら読み込む
+
+Mavenウィンドウを開く
+  -> Reload All Maven Projects を押す
+
+依存関係を追加した
+  -> もう一度 Reload All Maven Projects を押す
+```
+
+Mavenの読み込みが終わると、Spring Bootのアノテーションやimportの赤いエラーが減ります。
+それでも赤い場合は、Java SDKの設定を確認します。
+
+#### Java SDKを見る理由
+
+Spring BootはJavaで動きます。
+そのため、IntelliJ IDEAがどのJavaを使うかを設定する必要があります。
+
+この教材では、Java 17を使います。
+
+確認すること:
+
+```text
+Project SDK が 17 になっている
+MavenのJavaバージョンと合っている
+GourmetApplication.java を実行できる
+```
+
+Java SDKが合っていないと、次のような問題が起きます。
+
+```text
+Javaの文法エラーが出る
+Mavenビルドが失敗する
+Spring Bootアプリを起動できない
+```
+
+別プロジェクトでも、最初に `pom.xml` のJavaバージョンとIntelliJ IDEAのProject SDKが合っているか確認します。
+
+IntelliJ IDEAでの操作の目安:
+
+```text
+Project Structure を開く
+  -> Project SDK を確認する
+  -> 17 を選ぶ
+
+Module SDK も確認する
+  -> Project SDK と同じJavaを使う
+```
+
+`pom.xml` に次のように書かれている場合、IntelliJ側もJava 17に合わせます。
+
+```xml
+<java.version>17</java.version>
+```
+
+#### GourmetApplication.javaを見る理由
+
+`GourmetApplication.java` は、Spring Bootアプリの起動入口です。
+
+```java
+@SpringBootApplication
+public class GourmetApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(GourmetApplication.class, args);
+    }
+}
+```
+
+見るポイント:
+
+```text
+@SpringBootApplication
+  このclassをSpring Bootアプリの起点にする。
+
+mainメソッド
+  Javaアプリを起動するときの入口。
+
+SpringApplication.run(...)
+  Spring Bootアプリを起動する。
+```
+
+このファイルがある場所も大事です。
+ControllerやServiceは、基本的にこのファイルと同じパッケージ配下に置きます。
+
+この教材では、起動クラスがここにあります。
+
+```text
+com/example/gourmet/GourmetApplication.java
+```
+
+そのため、ControllerやServiceは次のように置きます。
+
+```text
+com/example/gourmet/controller/
+com/example/gourmet/service/
+```
+
+別プロジェクトでも、まず起動クラスを探すと、どこにControllerやServiceを置けばSpring Bootが見つけてくれるか判断しやすくなります。
+
+#### application.ymlを見る理由
+
+`application.yml` は、アプリの設定を書くファイルです。
+
+この教材では、最初はポート番号だけを確認します。
+
+```yaml
+server:
+  port: 8080
+```
+
+読み方:
+
+```text
+server.port
+  Spring Bootをどのポートで起動するか。
+  8080なら http://localhost:8080 でAPIを呼べる。
+```
+
+Day3でDBを使うと、DB接続先もここに書きます。
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gourmet
+    username: gourmet
+    password: password
+```
+
+別プロジェクトでも、APIのURLやDB接続で迷ったら、まず `application.yml` を見ます。
+
+#### 起動確認
 
 IntelliJ IDEAで確認すること:
 
@@ -161,6 +355,9 @@ Spring Bootを起動できたら、ログに次のような内容が出ます。
 Tomcat started on port 8080
 Started GourmetApplication
 ```
+
+このログが出たら、Spring BootのAPIサーバーが起動しています。
+このあと、Brunoやブラウザから `http://localhost:8080/...` にアクセスしてAPIを確認できます。
 
 ### 4. frontendをVS Codeで開く
 
