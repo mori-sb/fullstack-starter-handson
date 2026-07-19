@@ -20,12 +20,13 @@
 ```text
 1. GitHubからリポジトリを取得する
 2. developブランチに移動する
-3. backendをIntelliJ IDEAで開く
-4. Spring Bootを起動できるか確認する
-5. frontendをVS Codeで開く
-6. Reactを起動できるか確認する
-7. BrunoでAPI確認の準備をする
-8. Day3でDBを使うタイミングでRancher Desktopを準備する
+3. backendのSpring Bootプロジェクトを作る
+4. backendをIntelliJ IDEAで開く
+5. Spring Bootを起動できるか確認する
+6. frontendをVS Codeで開く
+7. Reactを起動できるか確認する
+8. BrunoでAPI確認の準備をする
+9. Day3でDBを使うタイミングでRancher Desktopを準備する
 ```
 
 最初から全部を完璧に整えるより、使うタイミングで確認します。
@@ -349,9 +350,105 @@ git branch
 
 `*` が付いているブランチが、今いるブランチです。
 
-### 3. backendをIntelliJ IDEAで開く
+### 3. backendのSpring Bootプロジェクトを作る
 
 Spring Boot側は `backend/` です。
+最初から `pom.xml` や `GourmetApplication.java` がある前提ではなく、まずSpring Bootプロジェクトを作ります。
+
+ここでは、Spring Initializrを使います。
+
+```text
+https://start.spring.io/
+```
+
+Spring Initializrでは、次のように設定します。
+
+```text
+Project
+  Maven
+
+Language
+  Java
+
+Spring Boot
+  3系の安定版
+
+Group
+  com.example
+
+Artifact
+  gourmet
+
+Name
+  gourmet
+
+Package name
+  com.example.gourmet
+
+Packaging
+  Jar
+
+Java
+  21
+```
+
+Dependenciesでは、まずDay2で使うものだけ入れます。
+
+```text
+Spring Web
+```
+
+Day3でDBを使うときに、次を追加します。
+
+```text
+Spring Data JPA
+PostgreSQL Driver
+```
+
+最初からDB関連まで入れても動きますが、Day2ではDBを使いません。
+まずSpring WebだけでAPIを作れることを確認し、Day3でRepositoryやDB接続を追加すると、何のために依存関係を増やすのかが分かりやすくなります。
+
+Spring InitializrでGenerateしたzipを展開し、中身をリポジトリの `backend/` に置きます。
+
+完成イメージ:
+
+```text
+fullstack-starter-handson/
+├─ backend/
+│  ├─ pom.xml
+│  └─ src/
+│     └─ main/
+│        ├─ java/
+│        │  └─ com/example/gourmet/
+│        │     └─ GourmetApplication.java
+│        └─ resources/
+│           └─ application.properties または application.yml
+└─ frontend/
+```
+
+この時点で、`pom.xml` と `GourmetApplication.java` が作られます。
+`application.properties` ができた場合は、そのまま使ってもよいです。
+この教材では説明をそろえるため、`application.yml` にして進めます。
+
+`application.yml` を作る場合:
+
+```text
+backend/src/main/resources/application.yml
+```
+
+最初は次だけ書きます。
+
+```yaml
+spring:
+  application:
+    name: gourmet
+
+server:
+  port: 8080
+```
+
+### 4. backendをIntelliJ IDEAで開く
+
 IntelliJ IDEAでは、リポジトリ全体ではなく `backend/` を開くとSpring Bootプロジェクトとして扱いやすいです。
 
 開く場所:
@@ -360,7 +457,7 @@ IntelliJ IDEAでは、リポジトリ全体ではなく `backend/` を開くとS
 fullstack-starter-handson/backend
 ```
 
-最初に見るファイル:
+Spring Bootプロジェクトを作ったあと、最初に見るファイル:
 
 ```text
 backend/pom.xml
@@ -369,6 +466,7 @@ backend/src/main/resources/application.yml
 ```
 
 Spring Bootプロジェクトを開くときは、どのプロジェクトでもまず次の3つを探します。
+これらは「最初から手で全部作るもの」ではなく、Spring Initializrでプロジェクトを作ると生成される基本ファイルです。
 
 ```text
 pom.xml
