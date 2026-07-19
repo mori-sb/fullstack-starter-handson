@@ -349,28 +349,150 @@ Repositoryの説明だけに集中してください。
 images/crud-api-map.png
 ```
 
+伝えること:
+
+- 画面操作とHTTPメソッドが対応している
+- ControllerのメソッドとRepositoryのSQLも対応している
+- CRUDは、登録、取得、更新、削除の基本セットである
+
+生成依頼文:
+
+```text
+モダンなSaaS技術資料風に、Spring Boot + MyBatisで作るCRUD APIの対応図を作ってください。
+
+横長16:9の教材スライド画像にしてください。
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ネイビー・グリーン・シアンを使って、読みやすくしてください。
+
+左側に「画面操作」、中央に「Spring Boot Controller」、右側に「MyBatis Repository / SQL」を配置してください。
+5行の対応表のように見せてください。
+
+行の内容:
+一覧を見る -> GET /api/movies -> findAll() -> SELECT
+1件を見る -> GET /api/movies/{id} -> findById(id) -> SELECT WHERE id
+登録する -> POST /api/movies -> create(request) -> INSERT
+編集する -> PUT /api/movies/{id} -> update(id, request) -> UPDATE
+削除する -> DELETE /api/movies/{id} -> delete(id) -> DELETE
+
+下部にポイントとして、
+「画面操作、API、SQLは対応している」
+「まずはこの対応を読めるようにする」
+を入れてください。
+
+重要:
+RestaurantではなくMovieを題材にしてください。
+演習の答えになりすぎないように、Restaurantの項目名は入れないでください。
+```
+
 ### 13. DBモデルとDBテーブル対応図
 
 ファイル名:
 
 ```text
-images/entity-table-map.png
+images/dbmodel-table-map.png
 ```
 
-関連する作成済み画像:
+伝えること:
+
+- DBモデルはDBテーブルの1行をJavaで扱うためのクラスである
+- この教材ではJPAの `@Entity` は使わない
+- Javaの `imageUrl` とDBの `image_url` のように、名前の対応を見る必要がある
+- DTOとは役割が違う
+
+生成依頼文:
 
 ```text
-images/spring-entity-flow.png
-```
+モダンなSaaS技術資料風に、MyBatisで使うDBモデルとDBテーブルの対応図を作ってください。
 
-まず `spring-entity-flow.png` は必要に応じてDBモデルの位置づけとして扱い、その後でDBモデルとDBテーブルの対応を説明する。
+横長16:9の教材スライド画像にしてください。
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ネイビー・グリーン・シアンを使って、読みやすくしてください。
+
+左側に「JavaのDBモデル Movie」、右側に「DBの movies table」を配置してください。
+中央に対応線を引いてください。
+
+左側のMovieには次のフィールドを表示してください。
+id: Long
+title: String
+genre: String
+memo: String
+imageUrl: String
+status: String
+
+右側のmovies tableには次のカラムを表示してください。
+id: BIGSERIAL
+title: VARCHAR
+genre: VARCHAR
+memo: TEXT
+image_url: VARCHAR
+status: VARCHAR
+
+imageUrl と image_url の対応を少し強調してください。
+
+下部にポイントとして、
+「DBモデルはDBの1行をJavaで扱うための形」
+「JPAの@Entityではない」
+「APIで受け渡しするDTOとは目的が違う」
+を入れてください。
+
+重要:
+Entityという単語は使わないでください。
+Movieを題材にしてください。
+```
 
 ### 14. 登録APIの流れ
 
 ファイル名:
 
 ```text
-images/create-api-flow.png
+images/create-api-mybatis-flow.png
+```
+
+伝えること:
+
+- POSTで送られたJSONはRequest DTOで受け取る
+- ServiceでDBモデルに詰め替える
+- RepositoryがINSERTを実行する
+- 保存後はResponse DTOで返す
+
+生成依頼文:
+
+```text
+モダンなSaaS技術資料風に、Spring Boot + MyBatisの登録APIの流れを説明する図を作ってください。
+
+横長16:9の教材スライド画像にしてください。
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ネイビー・グリーン・シアンを使って、読みやすくしてください。
+
+左から右に、次の流れを配置してください。
+
+BrunoまたはReact
+  POST /api/movies
+  JSON body
+
+MovieController
+  @PostMapping
+  @RequestBody MovieRequest
+
+MovieService
+  MovieRequest -> Movie
+  create処理
+
+MovieRepository
+  @Insert
+  INSERT INTO movies
+
+Database
+  movies tableに保存
+
+戻りの流れとして、DatabaseからServiceへ保存後のMovie、ServiceからControllerへMovieResponse、ControllerからReactへJSON Responseが返る矢印も薄く表示してください。
+
+下部にポイントとして、
+「Request DTOは受け取る形」
+「DBモデルは保存する形」
+「Response DTOは返す形」
+を入れてください。
+
+重要:
+題材はMovieにしてください。
+Restaurantの答えにならないようにしてください。
 ```
 
 ### 15. 一覧取得APIの流れ
@@ -381,7 +503,113 @@ images/create-api-flow.png
 images/list-api-flow.png
 ```
 
-### 16. クエリパラメータの図
+伝えること:
+
+- GETではbodyを送らずURLで一覧を取得する
+- Controller、Service、Repository、Databaseの順に処理が進む
+- DBから取得した複数件はListとして返る
+- APIレスポンスはJSON配列になる
+
+生成依頼文:
+
+```text
+モダンなSaaS技術資料風に、Spring Boot + MyBatisの一覧取得APIの流れを説明する図を作ってください。
+
+横長16:9の教材スライド画像にしてください。
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ネイビー・グリーン・シアンを使って、読みやすくしてください。
+
+左から右に、次の流れを配置してください。
+
+BrunoまたはReact
+  GET /api/movies
+
+MovieController
+  @GetMapping
+  findAll()
+
+MovieService
+  movieRepository.findAll()
+  List<Movie>をList<MovieResponse>へ変換
+
+MovieRepository
+  @Select
+  SELECT ... FROM movies
+
+Database
+  movies table
+
+戻りの流れとして、DatabaseからRepositoryへ複数行、ServiceからControllerへList<MovieResponse>、ControllerからReactへJSON配列が返る矢印を表示してください。
+
+下部にポイントとして、
+「GET一覧はJSON配列で返る」
+「RepositoryはSQLでDBから取得する」
+「Serviceで画面に返す形へ変換する」
+を入れてください。
+
+重要:
+題材はMovieにしてください。
+Restaurantの項目名は入れないでください。
+```
+
+### 16. DTOとDBモデルの使い分け図
+
+ファイル名:
+
+```text
+images/dto-dbmodel-flow.png
+```
+
+伝えること:
+
+- DTOとDBモデルは似ていても目的が違う
+- Request DTOはAPIで受け取る形
+- DBモデルはRepositoryとDBのやり取りで使う形
+- Response DTOはAPIで返す形
+
+生成依頼文:
+
+```text
+モダンなSaaS技術資料風に、Spring Boot + MyBatisでのRequest DTO、DBモデル、Response DTOの使い分け図を作ってください。
+
+横長16:9の教材スライド画像にしてください。
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ネイビー・グリーン・シアンを使って、読みやすくしてください。
+
+左から右に次のカードを配置してください。
+
+MovieRequest
+  APIで受け取る形
+  title / genre / memo / imageUrl / status
+  idはない
+
+MovieService
+  Request DTOをDBモデルに詰め替える
+  DBモデルをResponse DTOに詰め替える
+
+Movie
+  DBモデル
+  DBの1行をJavaで扱う形
+  id / title / genre / memo / imageUrl / status
+
+MovieRepository
+  SQLを実行する
+  DBモデルを使う
+
+MovieResponse
+  APIで返す形
+  id / title / genre / memo / imageUrl / status
+
+下部にポイントとして、
+「DTO = API用」
+「DBモデル = DB用」
+「Serviceが間をつなぐ」
+を入れてください。
+
+重要:
+Entityという単語は使わないでください。
+Movieを題材にしてください。
+```
+
+### 17. クエリパラメータの図
 
 ファイル名:
 

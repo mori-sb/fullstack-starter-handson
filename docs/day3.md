@@ -44,6 +44,39 @@ Movieで説明したCRUDと同じ構造で、RestaurantのCRUDを作ります。
 Day3では、固定データをやめてDBに保存します。
 SQLを実際に書くことで、どのテーブルからどのデータを取得しているのかを見えるようにします。
 
+## Day3で使う図
+
+Day3は新しい言葉が増えます。
+先に図で全体像を見てから、コードを読むようにします。
+
+```text
+1. 画面操作とAPIの対応図
+   CRUD APIが、どの画面操作に対応するかを見る。
+
+2. Repositoryの役割図
+   Service、Repository、Databaseの関係を見る。
+
+3. DTOの位置づけ図
+   Request DTO、Response DTOがどこで使われるかを見る。
+
+4. クエリパラメータの図
+   絞り込み条件がURLに入る流れを見る。
+```
+
+追加で画像を作る場合は、次の3枚があると説明しやすくなります。
+プロンプトは `docs/instructor/visual-map.md` に置いています。
+
+```text
+images/mybatis-crud-map.png
+  HTTPメソッド、Repositoryメソッド、SQLの対応を見る図。
+
+images/dto-dbmodel-flow.png
+  Request DTO、DBモデル、Response DTOの違いを見る図。
+
+images/create-api-mybatis-flow.png
+  POST APIでDBに保存されるまでの流れを見る図。
+```
+
 ## 今日の大事な考え方
 
 CRUDは多くの業務アプリの基本です。
@@ -56,6 +89,30 @@ Delete  削除する
 ```
 
 この4つを一度作ると、申請管理、台帳管理、レビュー管理など多くのアプリに応用できます。
+
+## Day3で迷わないためのポイント
+
+Day3では、役割を分けて考えます。
+
+```text
+画面操作とURLを受け取る場所
+  Controller
+
+処理の順番を決める場所
+  Service
+
+SQLを書く場所
+  Repository
+
+DBの1行をJavaで受け取る形
+  DBモデル
+
+APIで受け渡しするJSONの形
+  DTO
+```
+
+まずは、どのファイルに何を書くかを覚えます。
+細かい書き方は、Movieのコードを見ながらRestaurantへ置き換えていきます。
 
 ## 最初に伝えること
 
@@ -121,6 +178,8 @@ Movie           <->  movies
 
 DTOとDBモデルは、持っている項目が似ていても目的が違います。
 
+![DTOの位置づけ](../images/spring-dto-flow.png)
+
 ```text
 Request DTO
   ReactからAPIへ送られるJSONの形。
@@ -147,6 +206,22 @@ ServiceがDBモデルを作る
 RepositoryがSQLでDBに保存する
   ↓
 ServiceがResponse DTOを返す
+```
+
+同じ映画データでも、使う場所によって形を分けます。
+
+```text
+MovieRequest
+  POST /api/movies のbodyで受け取る。
+  idはまだ存在しないので持たない。
+
+Movie
+  moviesテーブルの1行をJavaで扱う。
+  RepositoryがSQLの結果を受け取るために使う。
+
+MovieResponse
+  Reactへ返すJSONの形。
+  DBで作られたidを含めて返す。
 ```
 
 なぜ分けるのか:
@@ -222,6 +297,8 @@ MyBatisのRepositoryでは、次のようなアノテーションを使います
 ## CRUDとHTTPメソッド
 
 画面の操作、HTTPメソッド、APIは対応しています。
+
+![画面操作とAPIの対応](../images/screen-api-map.png)
 
 ```text
 お店を登録する
@@ -323,6 +400,9 @@ CRUDは量が多いため、次の順番で進めます。
 7. Brunoで確認する
 ```
 
+ここで大事なのは、いきなり全部を作らないことです。
+まず登録と一覧を動かし、DBに保存できることを確認してから、詳細、更新、削除を追加します。
+
 ## 1. テーブルを確認する
 
 Movie題材では、DBに `movies` テーブルがある前提で進めます。
@@ -351,6 +431,20 @@ image_url
   JavaではimageUrlという名前にする。
   DBではimage_urlという列名にする。
 ```
+
+JavaとDBでは名前の書き方が少し違います。
+
+```text
+Java
+  imageUrl
+  camelCaseで書く
+
+DB
+  image_url
+  snake_caseで書く
+```
+
+MyBatisではSQLの中で `image_url AS imageUrl` と書くことで、DBの列名とJavaのフィールド名を対応させます。
 
 ## 2. DBモデルを作る
 
@@ -436,6 +530,20 @@ getter / setter
   MyBatisやServiceが値を読み書きするために使う。
 ```
 
+この `Movie` はAPIのJSONを表すクラスではありません。
+DBの1行をJavaで扱うためのクラスです。
+
+```text
+APIで受け取るJSON
+  MovieRequest
+
+DBの1行
+  Movie
+
+APIで返すJSON
+  MovieResponse
+```
+
 ## 3. DTOを作る
 
 作るファイル:
@@ -491,6 +599,25 @@ MovieResponse
 ## 4. RepositoryにSQLを書く
 
 作るファイルは `repository/MovieRepository.java` です。
+
+Repositoryでは、「どのSQLを実行するか」をメソッドごとに書きます。
+
+```text
+findAll()
+  一覧を取得するSELECT
+
+findById(Long id)
+  1件を取得するSELECT
+
+insert(Movie movie)
+  登録するINSERT
+
+update(Movie movie)
+  更新するUPDATE
+
+delete(Long id)
+  削除するDELETE
+```
 
 ```java
 package com.example.gourmet.repository;
@@ -575,6 +702,28 @@ image_url AS imageUrl
 @Delete
   DELETE文を書く。
 ```
+
+Repositoryで特に見るべきところ:
+
+```text
+SQLのテーブル名
+  FROM movies
+  INSERT INTO movies
+  UPDATE movies
+  DELETE FROM movies
+
+SQLのカラム名
+  id, title, genre, memo, image_url, status
+
+Java側の値
+  #{title}
+  #{genre}
+  #{memo}
+  #{imageUrl}
+  #{status}
+```
+
+`#{...}` は、Javaのオブジェクトや引数から値を取り出してSQLに渡す書き方です。
 
 ## 5. Serviceで処理をつなぐ
 
@@ -661,6 +810,33 @@ Request DTOをDBモデルに詰め替える
 DBモデルをResponse DTOに詰め替える
 ```
 
+Serviceは、ControllerとRepositoryの間に立ちます。
+
+```text
+Controller
+  リクエストを受け取る
+
+Service
+  何をするかを決める
+
+Repository
+  SQLを実行する
+```
+
+`create` の流れだけを抜き出すと、次のようになります。
+
+```text
+MovieRequestを受け取る
+  ↓
+toModel(request) でMovieに詰め替える
+  ↓
+movieRepository.insert(movie) でDBに保存する
+  ↓
+toResponse(movie) でMovieResponseに詰め替える
+  ↓
+ReactへJSONとして返す
+```
+
 ## 6. ControllerでAPIを受け取る
 
 編集するファイルは `controller/MovieController.java` です。
@@ -728,6 +904,27 @@ ControllerはRepositoryを直接呼ばない
 ControllerはServiceを呼ぶ
 ```
 
+Controllerでは、次の3つを見ます。
+
+```text
+URL
+  @RequestMapping("/api/movies")
+  @GetMapping("/{id}")
+
+HTTPメソッド
+  @GetMapping
+  @PostMapping
+  @PutMapping
+  @DeleteMapping
+
+受け取る値
+  @PathVariable Long id
+  @RequestBody MovieRequest request
+```
+
+Controllerに処理を書きすぎると、URLの入口と処理の中身が混ざります。
+そのため、ControllerはServiceを呼ぶだけに近い形にします。
+
 ## 7. Brunoで確認する
 
 登録:
@@ -784,6 +981,8 @@ DELETE後に一覧から消える
 ## クエリパラメータで絞り込む考え方
 
 余裕があれば、一覧APIにフィルタを追加します。
+
+![クエリパラメータで一覧を絞り込む流れ](../images/query-param-flow.png)
 
 ```text
 GET /api/movies?genre=SF
