@@ -53,7 +53,7 @@ Spring Bootでは、処理を役割ごとに分けて書く。
 Controller  APIの入口
 Service     業務処理を書く場所
 Repository  DBアクセスを書く場所
-Entity      DBに保存するデータの形
+DBモデル    DBテーブルの1行を受け取る形
 DTO         APIで受け渡しするデータの形
 ```
 
@@ -72,7 +72,7 @@ APIの入口、処理、DBアクセスを分けて書く。
 Controller -> Service -> Repository -> DB
 ```
 
-DTO、Entity、Mapperは後で追加する概念。
+DTO、DBモデル、MyBatisは後で追加する概念。
 最初から全部覚えようとせず、まずはこの一本道を理解する。
 
 ![Spring Bootバックエンドの基本構造](../images/spring-basic-flow.png)
@@ -83,7 +83,7 @@ DTO、Entity、Mapperは後で追加する概念。
 Browser / React -> Controller -> Service -> Repository -> Database
 ```
 
-DTO、Entity、Mapperはまだ覚えなくて大丈夫です。
+DTO、DBモデル、MyBatisはまだ覚えなくて大丈夫です。
 最初は「APIの入口」「処理を書く場所」「DBとやり取りする場所」の3つに分けて考えます。
 
 ## Spring Bootのディレクトリ構造
@@ -108,7 +108,7 @@ backend/
       │     ├─ repository/
       │     │  ├─ MovieRepository.java
       │     │  └─ RestaurantRepository.java
-      │     ├─ entity/
+      │     ├─ model/
       │     │  ├─ Movie.java
       │     │  ├─ Restaurant.java
       │     │  └─ RestaurantStatus.java
@@ -119,9 +119,6 @@ backend/
       │     │  └─ restaurant/
       │     │     ├─ RestaurantRequest.java
       │     │     └─ RestaurantResponse.java
-      │     └─ mapper/
-      │        ├─ MovieMapper.java
-      │        └─ RestaurantMapper.java
       └─ resources/
          └─ application.yml
 ```
@@ -176,10 +173,9 @@ repository/RestaurantRepository.java
 あとから見るファイル:
 
 ```text
-entity/Restaurant.java
+model/Restaurant.java
 dto/restaurant/RestaurantRequest.java
 dto/restaurant/RestaurantResponse.java
-mapper/RestaurantMapper.java
 entity/RestaurantStatus.java
 ```
 
@@ -190,8 +186,7 @@ controller/   APIの入口
 service/      処理を書く場所
 repository/   DBとやり取りする場所
 dto/          ReactとAPIで受け渡しするデータ
-mapper/       DTOとEntityを変換する
-entity/       DBに保存するデータ
+model/        DBテーブルの1行を受け取るデータ
 ```
 
 ## ClassとDIの基本
@@ -1199,9 +1194,10 @@ http://localhost:8080/api/movies
 
 ### RepositoryはSQLを書く場所ですか
 
-必ずしも手でSQLを書く場所ではない。
+この教材では、RepositoryにSQLを書きます。
 
-Spring Data JPAを使うと、基本的なCRUDはRepositoryのメソッドで扱える。
+MyBatisを使い、`@Select`、`@Insert`、`@Update`、`@Delete` でDB操作を表します。
+SQLが見えるため、RepositoryがDBと何をしているかを理解しやすくなります。
 
 ## メモ
 

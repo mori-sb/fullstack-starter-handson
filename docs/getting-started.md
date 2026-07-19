@@ -401,7 +401,7 @@ Spring Web
 Day3でDBを使うときに、次を追加します。
 
 ```text
-Spring Data JPA
+MyBatis Framework
 PostgreSQL Driver
 ```
 
@@ -515,8 +515,8 @@ spring-boot-starter-web
 Day3でDBを使うときは、次のような依存関係が必要になります。
 
 ```text
-spring-boot-starter-data-jpa
-  EntityやRepositoryを使ってDB操作をするために必要。
+mybatis-spring-boot-starter
+  MyBatisでSQLを書くRepositoryを使うために必要。
 
 postgresql
   Spring BootからPostgreSQLへ接続するために必要。
@@ -1030,7 +1030,7 @@ Repository  DBとやり取りする場所
 React -> Controller -> Service -> Repository -> DB
 ```
 
-DTO、Entity、Mapperは後から出てきます。
+DTO、DBモデル、MyBatisは後から出てきます。
 いきなり全部覚えようとしなくて大丈夫です。
 
 Spring Boot側のディレクトリは、最終的に次のような形にします。
@@ -1051,7 +1051,7 @@ backend/
       │     ├─ repository/
       │     │  ├─ MovieRepository.java
       │     │  └─ RestaurantRepository.java
-      │     ├─ entity/
+      │     ├─ model/
       │     │  ├─ Movie.java
       │     │  ├─ Restaurant.java
       │     │  └─ RestaurantStatus.java
@@ -1062,9 +1062,6 @@ backend/
       │     │  └─ restaurant/
       │     │     ├─ RestaurantRequest.java
       │     │     └─ RestaurantResponse.java
-      │     ├─ mapper/
-      │     │  ├─ MovieMapper.java
-      │     │  └─ RestaurantMapper.java
       │     └─ config/
       │        └─ WebConfig.java
       └─ resources/
@@ -1085,10 +1082,9 @@ repository/RestaurantRepository.java
 慣れてきたら見る場所:
 
 ```text
-entity/Restaurant.java
+model/Restaurant.java
 dto/restaurant/RestaurantRequest.java
 dto/restaurant/RestaurantResponse.java
-mapper/RestaurantMapper.java
 ```
 
 ## 最初に覚えるReact

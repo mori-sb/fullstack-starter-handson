@@ -169,11 +169,10 @@ DB保存を使ったCRUD APIを作る。
 作るファイル:
 
 ```text
-entity/Restaurant.java
+model/Restaurant.java
 repository/RestaurantRepository.java
 dto/restaurant/RestaurantRequest.java
 dto/restaurant/RestaurantResponse.java
-mapper/RestaurantMapper.java
 service/RestaurantService.java
 controller/RestaurantController.java
 ```
@@ -188,13 +187,13 @@ PUT    /api/restaurants/{id}
 DELETE /api/restaurants/{id}
 ```
 
-DTO、Entity、Mapperの役割:
+DTO、DBモデル、Repositoryの役割:
 
 ```text
 RestaurantRequest   Reactから受け取るJSONの形
-Restaurant           DBに保存するEntity
+Restaurant          DBテーブルの1行を受け取るDBモデル
 RestaurantResponse  Reactへ返すJSONの形
-RestaurantMapper    Request/Entity/Responseを変換する
+RestaurantRepository SQLを書いてDBとやり取りする
 ```
 
 登録の流れ:
@@ -203,9 +202,9 @@ RestaurantMapper    Request/Entity/Responseを変換する
 POST /api/restaurants
   -> Controller
   -> Service
-  -> MapperでRequest DTOをEntityへ変換
-  -> Repository.save
-  -> MapperでEntityをResponse DTOへ変換
+  -> ServiceでRequest DTOをDBモデルへ詰め替える
+  -> Repositoryの@InsertでDBへ保存
+  -> ServiceでDBモデルをResponse DTOへ詰め替える
   -> JSONレスポンス
 ```
 
@@ -213,8 +212,8 @@ POST /api/restaurants
 
 - ControllerからRepositoryを直接呼んでいない
 - Serviceが処理の中心になっている
-- EntityとDTOを分けている
-- Mapperで変換している
+- DTOとDBモデルを分けている
+- RepositoryにSQLを書いている
 - 存在しないIDの扱いを考えている
 - 登録後のレスポンスに `id` が含まれている
 

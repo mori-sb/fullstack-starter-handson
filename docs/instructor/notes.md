@@ -10,7 +10,7 @@ AIを使えばコード生成は速いため、説明時間は「なぜそう書
 - 画像を見せてからコードを見る
 - 1つの概念を説明したら、短いコードで対応箇所を確認する
 - いきなり全部盛りにしない
-- まず本線を理解してから、DTO、Entity、Mapperなどを追加する
+- まず本線を理解してから、DTO、DBモデル、MyBatisなどを追加する
 - 分からない時に「どこが分からないか」を言えるようにする
 - 毎日、最後に確認質問で理解を言語化してもらう
 
@@ -79,7 +79,7 @@ Serviceには、登録する、編集する、削除する、というアプリ�
 
 避けたいこと:
 
-- 最初からDTO、Entity、Mapperを全部説明する
+- 最初からDTO、DBモデル、MyBatisを全部説明する
 - DB接続の細かい設定で時間を使いすぎる
 
 ### Day 3
@@ -87,7 +87,7 @@ Serviceには、登録する、編集する、削除する、というアプリ�
 重視すること:
 
 - DBに保存すると、アプリを再起動してもデータが残ること
-- EntityはDBに保存する形
+- DBモデルはDBテーブルの1行を受け取る形
 - RepositoryはDB操作
 - CRUDとHTTPメソッドの対応
 
@@ -95,7 +95,7 @@ Serviceには、登録する、編集する、削除する、というアプリ�
 
 ```text
 1. 固定データとDB保存の違い
-2. Entityとテーブルの対応
+2. DBモデルとテーブルの対応
 3. RepositoryでCRUD
 4. API単体で登録・一覧・詳細・編集・削除を確認
 5. フィルタはクエリパラメータで表す
@@ -190,7 +190,7 @@ Request DTO、Response DTO、Mapperを追加して、Controllerの入出力をDT
 - グルメ管理アプリの全体構成
 - React、Spring Boot、DBの役割
 - Controller、Service、Repositoryの役割
-- DTO、Entity、Mapperを分ける理由
+- DTO、DBモデル、Repositoryを分ける理由
 - CRUD APIのURLとHTTPメソッド
 - Reactのprops、state、useEffect
 - 画像URLが画面に表示される流れ

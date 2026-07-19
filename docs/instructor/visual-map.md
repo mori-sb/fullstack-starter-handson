@@ -11,7 +11,7 @@
 - 1枚の画像で1つの概念だけ説明する
 - 左から右に流れる図を基本にする
 - 右に行くほどDBに近づく構成にする
-- まず基本の流れを見せてから、DTO、Entity、Mapperなどを追加する
+- まず基本の流れを見せてから、DTO、DBモデル、MyBatisなどを追加する
 - 画像を見せた後に、対応するコードを見る
 - 画像の中の用語とコードのクラス名を対応させる
 
@@ -160,7 +160,7 @@ service/
 repository/
   MovieRepository.java
   RestaurantRepository.java
-entity/
+model/
   Movie.java
   Restaurant.java
   RestaurantStatus.java
@@ -171,17 +171,12 @@ dto/
   restaurant/
     RestaurantRequest.java
     RestaurantResponse.java
-mapper/
-  MovieMapper.java
-  RestaurantMapper.java
-
 右側に、各ファイルの役割をカードで表示してください。
 controller/: APIの入口
 service/: 処理を書く場所
-repository/: DBとやり取りする場所
-entity/: DBに保存するデータ
+repository/: SQLを書いてDBとやり取りする場所
+model/: DBテーブルの1行を受け取るデータ
 dto/: APIで受け渡しするデータ
-mapper/: DTOとEntityを変換する
 
 「まず読む順番」として、controller -> service -> repository を強調してください。
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、グリーンとシアンを使った読みやすい図にしてください。
@@ -294,13 +289,13 @@ Day3の「Repositoryとは」。
 
 - RepositoryはServiceから呼ばれる
 - RepositoryはDB操作の入口である
-- `save`、`findAll`、`findById`、`delete` のような基本操作を担当する
-- SQLを直接書く前に、Spring Data JPAのRepositoryを使う流れを理解する
+- `@Select`、`@Insert`、`@Update`、`@Delete` でSQLを書く
+- RepositoryにSQLを書くと、DB操作の中身が見える
 
 生成依頼文:
 
 ```text
-モダンなSaaS技術資料風に、Spring BootのRepositoryの役割を説明する図を作ってください。
+モダンなSaaS技術資料風に、Spring Boot + MyBatisのRepositoryの役割を説明する図を作ってください。
 
 横長16:9の教材スライド画像にしてください。
 白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ネイビー・グリーン・シアンを使って、読みやすい図にしてください。
@@ -312,19 +307,19 @@ Day3の「Repositoryとは」。
 右: Database
 
 MovieServiceからMovieRepositoryへ矢印を出し、ラベルに「DB操作を依頼」と書いてください。
-MovieRepositoryからDatabaseへ矢印を出し、ラベルに「Entityを保存・取得」と書いてください。
+MovieRepositoryからDatabaseへ矢印を出し、ラベルに「SQLを実行」と書いてください。
 
 MovieRepositoryの周辺に、基本操作として次の4つを小さなラベルで表示してください。
 
-save
-findAll
-findById
-delete
+@Select
+@Insert
+@Update
+@Delete
 
 MovieRepositoryのカードには、
 「DB操作の入口」
-「Entityを保存・取得する」
-「Spring Data JPAが基本操作を用意」
+「SQLを書く場所」
+「MyBatisの@Mapperを付ける」
 という説明を入れてください。
 
 Databaseのカードには、
@@ -334,14 +329,14 @@ Databaseのカードには、
 
 下部にポイントとして、
 「Serviceは何をしたいかを決める」
-「RepositoryはDBとどうやり取りするかを担当する」
-「Repositoryで扱うのはDTOではなくEntity」
+「RepositoryはSQLを書いてDBとやり取りする」
+「Repositoryで扱うのはDTOではなくDBモデル」
 を入れてください。
 
 重要:
 DTO、Controller、Reactはこの図には入れないでください。
 Repositoryの説明だけに集中してください。
-文字は日本語中心で、用語は MovieService / MovieRepository / Database / Entity / save / findAll / findById / delete を正確に表示してください。
+文字は日本語中心で、用語は MovieService / MovieRepository / Database / DBモデル / @Mapper / @Select / @Insert / @Update / @Delete を正確に表示してください。
 ```
 
 ## Day 3: DBとCRUD
@@ -354,7 +349,7 @@ Repositoryの説明だけに集中してください。
 images/crud-api-map.png
 ```
 
-### 13. EntityとDBテーブル対応図
+### 13. DBモデルとDBテーブル対応図
 
 ファイル名:
 
@@ -368,7 +363,7 @@ images/entity-table-map.png
 images/spring-entity-flow.png
 ```
 
-まず `spring-entity-flow.png` でEntityの位置づけを説明し、その後でEntityとDBテーブルの対応を説明する。
+まず `spring-entity-flow.png` は必要に応じてDBモデルの位置づけとして扱い、その後でDBモデルとDBテーブルの対応を説明する。
 
 ### 14. 登録APIの流れ
 

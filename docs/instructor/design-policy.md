@@ -62,7 +62,7 @@ DB
 次:
 
 ```text
-Entity
+DBモデル
 DTO
 Mapper
 Validation

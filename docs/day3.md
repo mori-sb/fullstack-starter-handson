@@ -2,20 +2,20 @@
 
 ## 今日のゴール
 
-- Entityの役割を理解する
-- Repositoryを使ってDBにアクセスできる
+- DBに保存する流れを理解する
+- MyBatisでSQLを書くRepositoryを作れる
 - CRUD APIを作れる
-- APIの正常系と簡単な異常系を確認できる
-- 地域・ジャンル・ステータスで絞り込む考え方を理解する
-- 仕様変更時にどの層を直すか判断できる
+- Request DTO、Response DTO、DBモデルの違いを説明できる
+- Brunoで登録、一覧、詳細、更新、削除を確認できる
 
 ## 扱う内容
 
-- Entity
-- Repository
+- MyBatis
+- `@Mapper`
+- `@Select` / `@Insert` / `@Update` / `@Delete`
+- Request DTO / Response DTO
+- DBモデル
 - CRUD
-- バリデーション
-- エラーレスポンス
 - クエリパラメータ
 
 ## ライブコーディングと演習
@@ -26,26 +26,27 @@
 ```
 
 Movieで説明したCRUDと同じ構造で、RestaurantのCRUDを作ります。
-Movieで説明していない検索条件や複雑なバリデーションは演習に出しません。
+説明していない検索条件や複雑なバリデーションは演習に出しません。
 
 ## 進める順番
 
 ```text
 1. Day2の固定データAPIを復習する
-2. EntityとDBテーブルの関係を図で確認する
-3. Repositoryで使う基本操作を確認する
-4. DTO、Entity、Mapperの役割を確認する
+2. DBに保存するデータの形を確認する
+3. MyBatisのRepositoryでSQLを書く流れを確認する
+4. Request DTO、Response DTO、DBモデルの違いを確認する
 5. 登録、一覧、詳細APIを段階的に実装する
 6. 更新、削除、フィルタの考え方を確認する
-7. 演習の進め方と確認ポイントを確認する
+7. Brunoで動作確認する
+8. 演習の進め方と確認ポイントを確認する
 ```
 
-Day3では、APIがDBとつながります。
-作る量が多いので、まず登録と一覧を確実に動かし、その後に詳細、更新、削除、フィルタへ広げます。
+Day3では、固定データをやめてDBに保存します。
+SQLを実際に書くことで、どのテーブルからどのデータを取得しているのかを見えるようにします。
 
 ## 今日の大事な考え方
 
-CRUDは多くの業務アプリの基本になる。
+CRUDは多くの業務アプリの基本です。
 
 ```text
 Create  登録する
@@ -54,176 +55,173 @@ Update  編集する
 Delete  削除する
 ```
 
-この4つを一度作ると、申請管理、台帳管理、レビュー管理など多くのアプリに応用できる。
+この4つを一度作ると、申請管理、台帳管理、レビュー管理など多くのアプリに応用できます。
 
 ## 最初に伝えること
 
-Day2では固定データを返した。
-Day3では、データをDBに保存する。
-
-DBを使うと、アプリを再起動してもデータを残せる。
-登録、編集、削除の結果が保存されるため、アプリらしくなる。
+Day2では、Serviceの中で固定データを返しました。
+Day3では、データをDBに保存します。
 
 ```text
 固定データ:
-コードに書いてあるだけのデータ
+  Javaコードに直接書いてあるデータ
 
 DB保存:
-アプリの外に保存され、後から取得できるデータ
+  アプリの外に保存され、あとから取得できるデータ
 ```
 
-## Entityとは
+DBを使うと、アプリを再起動してもデータを残せます。
+登録、編集、削除の結果が保存されるため、アプリらしくなります。
 
-Entityは、DBに保存するデータの形をJavaで表したもの。
+## この教材ではJPA Entityを使わない
 
-![Spring BootにおけるEntityの位置づけ](../images/spring-entity-flow.png)
-
-Entityは、RepositoryでDBに保存・取得するときに使います。
-Reactから受け取るJSONをそのまま扱うためのものではありません。
+Spring BootのDBアクセスには、いくつかの選択肢があります。
 
 ```text
-APIで受け取る
-  -> Request DTO
+Spring Data JPA
+  SQLをあまり書かずに、EntityとRepositoryでDB操作を行う。
 
-DBに保存する
-  -> Entity
-
-APIで返す
-  -> Response DTO
+MyBatis
+  RepositoryにSQLを書いて、DB操作を行う。
 ```
 
-グルメ管理アプリでは、`Restaurant` Entityを作る。
+この教材では、MyBatisを使います。
+理由は、SQLが見える方が「RepositoryがDBと何をしているか」を理解しやすいからです。
+
+そのため、JPAの `@Entity` は使いません。
+かわりに、DBの1行を受け取るための普通のJavaクラスを作ります。
+この教材では、それを「DBモデル」と呼びます。
 
 ```text
-Restaurant Entity
+DBモデル
+  DBテーブルの1行をJavaで受け取るためのクラス。
+  JPAの@Entityではない。
+```
+
+MovieのDBモデル:
+
+```text
+Movie
   id
-  name
-  area
+  title
   genre
   memo
   imageUrl
   status
 ```
 
-DBのテーブルに近い考え方。
-
-![EntityとDBテーブルの対応](../images/entity-table-map.png)
+DBテーブルに近い形です。
 
 ```text
-JavaのEntity  <->  DBのテーブル
-Restaurant    <->  restaurants
+JavaのDBモデル  <->  DBのテーブル
+Movie           <->  movies
 ```
 
-### Entityを使うタイミング
+## DTOとDBモデルの使い分け
 
-Entityを使うのは、DBとやり取りするタイミングです。
-
-```text
-登録する
-  Request DTOをEntityに変換して、Repository.save(entity)で保存する
-
-一覧を見る
-  Repository.findAll()でEntityを取得し、Response DTOに変換して返す
-
-詳細を見る
-  Repository.findById(id)でEntityを取得し、Response DTOに変換して返す
-
-編集する
-  DBからEntityを取得し、値を書き換えて、Repository.save(entity)で保存する
-
-削除する
-  DBからEntityを取得し、Repository.delete(entity)で削除する
-```
-
-つまり、Repositoryに渡すもの、Repositoryから返ってくるものがEntityです。
-
-### DTOとEntityの使い分け
-
-DTOとEntityは、持っている項目が似ていても目的が違います。
+DTOとDBモデルは、持っている項目が似ていても目的が違います。
 
 ```text
-DTO
-  APIで受け渡しするデータの形。
-  Reactとの約束を表す。
-
-Entity
-  DBに保存するデータの形。
-  DBテーブルとの対応を表す。
-```
-
-Restaurant登録の例:
-
-```text
-Reactから送るJSON
-  name, area, genre, memo, imageUrl, status
-
 Request DTO
-  登録時にReactから受け取る形。
-  idはまだないので持たない。
+  ReactからAPIへ送られるJSONの形。
+  登録や編集で受け取る。
 
-Entity
-  DBに保存する形。
-  idを持つ。
-  Repositoryで保存・取得される。
+DBモデル
+  RepositoryがDBから取得したり、DBへ保存したりする形。
+  SQLの結果を受け取る。
 
 Response DTO
-  Reactへ返す形。
-  DBで作られたidを含めて返す。
+  APIからReactへ返すJSONの形。
+  画面に必要な形で返す。
+```
+
+登録の流れ:
+
+```text
+ReactからPOST JSONを送る
+  ↓
+ControllerがRequest DTOで受け取る
+  ↓
+ServiceがDBモデルを作る
+  ↓
+RepositoryがSQLでDBに保存する
+  ↓
+ServiceがResponse DTOを返す
 ```
 
 なぜ分けるのか:
 
 ```text
-APIの形とDBの形を別々に変更できるようにするため。
+APIの形とDBの形を別々に考えられるようにするため。
 
 例:
   登録フォームではidを入力しない
-  でもDB上のEntityにはidが必要
+  でもDBにはidがある
 
 例:
   APIでは画面に必要な項目だけ返したい
   でもDBには管理用の項目を持つことがある
 ```
 
-DTOとEntityを分けると、Reactに見せるデータとDBに保存するデータを混ぜずに考えられます。
-その間をつなぐのがMapperです。
+この教材では、DTOとDBモデルの変換はServiceの中で書きます。
+変換用の `MovieMapper.java` は作りません。
+
+注意:
+
+```text
+MyBatisの@Mapper
+  RepositoryをMyBatisのSQL実行対象として登録する目印。
+
+変換用Mapper
+  DTOとDBモデルを変換するためのクラス。
+
+この2つは別物です。
+この教材では、MyBatisの@Mapperだけを使います。
+```
 
 ## Repositoryとは
 
-Repositoryは、EntityをDBに保存したり、DBから取得したりするための入口。
+Repositoryは、DBとやり取りする場所です。
+MyBatisを使う場合、RepositoryにはSQLを書きます。
 
 ![Repositoryの役割](../images/repository-role.png)
 
-Spring Data JPAを使うと、次のような操作を自分で細かくSQLを書かなくても使える。
-
 ```text
-save       登録・更新
-findAll    一覧取得
-findById   詳細取得
-delete     削除
+Controller
+  APIの入口
+
+Service
+  処理の流れを決める
+
+Repository
+  SQLを書いてDBとやり取りする
+
+Database
+  データを保存する
 ```
 
-まずは、Repositoryは「DB操作をまとめたもの」と理解すればよい。
-
-## Mapperとは
-
-Mapperは、DTOとEntityを変換する役割です。
-
-![DTO、Mapper、Entityの関係](../images/spring-mapper-flow.png)
-
-ReactとAPIの間ではDTOを使い、DBに保存するときはEntityを使います。
-この2つは目的が違うため、変換する場所が必要になります。
+MyBatisのRepositoryでは、次のようなアノテーションを使います。
 
 ```text
-Request DTO -> Mapper -> Entity
-Entity -> Mapper -> Response DTO
-```
+@Mapper
+  このinterfaceをMyBatisのRepositoryとして使う。
 
-最初は「MapperはDTOとEntityの変換係」と理解すれば十分です。
+@Select
+  SELECT文を書く。
+
+@Insert
+  INSERT文を書く。
+
+@Update
+  UPDATE文を書く。
+
+@Delete
+  DELETE文を書く。
+```
 
 ## CRUDとHTTPメソッド
 
-画面の操作、HTTPメソッド、APIは対応している。
+画面の操作、HTTPメソッド、APIは対応しています。
 
 ```text
 お店を登録する
@@ -242,53 +240,7 @@ Entity -> Mapper -> Response DTO
   -> DELETE /api/restaurants/{id}
 ```
 
-この対応が分かると、React側でどのAPIを呼べばよいか判断しやすくなる。
-
-## 図で確認すること
-
-- CRUDとHTTPメソッドの対応図
-- DBテーブルとEntityの対応図
-- RepositoryがServiceとDBの間に立つ図
-- クエリパラメータで一覧を絞り込む流れ
-
-## CRUDとAPIの対応
-
-```text
-POST   /api/restaurants       登録
-GET    /api/restaurants       一覧
-GET    /api/restaurants/{id}  詳細
-PUT    /api/restaurants/{id}  編集
-DELETE /api/restaurants/{id}  削除
-```
-
-## ライブコーディング: MovieのDB保存API
-
-説明者がMovie題材で、DB保存を使ったAPIを作ります。
-Day3では量が多いため、最初に登録と一覧を確実に理解します。
-
-まず作るAPI:
-
-```text
-POST /api/movies
-GET  /api/movies
-```
-
-その後、詳細、更新、削除の考え方を確認します。
-
-```text
-GET    /api/movies/{id}
-PUT    /api/movies/{id}
-DELETE /api/movies/{id}
-```
-
-余裕があれば、一覧APIにフィルタを追加する。
-
-![クエリパラメータで一覧を絞り込む流れ](../images/query-param-flow.png)
-
-```text
-GET /api/movies?genre=SF
-GET /api/movies?status=WATCHED
-```
+この対応が分かると、React側でどのAPIを呼べばよいか判断しやすくなります。
 
 ## ライブコーディングで作る場所
 
@@ -303,21 +255,19 @@ Day3ではDBを使うため、Javaファイルを作る前に `backend/pom.xml` 
 
 ```text
 backend/pom.xml
-  Spring Data JPA と DBドライバの依存関係を確認する
+  MyBatis と DBドライバの依存関係を確認する
 
 backend/src/main/resources/application.yml
   DB接続先を確認する
 ```
 
-Day2の段階ではDBを使わないため、Spring Boot Webだけで動かせます。
-Day3でRepositoryを使うタイミングで、DB接続に必要な設定を追加します。
-
-`pom.xml` で確認する依存関係:
+Day3で追加する依存関係:
 
 ```xml
 <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-data-jpa</artifactId>
+    <groupId>org.mybatis.spring.boot</groupId>
+    <artifactId>mybatis-spring-boot-starter</artifactId>
+    <version>3.0.5</version>
 </dependency>
 
 <dependency>
@@ -327,240 +277,179 @@ Day3でRepositoryを使うタイミングで、DB接続に必要な設定を追�
 </dependency>
 ```
 
-```text
-spring-boot-starter-data-jpa
-  RepositoryやEntityを使ってDB操作をするために必要。
+MyBatis Spring Boot Starter 3.0系はSpring Boot 3.2から3.5で使えます。
+この教材のSpring Boot 3系では、`3.0.5` を使います。
 
-postgresql
-  Spring BootからPostgreSQLへ接続するために必要。
-```
-
-Day3では、Day2で作ったMovie APIをDB保存版へ育てます。
-そのため、新しく作るファイルと、Day2から編集するファイルがあります。
-
-新しく作るファイル:
-
-```text
-com/example/gourmet/
-├─ entity/
-│  └─ Movie.java
-├─ repository/
-│  └─ MovieRepository.java
-├─ dto/
-│  └─ movie/
-│     └─ MovieRequest.java
-└─ mapper/
-   └─ MovieMapper.java
-```
-
-Day2から編集するファイル:
+Day3で作るファイル:
 
 ```text
 com/example/gourmet/
 ├─ controller/
-│  └─ MovieController.java
+│  └─ MovieController.java   Day2から編集する
 ├─ service/
-│  └─ MovieService.java
+│  └─ MovieService.java      Day2から編集する
+├─ repository/
+│  └─ MovieRepository.java   新しく作る
+├─ model/
+│  └─ Movie.java             新しく作る
 └─ dto/
    └─ movie/
-      └─ MovieResponse.java
+      ├─ MovieRequest.java   新しく作る
+      └─ MovieResponse.java  Day2から編集する
 ```
 
 説明者は、作る前に次のように説明すると迷いにくくなります。
 
 ```text
-Day2では、Serviceの中に固定データを書きました。
-Day3では、固定データをやめてDBに保存します。
+Day2ではServiceの中に固定データを書きました。
+Day3では固定データをやめて、RepositoryにSQLを書きます。
 
-そのため、DBに保存する形としてEntityを作ります。
-DB操作の入口としてRepositoryを作ります。
-Reactから受け取る形としてRequest DTOを作ります。
-DTOとEntityを変換するMapperを作ります。
-
-ControllerとServiceは、Day2で作ったものをDB保存版に変更します。
-```
-
-### IntelliJ IDEAで作る手順
-
-まず、新しく必要になるパッケージを作ります。
-
-```text
-1. com.example.gourmet を右クリック
-2. New -> Package
-3. entity と入力する
-4. 同じように repository と mapper を作る
-```
-
-`dto.movie` はDay2で作っている場合はそのまま使います。
-まだない場合は、次のように作ります。
-
-```text
-1. com.example.gourmet を右クリック
-2. New -> Package
-3. dto.movie と入力する
-```
-
-次に、ファイルを作ります。
-
-```text
-entity パッケージ
-  -> Movie.java
-
-repository パッケージ
-  -> MovieRepository.java
-
-dto.movie パッケージ
-  -> MovieRequest.java
-  -> MovieResponse.java
-
-mapper パッケージ
-  -> MovieMapper.java
-
-service パッケージ
-  -> MovieService.java を編集する
-
-controller パッケージ
-  -> MovieController.java を編集する
-```
-
-作った直後に確認すること:
-
-```text
-GourmetApplication.java と同じ com.example.gourmet 配下にある
-package行とディレクトリの位置が合っている
-Movie題材のファイルだけを作っている
-Restaurantの答えを先に作っていない
-```
-
-package行の例:
-
-```java
-package com.example.gourmet.repository;
-```
-
-これは、次の場所にあるファイルだという意味です。
-
-```text
-backend/src/main/java/com/example/gourmet/repository/MovieRepository.java
+RepositoryはDBとやり取りする場所です。
+ServiceはRepositoryを呼び出します。
+ControllerはServiceを呼び出します。
 ```
 
 ## 実装の進め方
 
 CRUDは量が多いため、次の順番で進めます。
 
-### 1. Entityを作る
+```text
+1. テーブルを確認する
+2. DBモデルを作る
+3. Request DTO / Response DTOを作る
+4. RepositoryにSQLを書く
+5. Serviceで処理をつなぐ
+6. ControllerでAPIを受け取る
+7. Brunoで確認する
+```
 
-まずDBに保存する形を作ります。
-作るファイルは `entity/Movie.java` です。
+## 1. テーブルを確認する
+
+Movie題材では、DBに `movies` テーブルがある前提で進めます。
+
+```sql
+CREATE TABLE movies (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    genre VARCHAR(255) NOT NULL,
+    memo TEXT,
+    image_url VARCHAR(500),
+    status VARCHAR(50) NOT NULL
+);
+```
+
+見るポイント:
+
+```text
+id
+  DBで1件を区別する番号。
+
+title, genre, memo, image_url, status
+  映画の情報。
+
+image_url
+  JavaではimageUrlという名前にする。
+  DBではimage_urlという列名にする。
+```
+
+## 2. DBモデルを作る
+
+作るファイルは `model/Movie.java` です。
+JPAの `@Entity` は付けません。
 
 ```java
-@Entity
+package com.example.gourmet.model;
+
 public class Movie {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String genre;
     private String memo;
     private String imageUrl;
     private String status;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
 ```
-
-見るポイント:
-
-- `@Entity` がDBに保存するクラスであることを表す
-- `id` はDB上で1件を区別するために使う
-- Reactへ返すJSONではなく、DBに保存する形である
 
 1行ずつ読む:
 
 ```text
-@Entity
-  このクラスをDBに保存する対象として扱う。
-
 public class Movie
-  映画データを表すJavaクラス。
+  DBのmoviesテーブルの1行を受け取るためのクラス。
 
-@Id
-  このフィールドが主キーであることを表す。
-  主キーは、DB上で1件のデータを区別するために使う。
+private Long id
+  DBで作られるID。
 
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-  idの値をDBに自動で作ってもらう。
+private String imageUrl
+  Java側ではcamelCaseで書く。
+  DBのimage_urlとは名前が少し違う。
 
-private Long id;
-  映画のID。
-
-private String title;
-  映画タイトル。
-
-private String genre;
-  ジャンル。
-
-private String memo;
-  メモ。
-
-private String imageUrl;
-  画像URL。
-
-private String status;
-  ステータス。
+getter / setter
+  MyBatisやServiceが値を読み書きするために使う。
 ```
 
-### 2. Repositoryを作る
-
-作るファイルは `repository/MovieRepository.java` です。
-
-```java
-public interface MovieRepository extends JpaRepository<Movie, Long> {
-}
-```
-
-1行ずつ読む:
-
-```text
-public interface MovieRepository
-  Movie用のRepositoryを定義している。
-  RepositoryはDB操作の入口。
-
-extends JpaRepository<Movie, Long>
-  Spring Data JPAが用意している基本的なDB操作を使えるようにする。
-
-Movie
-  このRepositoryで扱うEntity。
-
-Long
-  MovieのIDの型。
-
-{ }
-  中身が空でも、save、findAll、findById、deleteなどを使える。
-```
-
-これだけで、基本的なDB操作を使えるようになります。
-
-```text
-save       登録・更新
-findAll    一覧取得
-findById   詳細取得
-delete     削除
-```
-
-### 3. Request DTO、Response DTO、Mapperを作る
-
-DBに保存する前に、APIで受け渡しする形を分けます。
+## 3. DTOを作る
 
 作るファイル:
 
 ```text
 dto/movie/MovieRequest.java
 dto/movie/MovieResponse.java
-mapper/MovieMapper.java
 ```
 
+Request DTO:
+
 ```java
+package com.example.gourmet.dto.movie;
+
 public record MovieRequest(
         String title,
         String genre,
@@ -571,29 +460,11 @@ public record MovieRequest(
 }
 ```
 
-1行ずつ読む:
-
-```text
-public record MovieRequest(...)
-  Reactから送られてくるJSONの形を表す。
-
-String title
-  登録フォームから送られる映画タイトル。
-
-String genre
-  ジャンル。
-
-String memo
-  メモ。
-
-String imageUrl
-  画像URL。
-
-String status
-  見たい、見た、お気に入りなどの状態。
-```
+Response DTO:
 
 ```java
+package com.example.gourmet.dto.movie;
+
 public record MovieResponse(
         Long id,
         String title,
@@ -605,24 +476,160 @@ public record MovieResponse(
 }
 ```
 
+違い:
+
+```text
+MovieRequest
+  登録・編集でReactから受け取る形。
+  idはReactから送らない。
+
+MovieResponse
+  Reactへ返す形。
+  DBで作られたidも返す。
+```
+
+## 4. RepositoryにSQLを書く
+
+作るファイルは `repository/MovieRepository.java` です。
+
+```java
+package com.example.gourmet.repository;
+
+import com.example.gourmet.model.Movie;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
+
+@Mapper
+public interface MovieRepository {
+
+    @Select("""
+            SELECT id, title, genre, memo, image_url AS imageUrl, status
+            FROM movies
+            ORDER BY id
+            """)
+    List<Movie> findAll();
+
+    @Select("""
+            SELECT id, title, genre, memo, image_url AS imageUrl, status
+            FROM movies
+            WHERE id = #{id}
+            """)
+    Movie findById(Long id);
+
+    @Insert("""
+            INSERT INTO movies (title, genre, memo, image_url, status)
+            VALUES (#{title}, #{genre}, #{memo}, #{imageUrl}, #{status})
+            """)
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void insert(Movie movie);
+
+    @Update("""
+            UPDATE movies
+            SET title = #{title},
+                genre = #{genre},
+                memo = #{memo},
+                image_url = #{imageUrl},
+                status = #{status}
+            WHERE id = #{id}
+            """)
+    void update(Movie movie);
+
+    @Delete("""
+            DELETE FROM movies
+            WHERE id = #{id}
+            """)
+    void delete(Long id);
+}
+```
+
 1行ずつ読む:
 
 ```text
-public record MovieResponse(...)
-  Reactへ返すJSONの形を表す。
+@Mapper
+  MyBatisのRepositoryとして使う目印。
 
-Long id
-  DBに保存されたあとに付くID。
+@Select
+  SELECT文を書く。
 
-title, genre, memo, imageUrl, status
-  画面に表示するために返す値。
+image_url AS imageUrl
+  DBの列名image_urlを、JavaのimageUrlに対応させる。
+
+#{id}
+  メソッド引数のidをSQLに渡す。
+
+@Insert
+  INSERT文を書く。
+
+@Options(useGeneratedKeys = true, keyProperty = "id")
+  DBで自動採番されたidをMovieのidに戻す。
+
+@Update
+  UPDATE文を書く。
+
+@Delete
+  DELETE文を書く。
 ```
 
-```java
-@Component
-public class MovieMapper {
+## 5. Serviceで処理をつなぐ
 
-    public Movie toEntity(MovieRequest request) {
+編集するファイルは `service/MovieService.java` です。
+
+```java
+package com.example.gourmet.service;
+
+import com.example.gourmet.dto.movie.MovieRequest;
+import com.example.gourmet.dto.movie.MovieResponse;
+import com.example.gourmet.model.Movie;
+import com.example.gourmet.repository.MovieRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class MovieService {
+
+    private final MovieRepository movieRepository;
+
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
+
+    public List<MovieResponse> findAll() {
+        return movieRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public MovieResponse findById(Long id) {
+        Movie movie = movieRepository.findById(id);
+        return toResponse(movie);
+    }
+
+    public MovieResponse create(MovieRequest request) {
+        Movie movie = toModel(request);
+        movieRepository.insert(movie);
+        return toResponse(movie);
+    }
+
+    public MovieResponse update(Long id, MovieRequest request) {
+        Movie movie = toModel(request);
+        movie.setId(id);
+        movieRepository.update(movie);
+        return toResponse(movie);
+    }
+
+    public void delete(Long id) {
+        movieRepository.delete(id);
+    }
+
+    private Movie toModel(MovieRequest request) {
         Movie movie = new Movie();
         movie.setTitle(request.title());
         movie.setGenre(request.genre());
@@ -632,7 +639,7 @@ public class MovieMapper {
         return movie;
     }
 
-    public MovieResponse toResponse(Movie movie) {
+    private MovieResponse toResponse(Movie movie) {
         return new MovieResponse(
                 movie.getId(),
                 movie.getTitle(),
@@ -645,100 +652,36 @@ public class MovieMapper {
 }
 ```
 
-1行ずつ読む:
+見るポイント:
 
 ```text
-@Component
-  MovieMapperをSpring Bootに管理してもらう。
-  ServiceへDIできるようにする。
-
-toEntity(MovieRequest request)
-  Reactから受け取ったRequest DTOを、DB保存用のEntityに変換する。
-
-new Movie()
-  DBに保存するためのMovie Entityを作る。
-
-movie.setTitle(request.title())
-  Request DTOのtitleをEntityへ詰め替える。
-
-return movie;
-  Repositoryで保存できる形にして返す。
-
-toResponse(Movie movie)
-  DBから取得したEntityを、Reactへ返すResponse DTOに変換する。
-
-movie.getId()
-  DBで作られたIDをResponse DTOへ入れる。
+ServiceはSQLを書かない
+Repositoryを呼んでDB操作を依頼する
+Request DTOをDBモデルに詰め替える
+DBモデルをResponse DTOに詰め替える
 ```
 
-### 4. 登録APIを作る
+## 6. ControllerでAPIを受け取る
 
-登録では、Request DTOをEntityに変換してDBに保存します。
-
-```text
-MovieRequest
-  ↓ Mapper
-Movie Entity
-  ↓ Repository.save
-DBに保存
-```
-
-最初に確認すること:
-
-- POSTでJSONを送れる
-- DBに保存される
-- レスポンスに `id` が入る
-
-Serviceでは、Request DTO、Mapper、Repositoryをつなぎます。
-編集するファイルは `service/MovieService.java` です。
-
-```java
-@Service
-public class MovieService {
-
-    private final MovieRepository movieRepository;
-    private final MovieMapper movieMapper;
-
-    public MovieService(MovieRepository movieRepository, MovieMapper movieMapper) {
-        this.movieRepository = movieRepository;
-        this.movieMapper = movieMapper;
-    }
-
-    public MovieResponse create(MovieRequest request) {
-        Movie movie = movieMapper.toEntity(request);
-        Movie savedMovie = movieRepository.save(movie);
-        return movieMapper.toResponse(savedMovie);
-    }
-}
-```
-
-1行ずつ読む:
-
-```text
-private final MovieRepository movieRepository;
-  DB操作を行うRepositoryを使う。
-
-private final MovieMapper movieMapper;
-  DTOとEntityを変換するMapperを使う。
-
-public MovieService(...)
-  Spring BootがRepositoryとMapperを渡してくれる。
-
-Movie movie = movieMapper.toEntity(request);
-  Reactから受け取ったRequest DTOをEntityへ変換する。
-
-Movie savedMovie = movieRepository.save(movie);
-  EntityをDBへ保存する。
-  保存後はidが入ったEntityが返る。
-
-return movieMapper.toResponse(savedMovie);
-  保存した結果をResponse DTOに変換してReactへ返す。
-```
-
-Controllerでは、URLとHTTPメソッドを受け取り、Serviceへ処理を依頼します。
 編集するファイルは `controller/MovieController.java` です。
 
 ```java
+package com.example.gourmet.controller;
+
+import com.example.gourmet.dto.movie.MovieRequest;
+import com.example.gourmet.dto.movie.MovieResponse;
+import com.example.gourmet.service.MovieService;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/movies")
 public class MovieController {
@@ -749,465 +692,250 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    @GetMapping
+    public List<MovieResponse> findAll() {
+        return movieService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public MovieResponse findById(@PathVariable Long id) {
+        return movieService.findById(id);
+    }
+
     @PostMapping
     public MovieResponse create(@RequestBody MovieRequest request) {
         return movieService.create(request);
     }
-}
-```
 
-1行ずつ読む:
+    @PutMapping("/{id}")
+    public MovieResponse update(@PathVariable Long id, @RequestBody MovieRequest request) {
+        return movieService.update(id, request);
+    }
 
-```text
-@RestController
-  このクラスがREST APIのControllerであることを表す。
-  戻り値はJSONとして返される。
-
-@RequestMapping("/api/movies")
-  このControllerのAPI URLの共通部分を指定する。
-  この中のAPIは /api/movies から始まる。
-
-private final MovieService movieService;
-  実際の登録処理をServiceへ任せるために、MovieServiceを持つ。
-
-public MovieController(MovieService movieService)
-  Spring BootがMovieServiceを渡してくれる。
-  これがDIの基本形。
-
-@PostMapping
-  POST /api/movies が来たときに、このメソッドを動かす。
-
-public MovieResponse create(...)
-  登録結果としてMovieResponseを返す。
-  JSONでは1件分の映画データとして返る。
-
-@RequestBody MovieRequest request
-  リクエストボディのJSONをMovieRequestとして受け取る。
-  Reactから送られたtitle、genre、memoなどが入る。
-
-return movieService.create(request);
-  Controller自身では保存処理を書かない。
-  Serviceに依頼し、返ってきたResponse DTOをそのまま返す。
-```
-
-### 5. 一覧APIをDBから返す
-
-固定データではなく、DBから取得したデータを返します。
-
-```text
-Repository.findAll()
-  ↓
-Entityのリスト
-  ↓ Mapper
-Response DTOのリスト
-  ↓
-JSONレスポンス
-```
-
-Serviceに一覧取得の処理を追加します。
-
-```java
-public List<MovieResponse> findAll() {
-    return movieRepository.findAll()
-            .stream()
-            .map(movieMapper::toResponse)
-            .toList();
-}
-```
-
-1行ずつ読む:
-
-```text
-public List<MovieResponse> findAll()
-  MovieResponseを複数件返すメソッド。
-  JSONでは配列として返る。
-
-movieRepository.findAll()
-  DBに保存されているMovie Entityをすべて取得する。
-
-.stream()
-  取得したリストを、1件ずつ変換できる流れにする。
-
-.map(movieMapper::toResponse)
-  Movie EntityをMovieResponseへ1件ずつ変換する。
-  EntityをそのままReactへ返さないためにMapperを使う。
-
-.toList()
-  変換したMovieResponseをListに戻す。
-```
-
-Controllerでは、GETリクエストを受け取ってServiceへ渡します。
-
-```java
-@GetMapping
-public List<MovieResponse> findAll() {
-    return movieService.findAll();
-}
-```
-
-1行ずつ読む:
-
-```text
-@GetMapping
-  GET /api/movies が来たときに、このメソッドを動かす。
-
-public List<MovieResponse> findAll()
-  MovieResponseを複数件返すメソッド。
-  JSONでは配列として返る。
-
-return movieService.findAll();
-  ControllerではDB取得処理を書かない。
-  一覧取得の処理はServiceへ任せる。
-```
-
-### 6. 詳細、更新、削除を追加する
-
-登録と一覧が動いてから、IDを使うAPIを追加します。
-
-```text
-GET    /api/restaurants/{id}
-PUT    /api/restaurants/{id}
-DELETE /api/restaurants/{id}
-```
-
-IDを使うAPIでは、まず「そのIDのデータが存在するか」を確認します。
-
-Serviceでは、`findById` で対象データを探してから処理します。
-
-```java
-public MovieResponse findById(Long id) {
-    Movie movie = movieRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Movie not found"));
-
-    return movieMapper.toResponse(movie);
-}
-
-public MovieResponse update(Long id, MovieRequest request) {
-    Movie movie = movieRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Movie not found"));
-
-    movie.setTitle(request.title());
-    movie.setGenre(request.genre());
-    movie.setMemo(request.memo());
-    movie.setImageUrl(request.imageUrl());
-    movie.setStatus(request.status());
-
-    Movie savedMovie = movieRepository.save(movie);
-    return movieMapper.toResponse(savedMovie);
-}
-
-public void delete(Long id) {
-    Movie movie = movieRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Movie not found"));
-
-    movieRepository.delete(movie);
-}
-```
-
-1行ずつ読む:
-
-```text
-movieRepository.findById(id)
-  URLで指定されたidのデータをDBから探す。
-
-.orElseThrow(...)
-  データが見つからない場合はエラーにする。
-  存在しないidを更新・削除しないために必要。
-
-movie.setTitle(request.title())
-  リクエストで受け取った値を、既存のEntityへ上書きする。
-
-movieRepository.save(movie)
-  上書きしたEntityをDBへ保存する。
-  新規登録でも更新でもsaveを使う。
-
-movieRepository.delete(movie)
-  見つかったEntityをDBから削除する。
-
-public void delete(Long id)
-  削除では返すデータが不要な場合があるため、戻り値をvoidにできる。
-```
-
-Controllerでは、URLの `{id}` を `@PathVariable` で受け取ります。
-
-```java
-@GetMapping("/{id}")
-public MovieResponse findById(@PathVariable Long id) {
-    return movieService.findById(id);
-}
-
-@PutMapping("/{id}")
-public MovieResponse update(@PathVariable Long id, @RequestBody MovieRequest request) {
-    return movieService.update(id, request);
-}
-
-@DeleteMapping("/{id}")
-public void delete(@PathVariable Long id) {
-    movieService.delete(id);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        movieService.delete(id);
+    }
 }
 ```
 
 見るポイント:
 
-- `{id}` はURLの一部
-- `@PathVariable Long id` でURLのidを受け取る
-- 更新ではURLのidとリクエストJSONの両方を使う
-- 削除ではidだけで対象を探せる
-
-### 7. クエリパラメータで絞り込む
-
-一覧が動いた後に、条件付きの一覧取得を追加します。
-
 ```text
-GET /api/restaurants?area=新宿
+ControllerはURLとHTTPメソッドを受け取る
+ControllerはSQLを書かない
+ControllerはRepositoryを直接呼ばない
+ControllerはServiceを呼ぶ
 ```
 
-最初から複雑な検索にしすぎず、まずは地域だけで絞り込みます。
-その後、ジャンルやステータスを追加します。
+## 7. Brunoで確認する
 
-クエリパラメータは、URLの後ろにつける検索条件です。
+登録:
 
 ```text
-/api/restaurants?area=新宿
+POST http://localhost:8080/api/movies
 ```
 
-この場合、`area` が条件名で、`新宿` が条件の値です。
-Spring Bootでは `@RequestParam` で受け取ります。
+Body:
 
-```java
-@GetMapping
-public List<MovieResponse> findAll(@RequestParam(required = false) String genre) {
-    return movieService.findAll(genre);
+```json
+{
+  "title": "Inception",
+  "genre": "SF",
+  "memo": "夢の中に入っていく映画",
+  "imageUrl": "https://example.com/images/inception.jpg",
+  "status": "WATCHED"
 }
 ```
 
-1行ずつ読む:
+一覧:
 
 ```text
-@RequestParam(required = false) String genre
-  URLの ?genre=SF の値を受け取る。
-  required = false なので、条件なしの一覧取得もできる。
-
-movieService.findAll(genre)
-  絞り込み条件をServiceへ渡す。
-  Controllerでは検索処理そのものを書かない。
+GET http://localhost:8080/api/movies
 ```
 
-## 演習
-
-次の順番でAPIを完成させます。
+詳細:
 
 ```text
-1. 登録APIを作る
-2. 一覧APIをDBから返す
-3. 詳細APIを作る
-4. 更新APIを作る
-5. 削除APIを作る
-6. 地域フィルタを追加する
+GET http://localhost:8080/api/movies/1
 ```
 
-各APIごとに確認すること:
+更新:
 
-- URLとHTTPメソッドが正しい
-- リクエストJSONが想定通り
-- レスポンスJSONが想定通り
-- DBのデータが変わっている
-- 存在しないIDを指定したときの動きが分かる
+```text
+PUT http://localhost:8080/api/movies/1
+```
+
+削除:
+
+```text
+DELETE http://localhost:8080/api/movies/1
+```
+
+確認すること:
+
+```text
+POST後にidが返る
+GET一覧で登録したデータが見える
+PUT後に内容が変わる
+DELETE後に一覧から消える
+```
+
+## クエリパラメータで絞り込む考え方
+
+余裕があれば、一覧APIにフィルタを追加します。
+
+```text
+GET /api/movies?genre=SF
+GET /api/movies?status=WATCHED
+```
+
+Repositoryには、条件付きSQLを追加します。
+
+```java
+@Select("""
+        SELECT id, title, genre, memo, image_url AS imageUrl, status
+        FROM movies
+        WHERE genre = #{genre}
+        ORDER BY id
+        """)
+List<Movie> findByGenre(String genre);
+```
+
+Day3の基本は、まずCRUDを確実に動かすことです。
+フィルタはCRUDの流れが見えてから追加します。
+
+## 演習: RestaurantのCRUD API
+
+Movieで作ったCRUD APIと同じ構造で、RestaurantのCRUD APIを作ります。
+
+作るファイル:
+
+```text
+controller/RestaurantController.java
+service/RestaurantService.java
+repository/RestaurantRepository.java
+model/Restaurant.java
+dto/restaurant/RestaurantRequest.java
+dto/restaurant/RestaurantResponse.java
+```
+
+Restaurant側で扱う項目:
+
+```text
+id
+name
+area
+genre
+memo
+imageUrl
+status
+```
+
+作るAPI:
+
+```text
+POST   /api/restaurants
+GET    /api/restaurants
+GET    /api/restaurants/{id}
+PUT    /api/restaurants/{id}
+DELETE /api/restaurants/{id}
+```
+
+参考にするMovie側の名前:
+
+```text
+MovieController  -> RestaurantController
+MovieService     -> RestaurantService
+MovieRepository  -> RestaurantRepository
+Movie            -> Restaurant
+MovieRequest     -> RestaurantRequest
+MovieResponse    -> RestaurantResponse
+movies table     -> restaurants table
+title            -> name
+```
+
+演習では、新しい技術を増やしません。
+Movieで見た構造をRestaurantへ置き換えます。
 
 ## AIへの依頼例
 
-Day3では、DB保存とCRUD APIを作ります。
-一度に全部依頼せず、登録と一覧から始めます。
-
-最初に、自分で穴埋めしてからAIへ渡します。
-ここでも、作るものを全部説明しすぎず、Movieで見た構造から置き換える前提にします。
+まずは自分で穴埋めしてから、AIに確認してもらいます。
 
 ```text
-MovieのDB保存APIを参考にして、RestaurantのDB保存APIを作りたいです。
-まず、下の穴埋めが正しいか確認してください。
+MovieのMyBatis Repositoryを参考にして、
+RestaurantのRepositoryを作りたいです。
 
-まず作るもの:
-- ______
-- ______
-- ______
-- ______
-- ______
-- ______ /api/__________
-- ______ /api/__________
+作るAPI:
+POST   /api/__________
+GET    /api/__________
+GET    /api/__________/{id}
+PUT    /api/__________/{id}
+DELETE /api/__________/{id}
 
-項目:
+作るファイル:
+controller/____________________.java
+service/____________________.java
+repository/____________________.java
+model/____________________.java
+dto/restaurant/____________________.java
+dto/restaurant/____________________.java
+
+DBテーブル:
+____________________
+
+SQLで使うカラム:
 id, ______, ______, ______, ______, ______, ______
 
-条件:
-- Movie EntityのどこをRestaurant Entityへ置き換えるか: ______
-- MovieRequestのどこをRestaurantRequestへ置き換えるか: ______
-- MovieResponseのどこをRestaurantResponseへ置き換えるか: ______
-- MovieMapperのどこをRestaurantMapperへ置き換えるか: ______
-- MovieServiceのどこをRestaurantServiceへ置き換えるか: ______
-- MovieControllerのどこをRestaurantControllerへ置き換えるか: ______
-
-コードを出す前に、Request DTO、Entity、Response DTO、Mapperの役割を短く説明してください。
+MovieのどこをRestaurantへ置き換えればよいか、
+差分が分かるように説明してください。
 ```
 
-参考にするMovie側の例:
+## よくあるエラー
+
+### `@Mapper` が認識されない
+
+確認すること:
 
 ```text
-Entity          Movie
-Repository      MovieRepository
-Request DTO     MovieRequest
-Response DTO    MovieResponse
-Mapper          MovieMapper
-Create API      POST /api/movies
-List API        GET /api/movies
-JSON keys       id, title, genre, memo, imageUrl, status
+mybatis-spring-boot-starter がpom.xmlに入っているか
+Mavenを再読み込みしたか
+import org.apache.ibatis.annotations.Mapper; になっているか
 ```
 
-Restaurant側のクラス名、API、JSONキーは、Movieの例を見ながら自分で埋めます。
+### `imageUrl` がnullになる
 
-次の依頼例:
+確認すること:
 
 ```text
-Movieの詳細、更新、削除APIを参考にして、
-Restaurant APIに同じ構造の ______、______、______ を追加したいです。
-
-追加するAPI:
-______ /api/restaurants/{id}
-______ /api/restaurants/{id}
-______ /api/restaurants/{id}
-
-条件:
-- 存在しないIDの場合はどう扱うか: ______
-- 更新ではどのidを使って対象データを探すか: ______
-- 削除後のレスポンスボディは必要か: ______
-
-コードを出す前に、ServiceでfindById、save、deleteByIdのどれを使うか説明してください。
+SQLで image_url AS imageUrl と書いているか
+DBのカラム名は image_url
+Javaのフィールド名は imageUrl
 ```
 
-AIの回答を確認するときのポイント:
+### INSERT後にidが入らない
 
-- EntityとDTOが混ざっていないか
-- ControllerにDB操作が直接書かれていないか
-- RepositoryをServiceから呼んでいるか
-- 存在しないIDの扱いがあるか
-- CRUDのHTTPメソッドが資料と合っているか
-
-## リクエストとレスポンスの例
-
-登録APIでは、ReactからSpring BootへJSONを送る。
-
-```http
-POST /api/restaurants
-Content-Type: application/json
-```
-
-```json
-{
-  "name": "Cafe Sakura",
-  "area": "新宿",
-  "genre": "カフェ",
-  "memo": "落ち着いて作業できそう",
-  "imageUrl": "https://example.com/cafe.jpg",
-  "status": "WANT_TO_GO"
-}
-```
-
-Spring BootはDBに保存し、保存結果をJSONで返す。
-
-```json
-{
-  "id": 1,
-  "name": "Cafe Sakura",
-  "area": "新宿",
-  "genre": "カフェ",
-  "memo": "落ち着いて作業できそう",
-  "imageUrl": "https://example.com/cafe.jpg",
-  "status": "WANT_TO_GO"
-}
-```
-
-ポイントは、登録前のリクエストには `id` がなく、保存後のレスポンスには `id` があること。
-`id` はDBに保存されたデータを区別するために使う。
-
-## バリデーションの考え方
-
-入力値が空のまま登録されると、使いにくいアプリになる。
-
-最低限、次の項目は必須にする。
-
-- 店名
-- 地域
-- ジャンル
-- ステータス
-
-メモと画像URLは任意でもよい。
-
-最初から厳密に作り込みすぎない。
-まずは「必須項目が空ならエラーにする」程度で十分。
-
-## エラーレスポンスの考え方
-
-APIは成功するときだけでなく、失敗するときもある。
-
-例:
+確認すること:
 
 ```text
-存在しないIDを指定した
-必須項目が空だった
-URLが間違っていた
+@Options(useGeneratedKeys = true, keyProperty = "id") があるか
+DBのidが自動採番になっているか
 ```
 
-最初は次の違いを理解する。
+### ControllerからRepositoryを直接呼んでいる
+
+ControllerはAPIの入口です。
+DB操作はServiceからRepositoryを呼びます。
 
 ```text
-200 OK       成功
-201 Created  登録成功
-400 Bad Request  入力が間違っている
-404 Not Found    データが見つからない
-500 Internal Server Error  サーバー側の想定外エラー
+Controller -> Service -> Repository -> DB
 ```
 
-## 今日の確認ポイント
+## チェックリスト
 
-- EntityはDBに保存するデータの形だと説明できる
-- RepositoryはDB操作を担当すると説明できる
-- CRUDとHTTPメソッドの対応を説明できる
-- 登録前のJSONと保存後のJSONの違いを説明できる
-- API単体で登録、一覧、詳細、編集、削除を確認できる
-
-## よくある混乱
-
-### EntityとDTOは同じですか
-
-同じではない。
-
-EntityはDBに保存する形。
-DTOはAPIで受け渡しする形。
-
-最初は似ていても、目的が違う。
-
-### PUTとPOSTの違いは何ですか
-
-POSTは新しく作る。
-PUTは既にあるものを更新する。
-
-```text
-POST /api/restaurants
-  -> 新しいお店を作る
-
-PUT /api/restaurants/1
-  -> id=1のお店を更新する
-```
-
-### フィルタは別APIにするべきですか
-
-今回は一覧APIにクエリパラメータを付ける。
-
-```text
-GET /api/restaurants?area=新宿
-```
-
-一覧の条件違いなので、同じURLに条件を足す考え方でよい。
-
-## メモ
-
-DBは最初はH2を使うと環境差分が少ない。
+- MyBatisの `@Mapper` の役割を説明できる
+- RepositoryにSQLを書く理由を説明できる
+- Request DTO、Response DTO、DBモデルの違いを説明できる
+- Controller、Service、Repositoryの役割を説明できる
+- BrunoでPOST、GET、PUT、DELETEを確認できる
+- Movieの構造をRestaurantへ置き換えられる

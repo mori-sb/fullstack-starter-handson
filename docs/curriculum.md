@@ -495,25 +495,24 @@ GET http://localhost:8080/api/restaurants
 
 ### 今日のゴール
 
-- Entity、Repository、DTO、Mapperの役割を理解する
+- MyBatisでSQLを書くRepositoryの役割を理解する
 - DB保存を使ったCRUD APIを作れる
+- Request DTO、Response DTO、DBモデルの違いを説明できる
 - Movie CRUDの構造をRestaurant CRUDへ置き換えられる
-- 説明したAPIだけを演習で実装できる
 
 ### 使用する図
 
-- `spring-entity-flow.png`: Entityの位置づけ
-- `entity-table-map.png`: EntityとDBテーブルの対応
-- `spring-mapper-flow.png`: DTO、Mapper、Entityの関係
-- `repository-role.png`: Repositoryの役割
+- `repository-role.png`: RepositoryにSQLを書く流れ
+- `entity-table-map.png`: DBモデルとDBテーブルの対応
+- `query-param-flow.png`: クエリパラメータで一覧を絞り込む流れ
 
 ### 講義で説明する内容
 
-- EntityはDBに保存するデータの形
-- RepositoryはDB操作の入口
+- この教材ではJPA EntityではなくMyBatisを使う
+- Repositoryには `@Select`、`@Insert`、`@Update`、`@Delete` でSQLを書く
 - Request DTOはReactから受け取る形
+- DBモデルはSQLの結果を受け取る形
 - Response DTOはReactへ返す形
-- MapperはDTOとEntityを変換する
 - CRUDはCreate、Read、Update、Deleteの基本操作
 
 ### ライブコーディング内容
@@ -524,86 +523,43 @@ Movie題材でCRUD APIを作ります。
 作るファイル:
 
 ```text
-entity/Movie.java
+model/Movie.java
 repository/MovieRepository.java
 dto/movie/MovieRequest.java
 dto/movie/MovieResponse.java
-mapper/MovieMapper.java
 service/MovieService.java
 controller/MovieController.java
-```
-
-API:
-
-```text
-GET    /api/movies
-GET    /api/movies/{id}
-POST   /api/movies
-PUT    /api/movies/{id}
-DELETE /api/movies/{id}
-```
-
-Entity:
-
-```java
-@Entity
-public class Movie {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String title;
-    private String genre;
-    private String memo;
-    private String imageUrl;
-    private String status;
-}
-```
-
-1行ずつ読む:
-
-```text
-@Entity
-  DBに保存するクラスであることを表す。
-
-@Id
-  主キーを表す。
-
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-  idをDBに自動採番してもらう。
-
-private String title;
-  DBに保存する映画タイトル。
 ```
 
 Repository:
 
 ```java
-public interface MovieRepository extends JpaRepository<Movie, Long> {
-}
-```
+@Mapper
+public interface MovieRepository {
 
-Controllerの登録API:
-
-```java
-@PostMapping
-public MovieResponse create(@RequestBody MovieRequest request) {
-    return movieService.create(request);
+    @Select("""
+            SELECT id, title, genre, memo, image_url AS imageUrl, status
+            FROM movies
+            WHERE id = #{id}
+            """)
+    Movie findById(Long id);
 }
 ```
 
 読み方:
 
 ```text
-@PostMapping
-  POST /api/movies を受け取る。
+@Mapper
+  MyBatisのRepositoryとして使う目印。
 
-@RequestBody MovieRequest request
-  リクエストJSONをMovieRequestとして受け取る。
+@Select
+  SELECT文を書く。
 
-return movieService.create(request);
-  登録処理はServiceへ任せる。
+image_url AS imageUrl
+  DBの列名をJavaのフィールド名に合わせる。
+
+#{id}
+  メソッド引数のidをSQLに渡す。
 ```
 
 ### 演習内容
@@ -613,36 +569,23 @@ Restaurant題材で同じCRUD APIを作ります。
 作るファイル:
 
 ```text
-entity/Restaurant.java
+model/Restaurant.java
 repository/RestaurantRepository.java
 dto/restaurant/RestaurantRequest.java
 dto/restaurant/RestaurantResponse.java
-mapper/RestaurantMapper.java
 service/RestaurantService.java
 controller/RestaurantController.java
 ```
-
-API:
-
-```text
-GET    /api/restaurants
-GET    /api/restaurants/{id}
-POST   /api/restaurants
-PUT    /api/restaurants/{id}
-DELETE /api/restaurants/{id}
-```
-
-Movieで説明していない検索条件や複雑なバリデーションは出しません。
 
 ### ライブコーディングと演習の対応表
 
 | Movie側で見たもの | Restaurant側で考えること |
 | --- | --- |
-| `Movie` | Entity名 |
+| `Movie` | DBモデル名 |
 | `MovieRepository` | Repository名 |
 | `MovieRequest` | Request DTO名 |
 | `MovieResponse` | Response DTO名 |
-| `MovieMapper` | Mapper名 |
+| `movies` | テーブル名 |
 | `/api/movies/{id}` | ID付きAPIのURL |
 | `title` | 店名にあたるJSONキー |
 
@@ -650,44 +593,15 @@ Movieで説明していない検索条件や複雑なバリデーションは出
 
 - RestaurantをDBに保存できる
 - 一覧、詳細、登録、更新、削除APIが動く
-- DTOとEntityを分けている
-- Mapperで変換している
+- DTOとDBモデルを分けている
+- RepositoryにSQLを書いている
 - ServiceからRepositoryを呼んでいる
-
-### 動作確認方法
-
-Brunoで確認します。
-
-```http
-POST http://localhost:8080/api/restaurants
-GET  http://localhost:8080/api/restaurants
-GET  http://localhost:8080/api/restaurants/1
-PUT  http://localhost:8080/api/restaurants/1
-DELETE http://localhost:8080/api/restaurants/1
-```
-
-### よくあるエラー
-
-- Entityに `@Id` がない
-- Repositoryの型指定が違う
-- Request DTOとEntityを混同している
-- Mapperで `id` の扱いを間違える
-- 存在しないIDを指定したときの扱いがない
-
-### 参加者が理解すべきポイント
-
-- EntityはDB用
-- DTOはAPI用
-- Mapperは変換用
-- RepositoryはDB操作用
-- ControllerはServiceを呼ぶ
 
 ### チェックリスト
 
-- `Restaurant` Entityを作った
-- `RestaurantRepository` を作った
+- `Restaurant` DBモデルを作った
+- `RestaurantRepository` にSQLを書いた
 - Request/Response DTOを作った
-- Mapperを作った
 - CRUD APIをBrunoで確認した
 - MovieとRestaurantの対応を説明できる
 

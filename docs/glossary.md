@@ -158,9 +158,11 @@ DBとやり取りする場所。
 
 保存、取得、削除などを担当する。
 
-### Entity
+### DBモデル
 
-DBに保存するデータの形。
+DBテーブルの1行をJavaで受け取るための形。
+
+この教材ではMyBatisを使うため、JPAの `@Entity` は扱わない。
 
 ### DTO
 
@@ -169,9 +171,17 @@ APIで受け渡しするデータの形。
 Request DTOはReactから受け取る形。
 Response DTOはReactへ返す形。
 
-### Mapper
+### MyBatisのMapper
 
-DTOとEntityを変換するもの。
+MyBatisでSQLを書くRepositoryに付ける目印。
+
+```java
+@Mapper
+public interface RestaurantRepository {
+}
+```
+
+DTOとDBモデルの変換は、この教材ではServiceの中で行う。
 
 ### Validation
 

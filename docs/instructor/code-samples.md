@@ -99,41 +99,12 @@ public class RestaurantResponse {
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
-    private final RestaurantMapper restaurantMapper;
 
-    public RestaurantService(
-            RestaurantRepository restaurantRepository,
-            RestaurantMapper restaurantMapper
-    ) {
+    public RestaurantService(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
-        this.restaurantMapper = restaurantMapper;
     }
 
     public RestaurantResponse create(RestaurantRequest request) {
-        Restaurant restaurant = restaurantMapper.toEntity(request);
-        Restaurant saved = restaurantRepository.save(restaurant);
-        return restaurantMapper.toResponse(saved);
-    }
-}
-```
-
-見るポイント:
-
-- Controllerから呼ばれる
-- Repositoryを使ってDB保存する
-- Mapperを使ってDTOとEntityを変換する
-
-### Mapper
-
-役割:
-
-DTOとEntityを変換する。
-
-```java
-@Component
-public class RestaurantMapper {
-
-    public Restaurant toEntity(RestaurantRequest request) {
         Restaurant restaurant = new Restaurant();
         restaurant.setName(request.getName());
         restaurant.setArea(request.getArea());
@@ -141,10 +112,9 @@ public class RestaurantMapper {
         restaurant.setMemo(request.getMemo());
         restaurant.setImageUrl(request.getImageUrl());
         restaurant.setStatus(request.getStatus());
-        return restaurant;
-    }
 
-    public RestaurantResponse toResponse(Restaurant restaurant) {
+        restaurantRepository.insert(restaurant);
+
         return new RestaurantResponse(
                 restaurant.getId(),
                 restaurant.getName(),
@@ -160,37 +130,33 @@ public class RestaurantMapper {
 
 見るポイント:
 
-- API用のDTOとDB用のEntityを直接混ぜない
-- 変換処理を1か所に集める
+- Controllerから呼ばれる
+- Repositoryを使ってDB保存する
+- DTOとDBモデルの詰め替えを行う
 
-### Entity
+### DBモデル
 
 役割:
 
-DBに保存するデータの形。
+DBテーブルの1行を受け取る形。
 
 ```java
-@Entity
 public class Restaurant {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String area;
     private String genre;
     private String memo;
     private String imageUrl;
-
-    @Enumerated(EnumType.STRING)
-    private RestaurantStatus status;
+    private String status;
 }
 ```
 
 見るポイント:
 
-- DBテーブルに近い形
+- JPAの `@Entity` は付けない
+- DBテーブルの1行に近い形
 - `id` はDB側で採番される
 - `imageUrl` は画像そのものではなくURL文字列
 
@@ -201,17 +167,30 @@ public class Restaurant {
 DB操作を担当する。
 
 ```java
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
-    List<Restaurant> findByArea(String area);
-    List<Restaurant> findByGenre(String genre);
-    List<Restaurant> findByStatus(RestaurantStatus status);
+@Mapper
+public interface RestaurantRepository {
+
+    @Select("""
+            SELECT id, name, area, genre, memo, image_url AS imageUrl, status
+            FROM restaurants
+            ORDER BY id
+            """)
+    List<Restaurant> findAll();
+
+    @Insert("""
+            INSERT INTO restaurants (name, area, genre, memo, image_url, status)
+            VALUES (#{name}, #{area}, #{genre}, #{memo}, #{imageUrl}, #{status})
+            """)
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void insert(Restaurant restaurant);
 }
 ```
 
 見るポイント:
 
-- `JpaRepository` を継承すると基本的なCRUDが使える
-- メソッド名から検索処理を作れる
+- `@Mapper` を付ける
+- `@Select`、`@Insert` にSQLを書く
+- `image_url AS imageUrl` でDB列名とJavaフィールド名を合わせる
 
 ## React
 
