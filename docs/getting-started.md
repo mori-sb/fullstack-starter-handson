@@ -32,12 +32,268 @@
 Day1とDay2では、まずWebアプリ全体像とSpring Boot APIの基本を理解します。
 DBコンテナはDay3で必要になるため、そのタイミングで起動確認します。
 
+### 使うツールをインストールする
+
+最初に、開発に必要なツールを入れます。
+すでに入っている場合は、この節は確認だけで大丈夫です。
+
+この教材では、macOSでの作業を想定します。
+社内PCの権限やセキュリティ設定によってインストール方法が違う場合は、社内ルールに従います。
+
+入れるもの:
+
+```text
+Java 17             Spring Bootを動かす
+Maven               Spring Bootプロジェクトをビルドする
+Git                 GitHubからリポジトリを取得する
+Node.js / npm       Reactを動かす
+IntelliJ IDEA       Spring Boot側を書く
+VS Code             React側を書く
+Bruno               APIを確認する
+Rancher Desktop     DBコンテナを起動する
+```
+
+#### Homebrewを使う場合
+
+Macでは、Homebrewを使うとコマンドでツールを入れられます。
+Homebrewが入っているか確認します。
+
+```bash
+brew --version
+```
+
+表示されない場合は、公式サイトの手順に従ってHomebrewをインストールします。
+
+```text
+https://brew.sh/
+```
+
+Homebrewを入れた直後は、ターミナルに表示される案内に従ってPATH設定を反映します。
+PATH設定ができていないと、`brew` コマンドが見つからないことがあります。
+
+#### Java 17をインストールする
+
+Spring BootはJavaで動きます。
+この教材ではJava 17を使います。
+
+Homebrewを使う場合:
+
+```bash
+brew install --cask temurin@17
+```
+
+公式ページから入れる場合:
+
+```text
+https://adoptium.net/temurin/releases/?version=17
+```
+
+インストール後に確認します。
+
+```bash
+java -version
+```
+
+見るポイント:
+
+```text
+17 が表示される
+```
+
+Javaは「入っているか」だけでなく、「IntelliJ IDEAがそのJavaを使っているか」も大事です。
+あとでIntelliJ IDEAのProject SDKもJava 17に合わせます。
+
+#### Mavenをインストールする
+
+Mavenは、Spring Bootプロジェクトをビルドするために使います。
+`pom.xml` を読み、必要なライブラリを取得して、アプリを起動・ビルドできるようにします。
+
+Homebrewを使う場合:
+
+```bash
+brew install maven
+```
+
+公式ページ:
+
+```text
+https://maven.apache.org/download.cgi
+```
+
+インストール後に確認します。
+
+```bash
+mvn -v
+```
+
+見るポイント:
+
+```text
+Apache Maven のバージョンが表示される
+Java version が 17 になっている
+```
+
+IntelliJ IDEAだけで実行する場合でも、Mavenの考え方は出てきます。
+`pom.xml` を変更したら、Mavenを再読み込みする必要があります。
+
+#### Gitをインストールする
+
+Gitは、GitHubから教材リポジトリを取得したり、変更履歴を管理したりするために使います。
+
+Homebrewを使う場合:
+
+```bash
+brew install git
+```
+
+公式ページから確認する場合:
+
+```text
+https://git-scm.com/downloads
+```
+
+インストール後に確認します。
+
+```bash
+git --version
+```
+
+#### Node.js / npmをインストールする
+
+Node.jsは、Reactを動かすために使います。
+npmは、Reactで使うライブラリを入れたり、開発サーバーを起動したりするために使います。
+
+Homebrewを使う場合:
+
+```bash
+brew install node
+```
+
+公式ページから入れる場合は、LTS版を選びます。
+
+```text
+https://nodejs.org/
+```
+
+インストール後に確認します。
+
+```bash
+node -v
+npm -v
+```
+
+見るポイント:
+
+```text
+node のバージョンが表示される
+npm のバージョンが表示される
+```
+
+#### IntelliJ IDEAをインストールする
+
+IntelliJ IDEAは、Spring Boot側のJavaコードを書くために使います。
+Community Editionでも基本的なJava開発はできます。
+Spring Boot支援機能を多く使う場合はUltimate Editionが便利です。
+
+公式ページ:
+
+```text
+https://www.jetbrains.com/idea/download/
+```
+
+インストール後に確認すること:
+
+```text
+IntelliJ IDEAを起動できる
+backend/ を開ける
+Java 17をProject SDKに設定できる
+Mavenプロジェクトとして読み込める
+```
+
+#### VS Codeをインストールする
+
+VS Codeは、React側のコードを書くために使います。
+
+公式ページ:
+
+```text
+https://code.visualstudio.com/
+```
+
+インストール後に確認すること:
+
+```text
+VS Codeを起動できる
+frontend/ を開ける
+ターミナルを開ける
+```
+
+Macで `code .` コマンドを使いたい場合は、VS CodeのCommand Paletteから次を実行します。
+
+```text
+Shell Command: Install 'code' command in PATH
+```
+
+#### Brunoをインストールする
+
+Brunoは、APIを直接呼び出して確認するために使います。
+React画面を作る前に、Spring Boot APIが正しくJSONを返すか確認できます。
+
+Homebrewを使う場合:
+
+```bash
+brew install bruno
+```
+
+公式ページ:
+
+```text
+https://www.usebruno.com/downloads
+```
+
+インストール後に確認すること:
+
+```text
+Brunoを起動できる
+WorkspaceまたはCollectionを作成できる
+GETリクエストを作成できる
+```
+
+#### Rancher Desktopをインストールする
+
+Rancher Desktopは、DBコンテナを起動するために使います。
+Day1、Day2ではまだDBを使わないため、実際の起動確認はDay3に入る前で大丈夫です。
+
+公式ページ:
+
+```text
+https://rancherdesktop.io/
+```
+
+インストール後に確認すること:
+
+```text
+Rancher Desktopを起動できる
+Container Engineを使える
+docker コマンドが使える
+```
+
+Day3に入る前に確認します。
+
+```bash
+docker --version
+docker ps
+```
+
+`docker` コマンドが使えない場合は、Rancher Desktopの設定でContainer EngineやPATH設定を確認します。
+
 ### 最初の環境確認
 
 ターミナルで次のコマンドを実行します。
 
 ```bash
 java -version
+mvn -v
 node -v
 npm -v
 git --version
@@ -47,6 +303,7 @@ git --version
 
 ```text
 Javaのバージョンが表示される
+Mavenのバージョンが表示される
 Node.jsのバージョンが表示される
 npmのバージョンが表示される
 Gitのバージョンが表示される
@@ -586,6 +843,7 @@ Rancher Desktop     DBコンテナを起動する
 Bruno               APIの動作確認をする
 Git / GitHub        コードと資料を管理する
 Java                Spring Bootを動かす
+Maven               Spring Bootプロジェクトをビルドする
 Node.js / npm       Reactを動かす
 ```
 
