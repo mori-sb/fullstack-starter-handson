@@ -25,8 +25,9 @@
 - IntelliJ IDEAで `backend/` を開ける
 - VS Codeで `frontend/` を開ける
 - `java -version` が表示される
+- `mvn -v` が表示される
 - `node -v` が表示される
-- `npm -v` が表示される
+- `yarn -v` が表示される
 - `git --version` が表示される
 - Rancher Desktopが起動している
 - Brunoを起動できる

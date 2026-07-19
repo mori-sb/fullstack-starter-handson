@@ -43,10 +43,10 @@ DBコンテナはDay3で必要になるため、そのタイミングで起動�
 入れるもの:
 
 ```text
-Java 17             Spring Bootを動かす
+Java 21             Spring Bootを動かす
 Maven               Spring Bootプロジェクトをビルドする
 Git                 GitHubからリポジトリを取得する
-Node.js / npm       Reactを動かす
+Node.js / yarn      Reactを動かす
 IntelliJ IDEA       Spring Boot側を書く
 VS Code             React側を書く
 Bruno               APIを確認する
@@ -71,21 +71,21 @@ https://brew.sh/
 Homebrewを入れた直後は、ターミナルに表示される案内に従ってPATH設定を反映します。
 PATH設定ができていないと、`brew` コマンドが見つからないことがあります。
 
-#### Java 17をインストールする
+#### Java 21をインストールする
 
 Spring BootはJavaで動きます。
-この教材ではJava 17を使います。
+この教材ではJava 21を使います。
 
 Homebrewを使う場合:
 
 ```bash
-brew install --cask temurin@17
+brew install --cask temurin@21
 ```
 
 公式ページから入れる場合:
 
 ```text
-https://adoptium.net/temurin/releases/?version=17
+https://adoptium.net/temurin/releases/?version=21
 ```
 
 インストール後に確認します。
@@ -97,11 +97,11 @@ java -version
 見るポイント:
 
 ```text
-17 が表示される
+21 が表示される
 ```
 
 Javaは「入っているか」だけでなく、「IntelliJ IDEAがそのJavaを使っているか」も大事です。
-あとでIntelliJ IDEAのProject SDKもJava 17に合わせます。
+あとでIntelliJ IDEAのProject SDKもJava 21に合わせます。
 
 #### Mavenをインストールする
 
@@ -130,38 +130,16 @@ mvn -v
 
 ```text
 Apache Maven のバージョンが表示される
-Java version が 17 になっている
+Java version が 21 になっている
 ```
 
 IntelliJ IDEAだけで実行する場合でも、Mavenの考え方は出てきます。
 `pom.xml` を変更したら、Mavenを再読み込みする必要があります。
 
-#### Gitをインストールする
-
-Gitは、GitHubから教材リポジトリを取得したり、変更履歴を管理したりするために使います。
-
-Homebrewを使う場合:
-
-```bash
-brew install git
-```
-
-公式ページから確認する場合:
-
-```text
-https://git-scm.com/downloads
-```
-
-インストール後に確認します。
-
-```bash
-git --version
-```
-
-#### Node.js / npmをインストールする
+#### Node.js / yarnをインストールする
 
 Node.jsは、Reactを動かすために使います。
-npmは、Reactで使うライブラリを入れたり、開発サーバーを起動したりするために使います。
+yarnは、Reactで使うライブラリを入れたり、開発サーバーを起動したりするために使います。
 
 Homebrewを使う場合:
 
@@ -179,14 +157,15 @@ https://nodejs.org/
 
 ```bash
 node -v
-npm -v
+corepack enable
+yarn -v
 ```
 
 見るポイント:
 
 ```text
 node のバージョンが表示される
-npm のバージョンが表示される
+yarn のバージョンが表示される
 ```
 
 #### IntelliJ IDEAをインストールする
@@ -206,7 +185,7 @@ https://www.jetbrains.com/idea/download/
 ```text
 IntelliJ IDEAを起動できる
 backend/ を開ける
-Java 17をProject SDKに設定できる
+Java 21をProject SDKに設定できる
 Mavenプロジェクトとして読み込める
 ```
 
@@ -295,7 +274,7 @@ docker ps
 java -version
 mvn -v
 node -v
-npm -v
+yarn -v
 git --version
 ```
 
@@ -305,7 +284,7 @@ git --version
 Javaのバージョンが表示される
 Mavenのバージョンが表示される
 Node.jsのバージョンが表示される
-npmのバージョンが表示される
+yarnのバージョンが表示される
 Gitのバージョンが表示される
 ```
 
@@ -483,12 +462,12 @@ Mavenの読み込みが終わると、Spring Bootのアノテーションやimpo
 Spring BootはJavaで動きます。
 そのため、IntelliJ IDEAがどのJavaを使うかを設定する必要があります。
 
-この教材では、Java 17を使います。
+この教材では、Java 21を使います。
 
 確認すること:
 
 ```text
-Project SDK が 17 になっている
+Project SDK が 21 になっている
 MavenのJavaバージョンと合っている
 GourmetApplication.java を実行できる
 ```
@@ -508,16 +487,16 @@ IntelliJ IDEAでの操作の目安:
 ```text
 Project Structure を開く
   -> Project SDK を確認する
-  -> 17 を選ぶ
+  -> 21 を選ぶ
 
 Module SDK も確認する
   -> Project SDK と同じJavaを使う
 ```
 
-`pom.xml` に次のように書かれている場合、IntelliJ側もJava 17に合わせます。
+`pom.xml` に次のように書かれている場合、IntelliJ側もJava 21に合わせます。
 
 ```xml
-<java.version>17</java.version>
+<java.version>21</java.version>
 ```
 
 #### GourmetApplication.javaを見る理由
@@ -629,8 +608,8 @@ fullstack-starter-handson/frontend
 Reactプロジェクトを作成済みの場合は、VS Codeのターミナルで次を実行します。
 
 ```bash
-npm install
-npm run dev
+yarn install
+yarn dev
 ```
 
 起動できたら、ブラウザで次を開きます。
@@ -844,7 +823,7 @@ Bruno               APIの動作確認をする
 Git / GitHub        コードと資料を管理する
 Java                Spring Bootを動かす
 Maven               Spring Bootプロジェクトをビルドする
-Node.js / npm       Reactを動かす
+Node.js / yarn      Reactを動かす
 ```
 
 各ツールの設定は、上の「プロジェクトを始める方法」で使う順番に確認します。
