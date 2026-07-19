@@ -14,8 +14,8 @@
 7. day5.md
 ```
 
-`getting-started.md` には、事前学習項目と参考サイトもまとめています。
-Java、JavaScript、TypeScriptに慣れていない場合は、Day1の前にそこだけ軽く読んでおきます。
+`getting-started.md` には、プロジェクトを始める手順、使うツール、事前学習項目、参考サイトをまとめています。
+環境準備はここで確認し、各Dayでは概念説明と実装に集中します。
 
 分からない言葉が出てきたら `glossary.md`、作業確認をしたいときは `checklists.md` を見ます。
 

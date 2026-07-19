@@ -1,8 +1,7 @@
 # Getting Started
 
-このページは、ハンズオンに参加する人が最初に読むページです。
+このページは、ハンズオンを始めるときに最初に読むページです。
 
-アプリ開発に慣れていなくても大丈夫です。
 このハンズオンでは、最初からすべてを暗記したり、完璧に理解したりする必要はありません。
 
 まずは、次の3つを目指します。
@@ -12,6 +11,231 @@
 2. コードがどの役割のものか見分けられる
 3. 小さな変更を自分で試せる
 ```
+
+## プロジェクトを始める方法
+
+環境準備は、参加前にすべて終わっている前提にしません。
+プロジェクトを始めるタイミングで、次の順番で確認します。
+
+```text
+1. GitHubからリポジトリを取得する
+2. developブランチに移動する
+3. backendをIntelliJ IDEAで開く
+4. Spring Bootを起動できるか確認する
+5. frontendをVS Codeで開く
+6. Reactを起動できるか確認する
+7. BrunoでAPI確認の準備をする
+8. Day3でDBを使うタイミングでRancher Desktopを準備する
+```
+
+最初から全部を完璧に整えるより、使うタイミングで確認します。
+Day1とDay2では、まずWebアプリ全体像とSpring Boot APIの基本を理解します。
+DBコンテナはDay3で必要になるため、そのタイミングで起動確認します。
+
+### 最初の環境確認
+
+ターミナルで次のコマンドを実行します。
+
+```bash
+java -version
+node -v
+npm -v
+git --version
+```
+
+確認できればよいこと:
+
+```text
+Javaのバージョンが表示される
+Node.jsのバージョンが表示される
+npmのバージョンが表示される
+Gitのバージョンが表示される
+```
+
+コマンドが見つからない場合は、実装に入る前にツールのインストールまたはPATH設定を確認します。
+
+### 1. リポジトリを取得する
+
+GitHubにある教材リポジトリを自分のPCに取得します。
+
+```bash
+git clone <repository-url>
+cd fullstack-starter-handson
+```
+
+すでにclone済みの場合は、作業ディレクトリに移動します。
+
+```bash
+cd fullstack-starter-handson
+```
+
+確認すること:
+
+```bash
+pwd
+git status
+```
+
+見るポイント:
+
+```text
+今いる場所が fullstack-starter-handson になっている
+git status が表示できる
+```
+
+### 2. developブランチに移動する
+
+作業は `develop` ブランチで進めます。
+
+```bash
+git branch
+git switch develop
+```
+
+`develop` がまだ手元にない場合は、次のように取得します。
+
+```bash
+git fetch origin
+git switch -c develop origin/develop
+```
+
+確認すること:
+
+```bash
+git branch
+```
+
+見るポイント:
+
+```text
+* develop
+```
+
+`*` が付いているブランチが、今いるブランチです。
+
+### 3. backendをIntelliJ IDEAで開く
+
+Spring Boot側は `backend/` です。
+IntelliJ IDEAでは、リポジトリ全体ではなく `backend/` を開くとSpring Bootプロジェクトとして扱いやすいです。
+
+開く場所:
+
+```text
+fullstack-starter-handson/backend
+```
+
+最初に見るファイル:
+
+```text
+backend/pom.xml
+backend/src/main/java/com/example/gourmet/GourmetApplication.java
+backend/src/main/resources/application.yml
+```
+
+見るポイント:
+
+```text
+pom.xml
+  Mavenプロジェクトの設定。
+  Spring Bootの依存関係を書く。
+
+GourmetApplication.java
+  Spring Bootアプリの起動入口。
+
+application.yml
+  アプリの設定を書く。
+  ポート番号やDB接続先などを設定する。
+```
+
+IntelliJ IDEAで確認すること:
+
+```text
+Mavenの読み込みが完了している
+Java SDKが設定されている
+GourmetApplication.java を実行できる
+```
+
+Spring Bootを起動できたら、ログに次のような内容が出ます。
+
+```text
+Tomcat started on port 8080
+Started GourmetApplication
+```
+
+### 4. frontendをVS Codeで開く
+
+React側は `frontend/` です。
+
+開く場所:
+
+```text
+fullstack-starter-handson/frontend
+```
+
+Reactプロジェクトを作成済みの場合は、VS Codeのターミナルで次を実行します。
+
+```bash
+npm install
+npm run dev
+```
+
+起動できたら、ブラウザで次を開きます。
+
+```text
+http://localhost:5173
+```
+
+まだReactプロジェクトを作っていない場合は、Day4で作ります。
+この時点では、`frontend/` がReact側の作業場所であることを確認できれば大丈夫です。
+
+### 5. BrunoでAPI確認の準備をする
+
+Brunoは、React画面を作る前にAPIを直接確認するために使います。
+
+最初に作るリクエスト:
+
+```text
+Name: Get movies
+Method: GET
+URL: http://localhost:8080/api/movies
+```
+
+Day2でMovie APIを作ったあと、このリクエストを送ってJSONが返ることを確認します。
+
+Day3以降は、Restaurant API用のリクエストも追加します。
+
+```text
+Name: Get restaurants
+Method: GET
+URL: http://localhost:8080/api/restaurants
+```
+
+### 6. Day3でDBを準備する
+
+DBはDay3で使います。
+Day1、Day2の時点では、DBコンテナを起動していなくても進められます。
+
+Day3に入る前に、Rancher Desktopを起動してから確認します。
+
+```bash
+docker --version
+docker ps
+```
+
+リポジトリに `compose.yml` または `docker-compose.yml` がある場合は、次でDBを起動します。
+
+```bash
+docker compose up -d
+```
+
+DB接続で見る場所:
+
+```text
+backend/src/main/resources/application.yml
+```
+
+ReactからDBへ直接つなぐことはありません。
+ReactはSpring Boot APIを呼び、Spring BootがDBとやり取りします。
 
 ## 参加前に知っておくと楽になること
 
@@ -154,7 +378,7 @@ RestaurantCard
 - [React: Passing Props to a Component](https://react.dev/learn/passing-props-to-a-component)
 - [React: State: A Component's Memory](https://react.dev/learn/state-a-components-memory)
 
-## 事前に準備するもの
+## 使うツール
 
 このハンズオンでは、次のツールを使います。
 
@@ -168,162 +392,8 @@ Java                Spring Bootを動かす
 Node.js / npm       Reactを動かす
 ```
 
-当日は、すべての設定が終わっている前提にはしません。
-ただし、最初に環境確認をしておくと、実装中の詰まりを減らせます。
-
-## 環境確認
-
-ターミナルで次のコマンドを実行します。
-
-```bash
-java -version
-node -v
-npm -v
-git --version
-```
-
-確認できればよいこと:
-
-```text
-Javaのバージョンが表示される
-Node.jsのバージョンが表示される
-npmのバージョンが表示される
-Gitのバージョンが表示される
-```
-
-コマンドが見つからない場合は、実装に入る前にツールのインストールまたはPATH設定を確認します。
-
-## Brunoの準備
-
-Brunoは、React画面を作る前にAPIを直接確認するために使います。
-このハンズオンでは、APIの動作確認はBrunoで行います。
-
-確認すること:
-
-- Brunoを起動できる
-- WorkspaceまたはCollectionを作成できる
-- 新しいリクエストを作成できる
-- HTTPメソッドを `GET`、`POST` などに変更できる
-- URLに `http://localhost:8080/api/restaurants` を入力できる
-- API実行後にステータスコードとJSONレスポンスを確認できる
-
-最初に作っておくリクエスト:
-
-```text
-Name: Get restaurants
-Method: GET
-URL: http://localhost:8080/api/restaurants
-```
-
-POSTを確認するときは、BodyをJSONにして送ります。
-
-```text
-Name: Create restaurant
-Method: POST
-URL: http://localhost:8080/api/restaurants
-Body: JSON
-```
-
-Bodyの例:
-
-```json
-{
-  "name": "Cafe Sakura",
-  "area": "新宿",
-  "genre": "カフェ",
-  "memo": "落ち着いて作業できそう",
-  "imageUrl": "https://example.com/cafe.jpg",
-  "status": "WANT_TO_GO"
-}
-```
-
-Brunoで確認する流れ:
-
-```text
-1. Spring Bootを起動する
-2. BrunoでGETリクエストを作る
-3. URLに http://localhost:8080/api/restaurants を入れる
-4. Sendを押す
-5. JSONが返ることを確認する
-```
-
-ReactからAPIを呼ぶ前にBrunoで確認すると、問題がReact側なのかAPI側なのか切り分けやすくなります。
-
-## IntelliJ IDEAの初期設定
-
-IntelliJ IDEAは、Spring Boot側の開発に使います。
-
-確認すること:
-
-- プロジェクトとして `backend/` を開ける
-- Java SDKが設定されている
-- GradleまたはMavenの読み込みが完了している
-- `GourmetApplication.java` を実行できる
-- 実行ログにエラーが出ていない
-
-最初に見る場所:
-
-```text
-backend/src/main/java/.../GourmetApplication.java
-backend/src/main/resources/application.yml
-```
-
-`GourmetApplication.java` はSpring Bootアプリの起動入口です。
-このファイルがない場合は、Spring Bootプロジェクトの雛形がまだ作られていません。
-
-Spring Bootが起動できたら、API側の準備は最初の段階としてOKです。
-
-## VS Codeの初期設定
-
-VS Codeは、React側の開発に使います。
-
-確認すること:
-
-- プロジェクトとして `frontend/` を開ける
-- ターミナルで `npm install` を実行できる
-- `npm run dev` でReact開発サーバーを起動できる
-- ブラウザで `http://localhost:5173` を開ける
-
-最初に見る場所:
-
-```text
-frontend/src/App.jsx
-frontend/src/components/
-frontend/src/api/
-```
-
-Reactが起動できたら、画面側の準備は最初の段階としてOKです。
-
-## Rancher DesktopでDBを起動する
-
-DBはRancher Desktopを使ってコンテナで起動します。
-
-確認すること:
-
-- Rancher Desktopが起動している
-- コンテナエンジンが使える
-- ターミナルで `docker --version` が表示される
-- DBコンテナを起動できる
-
-DB起動は、リポジトリに `compose.yml` または `docker-compose.yml` がある場合はそれを使います。
-
-```bash
-docker compose up -d
-```
-
-起動後に確認すること:
-
-```bash
-docker ps
-```
-
-見るポイント:
-
-- DBコンテナが起動している
-- `STATUS` が `Up` になっている
-- Spring Bootの `application.yml` に書いたDB接続先と合っている
-
-DB接続で詰まった場合は、ReactではなくSpring BootとDBの設定を確認します。
+各ツールの設定は、上の「プロジェクトを始める方法」で使う順番に確認します。
+DBはDay3で使うため、Rancher Desktopの確認もDay3に入る前で大丈夫です。
 
 ## Gitとブランチ
 
