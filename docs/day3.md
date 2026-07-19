@@ -78,6 +78,20 @@ Entityは、DBに保存するデータの形をJavaで表したもの。
 
 ![Spring BootにおけるEntityの位置づけ](../images/spring-entity-flow.png)
 
+Entityは、RepositoryでDBに保存・取得するときに使います。
+Reactから受け取るJSONをそのまま扱うためのものではありません。
+
+```text
+APIで受け取る
+  -> Request DTO
+
+DBに保存する
+  -> Entity
+
+APIで返す
+  -> Response DTO
+```
+
 グルメ管理アプリでは、`Restaurant` Entityを作る。
 
 ```text
@@ -99,6 +113,80 @@ DBのテーブルに近い考え方。
 JavaのEntity  <->  DBのテーブル
 Restaurant    <->  restaurants
 ```
+
+### Entityを使うタイミング
+
+Entityを使うのは、DBとやり取りするタイミングです。
+
+```text
+登録する
+  Request DTOをEntityに変換して、Repository.save(entity)で保存する
+
+一覧を見る
+  Repository.findAll()でEntityを取得し、Response DTOに変換して返す
+
+詳細を見る
+  Repository.findById(id)でEntityを取得し、Response DTOに変換して返す
+
+編集する
+  DBからEntityを取得し、値を書き換えて、Repository.save(entity)で保存する
+
+削除する
+  DBからEntityを取得し、Repository.delete(entity)で削除する
+```
+
+つまり、Repositoryに渡すもの、Repositoryから返ってくるものがEntityです。
+
+### DTOとEntityの使い分け
+
+DTOとEntityは、持っている項目が似ていても目的が違います。
+
+```text
+DTO
+  APIで受け渡しするデータの形。
+  Reactとの約束を表す。
+
+Entity
+  DBに保存するデータの形。
+  DBテーブルとの対応を表す。
+```
+
+Restaurant登録の例:
+
+```text
+Reactから送るJSON
+  name, area, genre, memo, imageUrl, status
+
+Request DTO
+  登録時にReactから受け取る形。
+  idはまだないので持たない。
+
+Entity
+  DBに保存する形。
+  idを持つ。
+  Repositoryで保存・取得される。
+
+Response DTO
+  Reactへ返す形。
+  DBで作られたidを含めて返す。
+```
+
+なぜ分けるのか:
+
+```text
+APIの形とDBの形を別々に変更できるようにするため。
+
+例:
+  登録フォームではidを入力しない
+  でもDB上のEntityにはidが必要
+
+例:
+  APIでは画面に必要な項目だけ返したい
+  でもDBには管理用の項目を持つことがある
+```
+
+DTOとEntityを分けると、Reactに見せるデータとDBに保存するデータを混ぜずに考えられます。
+その間をつなぐのがMapperです。
 
 ## Repositoryとは
 

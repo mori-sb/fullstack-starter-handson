@@ -302,9 +302,24 @@ Day3の「Repositoryとは」。
 ```text
 モダンなSaaS技術資料風に、Spring BootのRepositoryの役割を説明する図を作ってください。
 
-左に「MovieService」、中央に「MovieRepository」、右に「Database」を配置してください。
-MovieServiceからMovieRepositoryへ矢印を出し、「DB操作を依頼」と書いてください。
-MovieRepositoryからDatabaseへ複数の矢印を出し、それぞれ「save」「findAll」「findById」「delete」とラベルを付けてください。
+横長16:9の教材スライド画像にしてください。
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ネイビー・グリーン・シアンを使って、読みやすい図にしてください。
+
+左から右に、次の3つの大きなカードを配置してください。
+
+左: MovieService
+中央: MovieRepository
+右: Database
+
+MovieServiceからMovieRepositoryへ矢印を出し、ラベルに「DB操作を依頼」と書いてください。
+MovieRepositoryからDatabaseへ矢印を出し、ラベルに「Entityを保存・取得」と書いてください。
+
+MovieRepositoryの周辺に、基本操作として次の4つを小さなラベルで表示してください。
+
+save
+findAll
+findById
+delete
 
 MovieRepositoryのカードには、
 「DB操作の入口」
@@ -312,13 +327,21 @@ MovieRepositoryのカードには、
 「Spring Data JPAが基本操作を用意」
 という説明を入れてください。
 
+Databaseのカードには、
+「movies table」
+「id / title / genre / memo / imageUrl / status」
+という簡単なテーブル例を入れてください。
+
 下部にポイントとして、
 「Serviceは何をしたいかを決める」
 「RepositoryはDBとどうやり取りするかを担当する」
+「Repositoryで扱うのはDTOではなくEntity」
 を入れてください。
 
-白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ネイビー・グリーン・シアンを使ったモダンで読みやすい図にしてください。
-横長の教材スライド画像、16:9、文字は大きく読みやすくしてください。
+重要:
+DTO、Controller、Reactはこの図には入れないでください。
+Repositoryの説明だけに集中してください。
+文字は日本語中心で、用語は MovieService / MovieRepository / Database / Entity / save / findAll / findById / delete を正確に表示してください。
 ```
 
 ## Day 3: DBとCRUD
