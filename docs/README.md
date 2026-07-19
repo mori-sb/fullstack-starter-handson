@@ -80,9 +80,9 @@ Java、JavaScript、TypeScriptに慣れていない場合は、Day1の前にそ�
 - [Glossary](glossary.md)
 - [Checklists](checklists.md)
 
-## 講師向け
+## 説明者向け
 
-講師・教材作成者向けのメモは `instructor/` にまとめています。
+説明者・教材作成者向けのメモは `instructor/` にまとめています。
 
 - [Instructor Notes](instructor/notes.md)
 - [Design Policy](instructor/design-policy.md)

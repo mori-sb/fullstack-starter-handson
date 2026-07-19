@@ -73,7 +73,7 @@ RestaurantのJSON例を書ける
 5. BrunoでAPIとJSONの見え方を確認する
 6. Movieの例を見る
 7. Restaurantのワークシートを埋める
-8. Day1の提出物を確認する
+8. Day1の成果物を確認する
 ```
 
 Day1では、コードをたくさん書くよりも「これから何を作るのか」を言葉にできることを優先します。
@@ -652,13 +652,20 @@ Spring Boot
 DB
 ```
 
-## BrunoでAPIとJSONを見る
+## BrunoでAPIリクエストとJSONを見る
 
-Day1の前半で、Brunoを使ってAPIを直接呼び出し、JSONが返るところを見ます。
+Day1では、まだRestaurantのバックエンドAPIを作りません。
+そのため、ここで `GET /api/restaurants` を無理に実行する必要はありません。
 
-ここではReactの画面はまだ作りません。
-Reactがあとで呼ぶことになるAPIを、先にBrunoで確認します。
-まだAPIが用意されていない場合は、無理に実装せず、Day2でこのAPIを作ることだけ確認します。
+ここでは、Brunoで次の2つを確認します。
+
+```text
+1. APIリクエストは、HTTPメソッドとURLで表す
+2. APIレスポンスは、ステータスコードとJSONで確認する
+```
+
+説明者がデモ用のMovie APIを起動している場合だけ、実際にBrunoでリクエストを送ります。
+デモAPIがない場合は、Brunoの画面で「どこにHTTPメソッド、URL、レスポンスが表示されるか」を確認するだけで大丈夫です。
 
 見たい流れ:
 
@@ -681,8 +688,10 @@ JSONが返る
 
 ### Brunoで送るリクエスト
 
+説明者のデモ用Movie APIがある場合:
+
 ```http
-GET http://localhost:8080/api/restaurants
+GET http://localhost:8080/api/movies
 ```
 
 見るポイント:
@@ -695,7 +704,11 @@ http://localhost:8080
   自分のPCで起動しているSpring Bootの場所。
 
 /api/restaurants
-  お店一覧を取得するAPIのURL。
+  Restaurant APIを作るときのURL。
+  Day1ではまだ実行しない。
+
+/api/movies
+  説明者のデモ用Movie APIがある場合に実行するURL。
 ```
 
 Brunoでは、レスポンスのステータスコードも確認します。
@@ -711,20 +724,21 @@ Brunoでは、レスポンスのステータスコードも確認します。
   Spring Boot側で想定外のエラーが起きている。
 ```
 
-Day1では、まず `200 OK` とJSONが見えれば十分です。
+デモAPIがある場合は、まず `200 OK` とJSONが見えれば十分です。
 
 ### Brunoで返ってくるJSONの例
+
+説明者のデモ用Movie APIがある場合は、次のようなJSONが返るイメージです。
 
 ```json
 [
   {
     "id": 1,
-    "name": "Cafe Sakura",
-    "area": "新宿",
-    "genre": "カフェ",
-    "memo": "落ち着いて作業できそう",
-    "imageUrl": "https://example.com/cafe.jpg",
-    "status": "WANT_TO_GO"
+    "title": "Inception",
+    "genre": "SF",
+    "memo": "夢の中に入っていく映画",
+    "imageUrl": "https://example.com/inception.jpg",
+    "status": "WATCHED"
   }
 ]
 ```
@@ -733,27 +747,27 @@ Day1では、まず `200 OK` とJSONが見えれば十分です。
 
 ```text
 []
-  複数のお店を返すため、配列になっている。
+  複数の映画を返すため、配列になっている。
 
 {}
-  1件分のお店データ。
+  1件分の映画データ。
 
-"name": "Cafe Sakura"
+"title": "Inception"
   JSONのキーと値。
-  Reactでは restaurant.name のように取り出して表示する。
+  Reactでは movie.title のように取り出して表示する。
 
-"imageUrl": "https://example.com/cafe.jpg"
+"imageUrl": "https://example.com/inception.jpg"
   Reactでは imgタグのsrcに渡して画像を表示する。
 ```
 
-### Bruno実演で確認すること
+### Bruno確認で見ること
 
 - APIはURLで呼び出す
 - APIはJSONを返す
 - ReactはこのJSONを受け取って画面に表示する
 - JSONのキー名とReactで使うプロパティ名は対応する
 
-この実演を見てからDay2に進むと、「なぜSpring BootでJSONを返すAPIを作るのか」が分かりやすくなります。
+この確認をしてからDay2に進むと、「なぜSpring BootでJSONを返すAPIを作るのか」が分かりやすくなります。
 
 ## ワークシート: Restaurant設計
 
@@ -765,13 +779,13 @@ Movieの例を見たあと、同じ構造でRestaurantの設計ワークシー�
 目的は、Day2以降に作るAPIや画面の地図を先に作ることです。
 
 ここで使うワークシートは、このDay1資料の中にあります。
-Movieの欄は講師が説明する例です。
+Movieの欄は説明者が説明する例です。
 参加者が手を動かして埋めるのは、Restaurantの欄です。
 
 ```text
 Movie
   例として見るだけ
-  そのまま写して提出するものではない
+  そのまま写して完成にするものではない
 
 Restaurant
   自分で書く
@@ -799,7 +813,7 @@ Restaurantでは店名を表すJSONキーを何にすると自然ですか。
 ### 1. Movieの例を見る
 
 まずMovie題材で、画面操作、API、JSONの対応を見ます。
-ここはワークシートに書く欄ではなく、講師と一緒に確認する例です。
+ここはワークシートに書く欄ではなく、説明者と一緒に確認する例です。
 
 ```text
 映画一覧を見る    GET  /api/movies
@@ -883,7 +897,7 @@ Movieの例:
 ```
 
 Movieでは `title` だった項目が、Restaurantでは何に変わるかを考えます。
-Restaurantの欄は、講師と答え合わせします。
+Restaurantの欄は、説明者と答え合わせします。
 
 ここで確認すること:
 
@@ -1019,7 +1033,7 @@ GETとPOSTのAPI URLを説明できる
 idはレスポンスにはあるが、登録リクエストにはないと説明できる
 ```
 
-### Day1の提出物
+### Day1の成果物
 
 Day1の最後に、次の4つを書けていればOKです。
 
@@ -1030,7 +1044,7 @@ Day1の最後に、次の4つを書けていればOKです。
 4. RestaurantのJSON例
 ```
 
-提出物の形:
+成果物の形:
 
 ```text
 画面項目:
@@ -1049,7 +1063,7 @@ JSON例:
 }
 ```
 
-提出物を見直すときの質問:
+成果物を見直すときの質問:
 
 ```text
 画面に出したい項目はJSONに含まれているか
@@ -1063,7 +1077,7 @@ JSON例:
 - ReactはDBを直接触らない、と説明できる
 - Spring BootはAPIを受け取り、必要に応じてDBへアクセスする、と説明できる
 - JSONがReactとSpring Bootの間を流れるデータ形式だと説明できる
-- BrunoでAPIを呼び、JSONレスポンスを見る流れを説明できる
+- BrunoでAPIリクエストとJSONレスポンスを見る流れを説明できる
 - `GET`、`POST`、`PUT`、`DELETE` の大まかな意味を説明できる
 - `imageUrl` を `img` タグで表示する考え方を説明できる
 

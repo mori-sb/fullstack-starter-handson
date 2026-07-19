@@ -172,7 +172,7 @@ DELETE /api/restaurants/{id}  削除
 
 ## ライブコーディング: MovieのDB保存API
 
-講師がMovie題材で、DB保存を使ったAPIを作ります。
+説明者がMovie題材で、DB保存を使ったAPIを作ります。
 Day3では量が多いため、最初に登録と一覧を確実に理解します。
 
 まず作るAPI:
