@@ -209,6 +209,29 @@ POST /api/restaurants
 
 URLだけを見るのではなく、HTTPメソッドとセットで読むことが大事です。
 
+### エンドポイント
+
+APIのURLのうち、ReactやBrunoから呼び出す入口をエンドポイントと呼びます。
+
+```text
+GET /api/restaurants
+```
+
+この場合、`/api/restaurants` がエンドポイントです。
+実務では「このエンドポイントを呼ぶ」「一覧取得エンドポイント」のように言います。
+
+Day1では、エンドポイントを次のように読めれば十分です。
+
+```text
+HTTPメソッド + エンドポイント = APIでやりたい操作
+
+GET  /api/restaurants
+  お店一覧を取得するAPI
+
+POST /api/restaurants
+  お店を登録するAPI
+```
+
 ## 作るアプリ
 
 行きたいお店や行ったお店を登録し、地域・ジャンル・ステータスで探しやすくするグルメ管理アプリを作る。
@@ -674,6 +697,21 @@ http://localhost:8080
 /api/restaurants
   お店一覧を取得するAPIのURL。
 ```
+
+Brunoでは、レスポンスのステータスコードも確認します。
+
+```text
+200 OK
+  成功してJSONが返ってきた。
+
+404 Not Found
+  URLが間違っている、またはAPIがまだ存在しない。
+
+500 Internal Server Error
+  Spring Boot側で想定外のエラーが起きている。
+```
+
+Day1では、まず `200 OK` とJSONが見えれば十分です。
 
 ### Brunoで返ってくるJSONの例
 
