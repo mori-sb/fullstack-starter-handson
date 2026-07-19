@@ -152,6 +152,29 @@ DELETE  データを削除する
 
 まずはこの4つだけ分かれば十分。
 
+REST APIでは、URLは「対象」、HTTPメソッドは「操作」と考えると分かりやすいです。
+
+```text
+/api/restaurants
+  対象: お店
+
+GET
+  操作: 取得する
+```
+
+つまり、`GET /api/restaurants` は「お店を取得する」という意味になります。
+同じ `/api/restaurants` でも、HTTPメソッドが変わると意味が変わります。
+
+```text
+GET  /api/restaurants
+  お店一覧を見る
+
+POST /api/restaurants
+  お店を登録する
+```
+
+URLだけを見るのではなく、HTTPメソッドとセットで読むことが大事です。
+
 ## 作るアプリ
 
 行きたいお店や行ったお店を登録し、地域・ジャンル・ステータスで探しやすくするグルメ管理アプリを作る。
@@ -320,6 +343,116 @@ GET /api/restaurants?area=新宿
   地域が新宿のお店だけを取得する。
   ?area=新宿 の部分をクエリパラメータと呼ぶ。
 ```
+
+## REST APIの読み方
+
+REST APIは、次の3つに分けて読むと分かりやすいです。
+
+```text
+1. HTTPメソッド
+   何をしたいか
+
+2. URL
+   何に対して操作したいか
+
+3. JSON
+   送るデータ、または返ってくるデータ
+```
+
+例:
+
+```http
+POST /api/restaurants
+Content-Type: application/json
+```
+
+```json
+{
+  "name": "Cafe Sakura",
+  "area": "新宿",
+  "genre": "カフェ",
+  "memo": "落ち着いて作業できそう",
+  "imageUrl": "https://example.com/cafe.jpg",
+  "status": "WANT_TO_GO"
+}
+```
+
+このAPIは、次のように読みます。
+
+```text
+POST
+  新しく作る操作。
+
+/api/restaurants
+  お店データに対するAPI。
+
+JSON
+  登録したいお店の内容。
+```
+
+レスポンスでは、登録された結果がJSONで返ります。
+
+```json
+{
+  "id": 1,
+  "name": "Cafe Sakura",
+  "area": "新宿",
+  "genre": "カフェ",
+  "memo": "落ち着いて作業できそう",
+  "imageUrl": "https://example.com/cafe.jpg",
+  "status": "WANT_TO_GO"
+}
+```
+
+登録前のリクエストには `id` がありません。
+登録後のレスポンスには `id` が入ります。
+`id` は、DBに保存された1件を区別するための番号です。
+
+### パスパラメータとクエリパラメータ
+
+REST APIでは、URLの中に追加情報を入れることがあります。
+Day1では、次の2つの違いを知っておきます。
+
+```text
+パスパラメータ
+  1件を指定するために使う
+
+クエリパラメータ
+  一覧を条件で絞り込むために使う
+```
+
+パスパラメータの例:
+
+```text
+GET /api/restaurants/1
+```
+
+これは「idが1のお店を1件取得する」という意味です。
+資料では分かりやすくするため、`/api/restaurants/{id}` と書くことがあります。
+`{id}` には実際には `1` や `2` などの値が入ります。
+
+クエリパラメータの例:
+
+```text
+GET /api/restaurants?area=新宿
+```
+
+これは「地域が新宿のお店だけを一覧取得する」という意味です。
+`?` の後ろに条件を書きます。
+
+```text
+area=新宿
+  areaが新宿のデータに絞り込む
+```
+
+複数条件を付ける場合は、`&` でつなぎます。
+
+```text
+GET /api/restaurants?area=新宿&genre=カフェ
+```
+
+最初から暗記しなくて大丈夫です。
+見るポイントは、「1件を指定しているのか」「一覧を条件で絞っているのか」です。
 
 ## API設計の考え方
 
