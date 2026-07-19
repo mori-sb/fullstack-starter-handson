@@ -188,6 +188,19 @@ public interface RestaurantRepository {
 
 DTOとDBモデルの変換は、この教材ではServiceの中で行う。
 
+MyBatisの `@Mapper` と、DTO変換用のMapperは別物。
+
+```text
+MyBatisの@Mapper
+  SQLを実行するRepositoryに付ける目印。
+
+DTO変換用Mapper
+  Request DTO、DBモデル、Response DTOを変換するためのクラス。
+```
+
+変換が少ないうちはService内の `private` メソッドでよい。
+変換が増えてきたら、変換用Mapperに分けることを検討する。
+
 ### Migration
 
 DBのテーブル作成や変更を、SQLファイルとして履歴管理する仕組み。

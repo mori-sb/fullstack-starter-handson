@@ -259,6 +259,26 @@ APIの形とDBの形を別々に考えられるようにするため。
 この教材では、DTOとDBモデルの変換はServiceの中で書きます。
 変換用の `MovieMapper.java` は作りません。
 
+これは、変換処理が少なく、まずは処理の流れを理解することを優先するためです。
+`MovieRequest` から `Movie` を作る処理や、`Movie` から `MovieResponse` を作る処理は、Service内の `private` メソッドとして書いても問題ありません。
+
+```text
+Service内のprivateメソッドでよい場合
+  変換が単純
+  1つのServiceでしか使わない
+  項目数が少ない
+  まず処理の流れを読みたい
+
+変換用Mapperに分けるとよい場合
+  複数のServiceで同じ変換を使う
+  変換ロジックが増えてきた
+  Serviceが長くなって読みづらい
+  変換だけを分けてテストしたい
+```
+
+実務では、変換が増えたら `MovieMapper` のような変換専用クラスに分けることがあります。
+ただしDay3では、MyBatisの `@Mapper` と変換用Mapperが混ざると分かりにくいため、変換はService内に置きます。
+
 注意:
 
 ```text
@@ -934,6 +954,19 @@ Repositoryを呼んでDB操作を依頼する
 Request DTOをDBモデルに詰め替える
 DBモデルをResponse DTOに詰め替える
 ```
+
+`toModel` と `toResponse` は、DTOとDBモデルを詰め替えるための小さな変換メソッドです。
+
+```text
+toModel(MovieRequest request)
+  APIで受け取ったMovieRequestを、DB保存に使うMovieへ変換する。
+
+toResponse(Movie movie)
+  DBから取得したMovieを、APIで返すMovieResponseへ変換する。
+```
+
+この程度の変換であれば、Service内の `private` メソッドとして書いても自然です。
+変換が増えてServiceが読みづらくなったら、変換用クラスへ分けることを検討します。
 
 Serviceは、ControllerとRepositoryの間に立ちます。
 
