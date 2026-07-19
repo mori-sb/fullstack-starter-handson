@@ -286,6 +286,41 @@ images/service-role.png
 images/repository-role.png
 ```
 
+使う場面:
+
+Day3の「Repositoryとは」。
+
+伝えること:
+
+- RepositoryはServiceから呼ばれる
+- RepositoryはDB操作の入口である
+- `save`、`findAll`、`findById`、`delete` のような基本操作を担当する
+- SQLを直接書く前に、Spring Data JPAのRepositoryを使う流れを理解する
+
+生成依頼文:
+
+```text
+モダンなSaaS技術資料風に、Spring BootのRepositoryの役割を説明する図を作ってください。
+
+左に「MovieService」、中央に「MovieRepository」、右に「Database」を配置してください。
+MovieServiceからMovieRepositoryへ矢印を出し、「DB操作を依頼」と書いてください。
+MovieRepositoryからDatabaseへ複数の矢印を出し、それぞれ「save」「findAll」「findById」「delete」とラベルを付けてください。
+
+MovieRepositoryのカードには、
+「DB操作の入口」
+「Entityを保存・取得する」
+「Spring Data JPAが基本操作を用意」
+という説明を入れてください。
+
+下部にポイントとして、
+「Serviceは何をしたいかを決める」
+「RepositoryはDBとどうやり取りするかを担当する」
+を入れてください。
+
+白または薄いグレー背景、角丸カード、細い枠線、控えめな影、ネイビー・グリーン・シアンを使ったモダンで読みやすい図にしてください。
+横長の教材スライド画像、16:9、文字は大きく読みやすくしてください。
+```
+
 ## Day 3: DBとCRUD
 
 ### 12. CRUDとHTTPメソッド対応図

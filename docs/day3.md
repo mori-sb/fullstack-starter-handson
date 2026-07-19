@@ -104,6 +104,8 @@ Restaurant    <->  restaurants
 
 Repositoryは、EntityをDBに保存したり、DBから取得したりするための入口。
 
+![Repositoryの役割](../images/repository-role.png)
+
 Spring Data JPAを使うと、次のような操作を自分で細かくSQLを書かなくても使える。
 
 ```text
@@ -158,6 +160,7 @@ Entity -> Mapper -> Response DTO
 
 - CRUDとHTTPメソッドの対応図
 - DBテーブルとEntityの対応図
+- RepositoryがServiceとDBの間に立つ図
 - クエリパラメータで一覧を絞り込む流れ
 
 ## CRUDとAPIの対応
@@ -199,6 +202,160 @@ GET /api/movies?genre=SF
 GET /api/movies?status=WATCHED
 ```
 
+## ライブコーディングで作る場所
+
+Day3のライブコーディングは、Spring Bootプロジェクトの `backend/` 側で行います。
+IntelliJ IDEAで `backend` を開き、次の場所を起点にします。
+
+```text
+backend/src/main/java/com/example/gourmet/
+```
+
+Day3ではDBを使うため、Javaファイルを作る前に `backend/pom.xml` と `application.yml` も確認します。
+
+```text
+backend/pom.xml
+  Spring Data JPA と DBドライバの依存関係を確認する
+
+backend/src/main/resources/application.yml
+  DB接続先を確認する
+```
+
+Day2の段階ではDBを使わないため、Spring Boot Webだけで動かせます。
+Day3でRepositoryを使うタイミングで、DB接続に必要な設定を追加します。
+
+`pom.xml` で確認する依存関係:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+```text
+spring-boot-starter-data-jpa
+  RepositoryやEntityを使ってDB操作をするために必要。
+
+postgresql
+  Spring BootからPostgreSQLへ接続するために必要。
+```
+
+Day3では、Day2で作ったMovie APIをDB保存版へ育てます。
+そのため、新しく作るファイルと、Day2から編集するファイルがあります。
+
+新しく作るファイル:
+
+```text
+com/example/gourmet/
+├─ entity/
+│  └─ Movie.java
+├─ repository/
+│  └─ MovieRepository.java
+├─ dto/
+│  └─ movie/
+│     └─ MovieRequest.java
+└─ mapper/
+   └─ MovieMapper.java
+```
+
+Day2から編集するファイル:
+
+```text
+com/example/gourmet/
+├─ controller/
+│  └─ MovieController.java
+├─ service/
+│  └─ MovieService.java
+└─ dto/
+   └─ movie/
+      └─ MovieResponse.java
+```
+
+説明者は、作る前に次のように説明すると迷いにくくなります。
+
+```text
+Day2では、Serviceの中に固定データを書きました。
+Day3では、固定データをやめてDBに保存します。
+
+そのため、DBに保存する形としてEntityを作ります。
+DB操作の入口としてRepositoryを作ります。
+Reactから受け取る形としてRequest DTOを作ります。
+DTOとEntityを変換するMapperを作ります。
+
+ControllerとServiceは、Day2で作ったものをDB保存版に変更します。
+```
+
+### IntelliJ IDEAで作る手順
+
+まず、新しく必要になるパッケージを作ります。
+
+```text
+1. com.example.gourmet を右クリック
+2. New -> Package
+3. entity と入力する
+4. 同じように repository と mapper を作る
+```
+
+`dto.movie` はDay2で作っている場合はそのまま使います。
+まだない場合は、次のように作ります。
+
+```text
+1. com.example.gourmet を右クリック
+2. New -> Package
+3. dto.movie と入力する
+```
+
+次に、ファイルを作ります。
+
+```text
+entity パッケージ
+  -> Movie.java
+
+repository パッケージ
+  -> MovieRepository.java
+
+dto.movie パッケージ
+  -> MovieRequest.java
+  -> MovieResponse.java
+
+mapper パッケージ
+  -> MovieMapper.java
+
+service パッケージ
+  -> MovieService.java を編集する
+
+controller パッケージ
+  -> MovieController.java を編集する
+```
+
+作った直後に確認すること:
+
+```text
+GourmetApplication.java と同じ com.example.gourmet 配下にある
+package行とディレクトリの位置が合っている
+Movie題材のファイルだけを作っている
+Restaurantの答えを先に作っていない
+```
+
+package行の例:
+
+```java
+package com.example.gourmet.repository;
+```
+
+これは、次の場所にあるファイルだという意味です。
+
+```text
+backend/src/main/java/com/example/gourmet/repository/MovieRepository.java
+```
+
 ## 実装の進め方
 
 CRUDは量が多いため、次の順番で進めます。
@@ -206,6 +363,7 @@ CRUDは量が多いため、次の順番で進めます。
 ### 1. Entityを作る
 
 まずDBに保存する形を作ります。
+作るファイルは `entity/Movie.java` です。
 
 ```java
 @Entity
@@ -266,6 +424,8 @@ private String status;
 
 ### 2. Repositoryを作る
 
+作るファイルは `repository/MovieRepository.java` です。
+
 ```java
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 }
@@ -303,6 +463,14 @@ delete     削除
 ### 3. Request DTO、Response DTO、Mapperを作る
 
 DBに保存する前に、APIで受け渡しする形を分けます。
+
+作るファイル:
+
+```text
+dto/movie/MovieRequest.java
+dto/movie/MovieResponse.java
+mapper/MovieMapper.java
+```
 
 ```java
 public record MovieRequest(
@@ -434,6 +602,7 @@ DBに保存
 - レスポンスに `id` が入る
 
 Serviceでは、Request DTO、Mapper、Repositoryをつなぎます。
+編集するファイルは `service/MovieService.java` です。
 
 ```java
 @Service
@@ -479,6 +648,7 @@ return movieMapper.toResponse(savedMovie);
 ```
 
 Controllerでは、URLとHTTPメソッドを受け取り、Serviceへ処理を依頼します。
+編集するファイルは `controller/MovieController.java` です。
 
 ```java
 @RestController
