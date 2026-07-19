@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: gourmet
+
+server:
+  port: 8080

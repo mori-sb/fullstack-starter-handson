@@ -126,6 +126,42 @@ backend/
          └─ application.yml
 ```
 
+`GourmetApplication.java` は、Spring Bootアプリの起動入口です。
+Day2のライブコーディングで毎回編集するファイルではありませんが、アプリを起動するときに最初に動く大事なファイルです。
+
+```java
+package com.example.gourmet;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class GourmetApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(GourmetApplication.class, args);
+    }
+}
+```
+
+1行ずつ読む:
+
+```text
+@SpringBootApplication
+  このclassをSpring Bootアプリの起点にする。
+  ControllerやServiceなどを探して、アプリとして動かす準備をする。
+
+public static void main(String[] args)
+  Javaアプリを起動するときの入口。
+
+SpringApplication.run(...)
+  Spring Bootアプリを起動する。
+  起動すると、localhost:8080でAPIを受け取れる状態になる。
+```
+
+ライブコーディングで作る `MovieController` や `MovieService` は、この `GourmetApplication.java` と同じ `com.example.gourmet` の配下に置きます。
+そうするとSpring BootがControllerやServiceを見つけられます。
+
 この教材では、Controller、Service、Repositoryなどの役割がすぐ見つかるように、層ごとにディレクトリを分けます。
 `dto/` はMovie用とRestaurant用で分け、APIで受け渡しするデータの形を探しやすくします。
 
@@ -484,10 +520,15 @@ IntelliJ IDEAで `backend` を開き、次の場所を起点にします。
 backend/src/main/java/com/example/gourmet/
 ```
 
+この直下に `GourmetApplication.java` があることを最初に確認します。
+これはSpring Bootアプリの起動ファイルです。
+ライブコーディングではこのファイルを作り直さず、同じ配下にController、Service、DTOを追加します。
+
 ライブコーディングで作るファイルは3つです。
 
 ```text
 com/example/gourmet/
+├─ GourmetApplication.java
 ├─ controller/
 │  └─ MovieController.java
 ├─ service/

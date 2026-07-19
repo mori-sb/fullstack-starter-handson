@@ -268,6 +268,9 @@ backend/src/main/java/.../GourmetApplication.java
 backend/src/main/resources/application.yml
 ```
 
+`GourmetApplication.java` はSpring Bootアプリの起動入口です。
+このファイルがない場合は、Spring Bootプロジェクトの雛形がまだ作られていません。
+
 Spring Bootが起動できたら、API側の準備は最初の段階としてOKです。
 
 ## VS Codeの初期設定
