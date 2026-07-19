@@ -475,6 +475,93 @@ GET /api/movies
 ]
 ```
 
+## ライブコーディングで作る場所
+
+Movieの一覧APIは、Spring Bootプロジェクトの `backend/` 側に作ります。
+IntelliJ IDEAで `backend` を開き、次の場所を起点にします。
+
+```text
+backend/src/main/java/com/example/gourmet/
+```
+
+ライブコーディングで作るファイルは3つです。
+
+```text
+com/example/gourmet/
+├─ controller/
+│  └─ MovieController.java
+├─ service/
+│  └─ MovieService.java
+└─ dto/
+   └─ movie/
+      └─ MovieResponse.java
+```
+
+説明者は、作る前に次のように説明すると迷いにくくなります。
+
+```text
+今日はDBにはまだ接続しません。
+そのため repository/ や entity/ はまだ作りません。
+
+まずは、次の3つだけを作ります。
+
+Controller  /api/movies というURLを受け取る
+Service     返す映画データを用意する
+DTO         JSONとして返すデータの形を決める
+```
+
+### IntelliJ IDEAで作る手順
+
+IntelliJ IDEAでは、次の順番でパッケージとファイルを作ります。
+
+```text
+1. com.example.gourmet を右クリック
+2. New -> Package
+3. controller と入力する
+4. controller を右クリック
+5. New -> Java Class
+6. MovieController と入力する
+```
+
+同じように、ServiceとDTOも作ります。
+
+```text
+service パッケージ
+  -> MovieService.java
+
+dto.movie パッケージ
+  -> MovieResponse.java
+```
+
+`dto.movie` は、`dto` の下に `movie` を作るという意味です。
+IntelliJでは `dto.movie` と入力すると、`dto/movie` のように階層が作られます。
+
+作った直後の状態:
+
+```text
+backend/src/main/java/com/example/gourmet/
+├─ controller/MovieController.java
+├─ service/MovieService.java
+└─ dto/movie/MovieResponse.java
+```
+
+### package行の意味
+
+Javaファイルの先頭には、ファイルがどのパッケージに属するかを書きます。
+
+```java
+package com.example.gourmet.controller;
+```
+
+これは、次の場所にあるファイルだという意味です。
+
+```text
+backend/src/main/java/com/example/gourmet/controller/MovieController.java
+```
+
+パッケージ名とディレクトリの位置がずれていると、importや実行でエラーになります。
+ライブコーディング中は、ファイルの場所と `package` 行が対応しているかを必ず確認します。
+
 ## 実装の進め方
 
 一気に全部作らず、次の順番で作ります。
@@ -499,6 +586,30 @@ GET /api/movies
 ### 1. Controllerだけで固定文字列を返す
 
 まずはAPIにアクセスできるか確認します。
+最初に作るファイルは `controller/MovieController.java` です。
+
+```java
+package com.example.gourmet.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/movies")
+public class MovieController {
+
+    @GetMapping
+    public String hello() {
+        return "movies api";
+    }
+}
+```
+
+この段階では、ServiceもDTOも使いません。
+まずは `GET /api/movies` がControllerに届くことだけを確認します。
+
+メソッドだけ抜き出すと、ここを書いています。
 
 ```java
 @GetMapping
@@ -524,7 +635,7 @@ return "movies api";
 確認すること:
 
 ```text
-GET /api/movies にアクセスできる
+GET http://localhost:8080/api/movies にアクセスできる
 404ではない
 Spring Bootが起動している
 ```
@@ -532,8 +643,11 @@ Spring Bootが起動している
 ### 2. DTOを作ってJSONを返す
 
 次に、Reactへ返したい形を `MovieResponse` として作ります。
+作るファイルは `dto/movie/MovieResponse.java` です。
 
 ```java
+package com.example.gourmet.dto.movie;
+
 public record MovieResponse(
         Long id,
         String title,
@@ -649,8 +763,16 @@ Service     返すデータを用意する
 ```
 
 まずServiceを作ります。
+作るファイルは `service/MovieService.java` です。
 
 ```java
+package com.example.gourmet.service;
+
+import com.example.gourmet.dto.movie.MovieResponse;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class MovieService {
 
@@ -671,8 +793,19 @@ public class MovieService {
 
 次にControllerからServiceを呼びます。
 ここでDIを使います。
+編集するファイルは `controller/MovieController.java` です。
 
 ```java
+package com.example.gourmet.controller;
+
+import com.example.gourmet.dto.movie.MovieResponse;
+import com.example.gourmet.service.MovieService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/movies")
 public class MovieController {
