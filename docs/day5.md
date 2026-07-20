@@ -64,6 +64,66 @@ Reactがstateを更新する
 画面が変わる
 ```
 
+## Day5で使うReact重要事項
+
+Day5では、Day4で学んだReactの基本をAPI連携に使います。
+特に次の対応を意識します。
+
+```text
+fetch
+  Spring Boot APIを呼ぶ。
+
+useEffect
+  画面を開いたあとに一覧APIを呼ぶ。
+
+useState
+  APIから取得した一覧、読み込み中、エラーをstateとして持つ。
+
+props
+  App.jsxからMovieListやMovieFormへデータや関数を渡す。
+
+event handler
+  フォーム送信やボタンクリックでAPIを呼ぶ。
+
+JSX
+  stateの値を画面に表示する。
+```
+
+Day5で覚える流れ:
+
+```text
+画面を開く
+  useEffect
+  ↓
+APIを呼ぶ
+  fetch
+  ↓
+JSONを受け取る
+  response.json()
+  ↓
+stateを更新する
+  setMovies(data)
+  ↓
+画面が変わる
+  JSXが再描画される
+```
+
+登録の流れ:
+
+```text
+フォームに入力する
+  useState / onChange
+  ↓
+登録ボタンを押す
+  onSubmit
+  ↓
+APIへ送る
+  fetch + POST + JSON.stringify
+  ↓
+一覧を更新する
+  setMovies または loadMovies()
+```
+
 ## 最初に伝えること
 
 Day5では、これまで別々に作ってきたReactとSpring Bootをつなげる。

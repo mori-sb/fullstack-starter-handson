@@ -105,6 +105,75 @@ stateが変わる
 Day4では、Reactをすべて覚える必要はありません。
 まずは、次の書き方を読めるようにします。
 
+### Reactでまず覚える重要事項
+
+Reactを習得するときは、最初から全部を覚えようとしない。
+まずは、次の7つを読めるようにします。
+
+```text
+1. JSX
+   JavaScriptの中にHTMLに近い形で画面を書く。
+
+2. Component
+   画面を部品に分ける。
+   例: MovieCard、MovieList、MovieForm
+
+3. props
+   親から子へ渡すデータ。
+   子は受け取ったpropsを使って表示する。
+
+4. state
+   画面の中で変わるデータ。
+   stateが変わると画面が更新される。
+
+5. useState
+   stateを作るためのReactの機能。
+   入力フォームや一覧データを覚える。
+
+6. useEffect
+   画面表示後に実行したい処理を書く。
+   API呼び出しはDay5で詳しく扱う。
+
+7. event handler
+   クリック、入力、送信など、ユーザー操作で動く関数。
+   例: onClick、onChange、onSubmit
+```
+
+まずこの対応を覚える:
+
+```text
+表示する
+  JSX / Component / props
+
+入力する
+  state / useState / onChange
+
+操作する
+  onClick / onSubmit
+
+画面表示後に何かする
+  useEffect
+```
+
+コードを読むときは、次の順番で見ると迷いにくいです。
+
+```text
+1. Component名を見る
+   何の部品かを確認する。
+
+2. propsを見る
+   親から何を受け取っているか確認する。
+
+3. stateを見る
+   この部品の中で何が変わるか確認する。
+
+4. event handlerを見る
+   ユーザー操作で何が起きるか確認する。
+
+5. JSXを見る
+   画面に何が表示されるか確認する。
+```
+
 ```text
 export function MovieCard(...)
   他のファイルから使えるコンポーネントを定義している。
