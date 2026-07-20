@@ -130,6 +130,18 @@ export async function createMovie(movie) {
 
 画面を開いたときに一覧を取得する。
 
+Reactでは、コンポーネントの表示中にAPIを呼びたい場面があります。
+ただし、画面を描画する処理の中で直接 `fetchMovies()` を呼ぶと、再描画のたびにAPIを呼んでしまう可能性があります。
+
+そこで `useEffect` を使います。
+`useEffect` は、「画面に表示されたあとで実行したい処理」を書く場所です。
+
+今回の使い方:
+
+```text
+画面を初めて表示したあとに、映画一覧APIを1回だけ呼ぶ
+```
+
 ```jsx
 useEffect(() => {
   async function loadMovies() {
@@ -139,6 +151,21 @@ useEffect(() => {
 
   loadMovies();
 }, []);
+```
+
+読み方:
+
+```text
+useEffect(() => { ... }, [])
+  画面が表示されたあとに中の処理を実行する。
+
+() => { ... }
+  useEffectに渡している関数。
+  ここに「あとで実行したい処理」を書く。
+
+[]
+  依存配列。
+  空配列にすると、初回表示後に1回だけ実行する。
 ```
 
 流れ:
@@ -155,6 +182,24 @@ JSONを受け取る
 setMoviesでstateを更新する
   ↓
 映画一覧が表示される
+```
+
+なぜ `async function loadMovies()` を中に作るのか:
+
+```text
+API通信ではawaitを使いたい。
+ただし、useEffectに渡す関数そのものをasyncにする書き方は避ける。
+そのため、useEffectの中でasync関数を定義し、その関数を呼び出す。
+```
+
+つまり、次の2段階で考えます。
+
+```text
+1. loadMoviesを定義する
+   APIを呼んで、結果をstateへ入れる関数。
+
+2. loadMovies()を実行する
+   画面表示後に実際にAPIを呼ぶ。
 ```
 
 ![useEffectでAPIを呼ぶ流れ](../images/useeffect-api-flow.png)
@@ -405,6 +450,7 @@ useEffect(() => {
 useEffect(() => { ... }, [])
   画面が表示された後に処理を実行する。
   最後の [] は、初回表示時だけ実行するという意味。
+  ここでは、画面を開いたときに一覧を1回だけ取得したいので [] にする。
 
 async function loadMovies()
   APIから映画一覧を読み込むための関数。
@@ -421,6 +467,22 @@ setMovies(data);
 loadMovies();
   定義した読み込み関数を実行する。
 ```
+
+ここで説明者が補足すること:
+
+```text
+useEffectは、画面表示後に外部とのやり取りをするために使う。
+今回の外部とのやり取りは、Spring Boot APIを呼ぶこと。
+
+[] を付けないと、再描画のたびに実行される可能性がある。
+今回の一覧取得は初回だけでよいので、[] を付ける。
+
+useEffectの中でasync関数を作ってから呼ぶのは、
+awaitを使ってAPI結果を待ちたいから。
+```
+
+登録後に一覧をもう一度取得したい場合は、`loadMovies` を再利用します。
+このあと登録APIをつなぐときに、登録後に `loadMovies()` を呼ぶと、DBに保存された最新の一覧を画面へ反映できます。
 
 画面では、読み込み中とエラーもstateで持ちます。
 
