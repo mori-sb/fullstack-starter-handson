@@ -1209,6 +1209,151 @@ setMovies([...movies, { id: Date.now(), ...movie }])
   stateが変わるので画面が更新される。
 ```
 
+## ライブコーディング後の動作確認
+
+Day4はAPIに接続せず、React画面だけを確認します。
+コードを書いたら、ブラウザで表示、Console、入力操作、state更新の順番で見ます。
+
+### 1. Reactを起動する
+
+VS Codeのターミナルで `frontend/` に移動し、Reactを起動します。
+
+```bash
+yarn dev
+```
+
+確認すること:
+
+```text
+ViteのURLが表示される
+ブラウザで画面を開ける
+画面が真っ白ではない
+```
+
+よく見るエラー:
+
+```text
+Module not found
+  importのパスが間違っている可能性がある。
+  ./components/MovieCard のような相対パスを確認する。
+
+Unexpected token
+  JSXの閉じタグ、括弧、カンマが抜けている可能性がある。
+
+MovieCard is not defined
+  importし忘れている可能性がある。
+```
+
+### 2. Consoleを確認する
+
+ブラウザの開発者ツールでConsoleを開きます。
+
+確認すること:
+
+```text
+赤いエラーが出ていない
+keyに関する警告が出ていない
+画像URLの読み込みエラーが大量に出ていない
+```
+
+keyの警告が出た場合:
+
+```text
+MovieList.jsx の map で key={movie.id} を付けているか確認する。
+```
+
+### 3. 画面表示を確認する
+
+確認すること:
+
+```text
+映画カードが表示される
+画像が表示される
+タイトル、ジャンル、ステータス、メモが表示される
+複数件のデータが縦またはグリッドで並ぶ
+```
+
+画像が表示されない場合:
+
+```text
+movie.imageUrl にURLが入っているか
+imgタグの src={movie.imageUrl} になっているか
+URLをブラウザで直接開けるか
+```
+
+### 4. フォーム入力を確認する
+
+確認すること:
+
+```text
+タイトルを入力できる
+ジャンルを入力できる
+メモを入力できる
+画像URLを入力できる
+ステータスを選択できる
+```
+
+入力しても画面に文字が入らない場合:
+
+```text
+inputのnameがform stateのキーと一致しているか
+value={form.title} のようにvalueが設定されているか
+onChange={handleChange} が付いているか
+handleChangeでsetFormしているか
+```
+
+### 5. 登録ボタンを確認する
+
+フォームに入力して登録ボタンを押します。
+
+確認すること:
+
+```text
+新しいMovieカードが一覧に追加される
+フォームが空に戻る
+Consoleにエラーが出ていない
+```
+
+ここで見る流れ:
+
+```text
+MovieFormで入力する
+  ↓
+form stateが変わる
+  ↓
+登録ボタンを押す
+  ↓
+onAddMovie(form)
+  ↓
+App.jsxのhandleAddMovie
+  ↓
+setMovies
+  ↓
+一覧が増える
+```
+
+### 6. コンポーネントの役割を確認する
+
+動いたあとに、ファイルごとの役割を確認します。
+
+```text
+App.jsx
+  movies stateを持つ。
+  MovieFormとMovieListを組み合わせる。
+
+MovieForm.jsx
+  入力値を管理する。
+  登録したいデータを親へ渡す。
+
+MovieList.jsx
+  movies配列をmapで並べる。
+
+MovieCard.jsx
+  Movie 1件分だけを表示する。
+```
+
+ここまで説明できれば、Day4のライブコーディングは成功です。
+
 ## 演習前に見るMovie側の例
 
 演習では、Movieで作った構造をRestaurantへ置き換えます。

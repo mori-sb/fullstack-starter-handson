@@ -1151,6 +1151,188 @@ PUT後に内容が変わる
 DELETE後に一覧から消える
 ```
 
+## ライブコーディング後の動作確認
+
+Day3はDBに保存するため、APIレスポンスだけでなく、登録したデータをもう一度取得できるかまで確認します。
+確認は、登録、一覧、詳細、更新、削除の順番で行います。
+
+### 1. Spring BootとDBを起動する
+
+確認すること:
+
+```text
+Rancher Desktopが起動している
+DBコンテナが起動している
+Spring Bootがエラーなく起動している
+Flyway migrationが成功している
+```
+
+Spring Bootログで見ること:
+
+```text
+DB接続エラーが出ていない
+V1__create_movies_table.sql が実行されている
+movies テーブル作成でエラーになっていない
+```
+
+うまくいかないときに見ること:
+
+```text
+Connection refused
+  DBコンテナが起動していない可能性がある。
+
+relation "movies" does not exist
+  migrationが実行されていない、またはテーブル名が違う可能性がある。
+
+column "image_url" does not exist
+  SQLのカラム名とmigrationのカラム名がずれている可能性がある。
+```
+
+### 2. Brunoで登録APIを確認する
+
+まずPOSTで1件登録します。
+
+```text
+Method: POST
+URL:    http://localhost:8080/api/movies
+Body:   JSON
+```
+
+送るJSON:
+
+```json
+{
+  "title": "Inception",
+  "genre": "SF",
+  "memo": "夢の中に入っていく映画",
+  "imageUrl": "https://example.com/inception.jpg",
+  "status": "WATCHED"
+}
+```
+
+確認すること:
+
+```text
+ステータスコードが200または201になる
+レスポンスにidが含まれる
+title, genre, memo, imageUrl, status が送った値と一致する
+```
+
+ここで見るポイント:
+
+```text
+Request DTO
+  Brunoから送るJSONを受け取る形。
+  idは送らない。
+
+DBモデル
+  DBへ保存する形。
+  保存後はidを持つ。
+
+Response DTO
+  APIから返すJSONの形。
+  idを含めて返す。
+```
+
+### 3. Brunoで一覧APIを確認する
+
+```text
+Method: GET
+URL:    http://localhost:8080/api/movies
+Body:   なし
+```
+
+確認すること:
+
+```text
+レスポンスが配列になっている
+POSTで登録したMovieが含まれている
+imageUrlがnullになっていない
+```
+
+### 4. Brunoで詳細APIを確認する
+
+POSTで返ってきたidを使います。
+
+```text
+Method: GET
+URL:    http://localhost:8080/api/movies/1
+Body:   なし
+```
+
+確認すること:
+
+```text
+指定したidのMovieだけが返る
+存在しないidを指定したときの動きも確認する
+```
+
+### 5. Brunoで更新APIを確認する
+
+```text
+Method: PUT
+URL:    http://localhost:8080/api/movies/1
+Body:   JSON
+```
+
+送るJSON:
+
+```json
+{
+  "title": "Iron Man",
+  "genre": "Action",
+  "memo": "ヒーロー映画",
+  "imageUrl": "https://example.com/ironman.jpg",
+  "status": "FAVORITE"
+}
+```
+
+確認すること:
+
+```text
+レスポンスの内容が更新後の値になっている
+GET /api/movies/1 でも更新後の値が返る
+GET /api/movies の一覧でも更新後の値が見える
+```
+
+### 6. Brunoで削除APIを確認する
+
+```text
+Method: DELETE
+URL:    http://localhost:8080/api/movies/1
+Body:   なし
+```
+
+確認すること:
+
+```text
+ステータスコードが成功になっている
+GET /api/movies の一覧から消えている
+GET /api/movies/1 で取得できない
+```
+
+### 7. 動いた後に説明する流れ
+
+最後に、登録処理の流れを声に出して確認します。
+
+```text
+POST /api/movies
+  ↓
+MovieController
+  ↓
+MovieService
+  ↓
+MovieRepository
+  ↓
+INSERT INTO movies
+  ↓
+DBに保存
+  ↓
+MovieResponseとして返る
+```
+
+ここまで説明できれば、Day3のライブコーディングは成功です。
+
 ## クエリパラメータで絞り込む考え方
 
 余裕があれば、一覧APIにフィルタを追加します。

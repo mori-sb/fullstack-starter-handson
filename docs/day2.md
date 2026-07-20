@@ -1164,20 +1164,109 @@ public class MovieController {
 この時点では、Controllerだけでも動かせる。
 ただし実務では処理が増えるので、ServiceやRepositoryに分けていく。
 
-## 動作確認の観点
+## ライブコーディング後の動作確認
 
-ブラウザやAPIクライアントで次のURLにアクセスする。
+コードを書いた後は、次の順番で確認します。
+「コードを書いた」で止めず、APIを呼び、レスポンスを見て、ControllerとServiceの流れを説明します。
+
+### 1. Spring Bootを起動する
+
+IntelliJ IDEAで `GourmetApplication.java` を実行します。
+
+確認すること:
+
+```text
+Run画面にエラーが出ていない
+Started GourmetApplication と表示される
+8080番ポートで起動している
+```
+
+うまく起動しないときに見ること:
+
+```text
+Port 8080 was already in use
+  すでに別のSpring Bootが起動している。
+  古い起動を止めてから再実行する。
+
+Cannot resolve symbol
+  import、package、ファイルの場所がずれている可能性がある。
+
+Class not found
+  class名とファイル名が一致しているか確認する。
+```
+
+### 2. BrunoまたはブラウザでAPIを呼ぶ
+
+ブラウザで確認する場合:
 
 ```text
 http://localhost:8080/api/movies
 ```
 
+Brunoで確認する場合:
+
+```text
+Method: GET
+URL:    http://localhost:8080/api/movies
+Body:   なし
+```
+
 確認すること:
 
-- JSONが返ってくる
-- `title`、`genre`、`memo`、`imageUrl`、`status` が含まれている
-- 画像URLはただの文字列として返っている
-- Reactで表示する前に、API単体で確認できる
+```text
+ステータスコードが 200 になる
+JSONが返ってくる
+レスポンスが配列になっている
+title, genre, memo, imageUrl, status が含まれている
+画像URLはただの文字列として返っている
+```
+
+期待するJSONの例:
+
+```json
+[
+  {
+    "id": 1,
+    "title": "Inception",
+    "genre": "SF",
+    "memo": "夢の中に入っていく映画",
+    "imageUrl": "https://example.com/inception.jpg",
+    "status": "WATCHED"
+  }
+]
+```
+
+### 3. エラー時に見る場所
+
+```text
+404 Not Found
+  URL、@RequestMapping、@GetMappingを確認する。
+
+500 Internal Server Error
+  Javaコードの実行中に例外が出ている。
+  Spring Bootのログを見る。
+
+JSONのキーが想定と違う
+  MovieResponseのフィールド名を確認する。
+```
+
+### 4. 動いた後に説明する流れ
+
+APIが動いたら、次の流れを声に出して確認します。
+
+```text
+GET /api/movies
+  ↓
+MovieController.findAll()
+  ↓
+MovieService.findAll()
+  ↓
+List<MovieResponse>
+  ↓
+JSON配列として返る
+```
+
+ここまで説明できれば、Day2のライブコーディングは成功です。
 
 ## 今日の確認ポイント
 
