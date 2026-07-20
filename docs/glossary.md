@@ -288,12 +288,29 @@ TypeScriptでは、`string`、`number`、`boolean`、配列、オブジェクト
 ### Component
 
 画面を作る部品。
+Reactでは、画面を役割ごとのComponentに分けて作る。
 
 例:
 
 - RestaurantForm
 - RestaurantList
 - RestaurantCard
+
+分ける目的は、ファイル数を増やすことではない。
+どの部品が何を担当しているかを読みやすくするため。
+
+例:
+
+```text
+RestaurantList
+  配列を並べる。
+
+RestaurantCard
+  1件分を表示する。
+
+RestaurantForm
+  入力フォームを担当する。
+```
 
 ### props
 

@@ -177,6 +177,66 @@ APIのURLやfetch処理を変えたい
 AIが生成したReactコードを見るときも、まず「このコンポーネントは何を担当しているか」を確認します。
 動くかどうかだけでなく、役割が混ざりすぎていないかを見ることが大事です。
 
+## コンポーネント分割の確認観点
+
+Reactを書くときは、動いたあとに「適切にコンポーネントへ分けられているか」を確認します。
+分けること自体が目的ではなく、役割が読みやすくなっているかを見ます。
+
+```text
+App.jsx
+  画面全体で使うstateを持っているか。
+  子コンポーネントへ必要なpropsを渡しているか。
+
+RestaurantList.jsx
+  restaurants配列を受け取って、mapでRestaurantCardを並べているか。
+  1件分のカードの見た目を書きすぎていないか。
+
+RestaurantCard.jsx
+  restaurant 1件分の表示だけを担当しているか。
+  一覧全体のstateやフォーム入力を持っていないか。
+
+RestaurantForm.jsx
+  入力フォームとform stateを担当しているか。
+  一覧カードの見た目を書いていないか。
+
+RestaurantFilter.jsx
+  絞り込み条件の選択だけを担当しているか。
+  一覧データの表示まで抱え込んでいないか。
+```
+
+迷ったときは、次の質問で確認します。
+
+```text
+このコンポーネントは何を担当しているか。
+このコンポーネントが知らなくてよい情報を持っていないか。
+同じ表示や処理が別の場所に重複していないか。
+propsで渡せばよいデータを、別の場所で作り直していないか。
+```
+
+よくない分け方の例:
+
+```text
+RestaurantCardの中で、一覧全体のfilter stateを持つ。
+RestaurantListの中に、登録フォームの入力処理を書く。
+App.jsxに、カード1件分の細かいHTMLを全部書く。
+```
+
+よい分け方の目安:
+
+```text
+App.jsx
+  全体の状態と、子コンポーネントの組み合わせを担当する。
+
+RestaurantList.jsx
+  配列を並べることだけを担当する。
+
+RestaurantCard.jsx
+  1件分の表示だけを担当する。
+
+RestaurantForm.jsx
+  入力と送信だけを担当する。
+```
+
 ## Reactのディレクトリ構造
 
 React側は `frontend/` に作ります。
@@ -961,6 +1021,8 @@ Display keys      title, genre, memo, imageUrl, status
 - propsで何を渡しているか
 - stateが変わると画面が変わる理由
 - Tailwind CSSの `className` がどこに書かれているか
+- 各コンポーネントの責任が混ざりすぎていないか
+- `RestaurantCard`、`RestaurantList`、`RestaurantForm` の役割を自分の言葉で説明できるか
 
 ## AIへの依頼例
 
@@ -985,6 +1047,7 @@ MovieCardとMovieListを参考にして、Restaurantのカードと一覧を作�
 - API接続はまだ入れない
 
 コードを出す前に、propsがどのように渡っているか説明してください。
+また、CardとListの責任が適切に分かれているか確認してください。
 ```
 
 参考にするMovie側の例:
@@ -1018,12 +1081,15 @@ ______, ______, ______, ______, ______, ______
 - API呼び出しはまだ書かないでください
 
 コードを出す前に、form stateがどのように更新されるか説明してください。
+また、Formが一覧表示やCardの見た目まで担当していないか確認してください。
 ```
 
 AIの回答を確認するときのポイント:
 
 - API接続が勝手に入っていないか
 - コンポーネントが大きくなりすぎていないか
+- 1つのコンポーネントに複数の責任が混ざっていないか
+- `App.jsx` が全体のstate、`List` が配列表示、`Card` が1件表示、`Form` が入力を担当しているか
 - propsとstateの役割が分かれているか
 - `className` にTailwind CSSの指定が書かれているか
 - `img` の `src` に `restaurant.imageUrl` を渡しているか
@@ -1103,6 +1169,8 @@ alt={restaurant.name}
 ## 今日の確認ポイント
 
 - コンポーネントを分ける理由を説明できる
+- `App.jsx`、`RestaurantList.jsx`、`RestaurantCard.jsx`、`RestaurantForm.jsx` の役割を説明できる
+- 1つのコンポーネントに複数の責任が混ざっていないか確認できる
 - propsは親から子へ渡すデータだと説明できる
 - stateは画面内で変わる値だと説明できる
 - `useState` の基本的な読み方が分かる
