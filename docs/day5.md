@@ -317,45 +317,71 @@ Day5のライブコーディングでは、Movie題材でReactとSpring Boot API
    クエリパラメータで絞り込む。
 ```
 
-作るファイル:
+ライブコーディングで触る場所:
 
 ```text
-frontend/src/api/movies.js
-frontend/src/App.jsx
-frontend/src/components/MovieForm.jsx
-frontend/src/components/MovieList.jsx
-frontend/src/components/MovieCard.jsx
+frontend/
+└─ src/
+   ├─ App.jsx
+   ├─ api/
+   │  └─ movies.js
+   └─ components/
+      ├─ MovieForm.jsx
+      ├─ MovieList.jsx
+      ├─ MovieCard.jsx
+      └─ MovieFilter.jsx    フィルタまで扱う場合に作る
+```
+
+ファイルごとの扱い:
+
+| 色 | ファイル | Day5でやること |
+| --- | --- | --- |
+| 🟩 新規作成 | `frontend/src/api/movies.js` | API通信関数を作る |
+| 🟦 編集 | `frontend/src/App.jsx` | APIを呼び、stateへ反映する |
+| 🟦 編集 | `frontend/src/components/MovieForm.jsx` | 送信時に親へ入力値を渡す |
+| ⬜ そのまま使う | `frontend/src/components/MovieList.jsx` | `movies` 配列を表示する |
+| ⬜ そのまま使う | `frontend/src/components/MovieCard.jsx` | Movie 1件を表示する |
+| 🟨 必要なら作成 | `frontend/src/components/MovieFilter.jsx` | フィルタ条件を親へ渡す |
+
+それぞれに書くこと:
+
+| ファイル | 書くこと |
+| --- | --- |
+| 🟩 `api/movies.js` | `fetchMovies()` で `GET /api/movies` を呼ぶ |
+| 🟩 `api/movies.js` | `createMovie(movie)` で `POST /api/movies` を呼ぶ |
+| 🟦 `App.jsx` | `movies` / `loading` / `error` のstateを持つ |
+| 🟦 `App.jsx` | `useEffect` で `fetchMovies()` を呼ぶ |
+| 🟦 `App.jsx` | `loadMovies()` を作り、一覧を再取得できるようにする |
+| 🟦 `App.jsx` | `handleAddMovie(movie)` で `createMovie(movie)` を呼ぶ |
+| 🟦 `MovieForm.jsx` | `form` stateを持つ |
+| 🟦 `MovieForm.jsx` | 入力値を `onChange` で更新する |
+| 🟦 `MovieForm.jsx` | 送信時に `onAddMovie(form)` を呼ぶ |
+| ⬜ `MovieList.jsx` | `movies` 配列をpropsで受け取り、`MovieCard` を並べる |
+| ⬜ `MovieCard.jsx` | Movie 1件をpropsで受け取り、タイトル、ジャンル、メモ、画像、ステータスを表示する |
+| 🟨 `MovieFilter.jsx` | フィルタ条件を選び、変更された条件をApp.jsxへ渡す |
+
+重要:
+
+```text
+MovieForm.jsx はAPIを直接呼ばない。
+MovieForm.jsx は入力値を親へ渡す。
+App.jsx が createMovie(movie) を呼ぶ。
 ```
 
 説明者が進める順番:
 
-```text
-1. BrunoでGET /api/moviesを確認する
-   Spring Boot APIが先に動いていることを確認する。
-
-2. frontend/src/api/movies.js を作る
-   fetchMovies と createMovie を作る。
-   ReactコンポーネントにURLを直接書かないことを説明する。
-
-3. App.jsxでuseEffectを使う
-   画面表示時にfetchMoviesを呼ぶ。
-   取得したJSONをmovies stateに入れる。
-
-4. ブラウザのNetworkを確認する
-   GET /api/movies が呼ばれているか見る。
-   レスポンスJSONが画面に表示されるか見る。
-
-5. MovieFormのonSubmitをcreateMovieにつなぐ
-   フォームの値をPOSTする。
-   登録後に一覧を再取得する。
-
-6. もう一度Networkを確認する
-   POST /api/movies が呼ばれているか見る。
-   その後GET /api/moviesで一覧が更新されるか見る。
-
-7. loadingとerrorを入れる
-   通信中と失敗時の表示をstateで管理する。
-```
+| 順番 | 種別 | やること | 確認すること |
+| --- | --- | --- | --- |
+| 1 | 🟨 確認 | Brunoで `GET /api/movies` を呼ぶ | Spring Boot APIが先に動いている |
+| 2 | 🟩 作成 | `frontend/src/api/movies.js` を作る | `fetchMovies` と `createMovie` がある |
+| 3 | 🟦 編集 | `frontend/src/App.jsx` を開く | `fetchMovies` と `createMovie` をimportしている |
+| 4 | 🟦 編集 | `App.jsx` で `useEffect` を使う | 初回表示時に `fetchMovies()` を呼んでいる |
+| 5 | 🟨 確認 | ブラウザのNetworkを見る | `GET /api/movies` が呼ばれている |
+| 6 | 🟦 編集 | `MovieForm.jsx` を開く | `onSubmit` で `onAddMovie(form)` を呼ぶ |
+| 7 | 🟦 編集 | `App.jsx` で `handleAddMovie` を作る | `createMovie(movie)` を呼んでいる |
+| 8 | 🟦 編集 | 登録後に `loadMovies()` を呼ぶ | 登録後に一覧を再取得できる |
+| 9 | 🟨 確認 | もう一度Networkを見る | `POST /api/movies` のあとに一覧が更新される |
+| 10 | 🟦 編集 | `loading` と `error` を入れる | 通信中と失敗時の表示をstateで管理している |
 
 各ステップで説明すること:
 
@@ -415,6 +441,12 @@ ReactとSpring Bootをつなぐときは、1つずつ確認します。
 
 ライブコーディングではMovie題材で確認します。
 APIを呼ぶ処理は `frontend/src/api/movies.js` にまとめます。
+
+🟩 このステップで新しく作るファイル:
+
+```text
+frontend/src/api/movies.js
+```
 
 作る場所:
 
@@ -548,6 +580,12 @@ throw new Error(...)
 最初に固定データをやめて、APIから取得したデータをstateに入れます。
 ここからは `frontend/src/App.jsx` を編集します。
 
+🟦 このステップで編集するファイル:
+
+```text
+frontend/src/App.jsx
+```
+
 `App.jsx` でやること:
 
 ```text
@@ -666,6 +704,19 @@ finally
 `createMovie` も `frontend/src/api/movies.js` に書きます。
 一覧取得と同じように、API通信の処理は `api/` にまとめます。
 
+🟩 このステップで追記するファイル:
+
+```text
+frontend/src/api/movies.js
+```
+
+🟦 このステップで編集するファイル:
+
+```text
+frontend/src/App.jsx
+frontend/src/components/MovieForm.jsx
+```
+
 ```jsx
 export async function createMovie(movie) {
   const response = await fetch(API_BASE_URL, {
@@ -712,6 +763,31 @@ return response.json();
 
 編集では、URLにidを入れてPUTします。
 
+🟩 このステップで追記するファイル:
+
+```text
+frontend/src/api/movies.js
+```
+
+🟦 このステップで編集するファイル:
+
+```text
+frontend/src/App.jsx
+frontend/src/components/MovieForm.jsx
+frontend/src/components/MovieCard.jsx
+```
+
+このステップでやること:
+
+```text
+1. api/movies.js に updateMovie(id, movie) を追加する
+2. App.jsx に編集中のMovieを持つstateを追加する
+3. MovieCard.jsx の編集ボタンから、編集対象をApp.jsxへ渡す
+4. MovieForm.jsx に編集対象の値を表示する
+5. 保存時に updateMovie(id, movie) を呼ぶ
+6. 保存後に loadMovies() で一覧を再取得する
+```
+
 ```jsx
 export async function updateMovie(id, movie) {
   const response = await fetch(`${API_BASE_URL}/${id}`, {
@@ -749,6 +825,29 @@ body: JSON.stringify(movie)
 
 削除では、URLにidを入れてDELETEします。
 
+🟩 このステップで追記するファイル:
+
+```text
+frontend/src/api/movies.js
+```
+
+🟦 このステップで編集するファイル:
+
+```text
+frontend/src/App.jsx
+frontend/src/components/MovieCard.jsx
+```
+
+このステップでやること:
+
+```text
+1. api/movies.js に deleteMovie(id) を追加する
+2. App.jsx に handleDeleteMovie(id) を追加する
+3. MovieCard.jsx の削除ボタンから、削除したいidを親へ渡す
+4. App.jsx で deleteMovie(id) を呼ぶ
+5. 削除後に loadMovies() で一覧を再取得する
+```
+
 ```jsx
 export async function deleteMovie(id) {
   await fetch(`${API_BASE_URL}/${id}`, {
@@ -775,6 +874,39 @@ method: "DELETE"
 ### 6. フィルタ条件をAPIへ渡す
 
 地域やジャンルで絞り込む場合は、クエリパラメータをURLにつけます。
+
+🟩 このステップで追記するファイル:
+
+```text
+frontend/src/api/movies.js
+```
+
+🟦 このステップで編集するファイル:
+
+```text
+frontend/src/App.jsx
+frontend/src/components/MovieFilter.jsx
+```
+
+MovieFilter.jsx がまだない場合は、このタイミングで作ります。
+
+```text
+frontend/
+└─ src/
+   └─ components/
+      └─ MovieFilter.jsx
+```
+
+このステップでやること:
+
+```text
+1. MovieFilter.jsx で絞り込み条件を選べるようにする
+2. App.jsx に filters stateを追加する
+3. MovieFilter.jsx から、変更された条件をApp.jsxへ渡す
+4. App.jsx から fetchMovies(filters) を呼ぶ
+5. api/movies.js で filters をクエリパラメータに変換する
+6. Networkで /api/movies?genre=SF のようなURLになっているか確認する
+```
 
 ```jsx
 export async function fetchMovies(filters = {}) {
