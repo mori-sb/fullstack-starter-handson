@@ -18,6 +18,16 @@
 - CRUD
 - クエリパラメータ
 
+## 今日の重点
+
+| ラベル | 重点 | 今日できるようにすること |
+| --- | --- | --- |
+| 🟦 概念 | DTOとDBモデルの違い | API用の形とDB用の形を分けて説明できる |
+| 🟩 実装 | MyBatis Repository | `@Select` / `@Insert` などでSQLを読める |
+| 🟩 実装 | CRUD API | 登録、一覧、詳細、更新、削除の流れを作れる |
+| 🟨 確認 | BrunoでCRUD確認 | リクエスト、レスポンス、DB保存を確認できる |
+| 🟥 注意 | 一気に全部作らない | 1 APIずつ実装して確認する |
+
 ## ライブコーディングと演習
 
 ```text
@@ -83,12 +93,12 @@ images/create-api-mybatis-flow.png
 
 CRUDは多くの業務アプリの基本です。
 
-```text
-Create  登録する
-Read    一覧・詳細を見る
-Update  編集する
-Delete  削除する
-```
+| ラベル | CRUD | 意味 | APIの例 |
+| --- | --- | --- | --- |
+| 🟩 Create | 登録する | 新しいデータを作る | `POST /api/movies` |
+| 🟦 Read | 一覧・詳細を見る | データを取得する | `GET /api/movies` |
+| 🟧 Update | 編集する | 既存データを更新する | `PUT /api/movies/{id}` |
+| 🟥 Delete | 削除する | データを削除する | `DELETE /api/movies/{id}` |
 
 この4つを一度作ると、申請管理、台帳管理、レビュー管理など多くのアプリに応用できます。
 

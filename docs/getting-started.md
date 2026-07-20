@@ -6,11 +6,11 @@
 
 まずは、次の3つを目指します。
 
-```text
-1. 画面、API、DBの役割が分かる
-2. コードがどの役割のものか見分けられる
-3. 小さな変更を自分で試せる
-```
+| ラベル | 目指すこと |
+| --- | --- |
+| 🟦 概念 | 画面、API、DBの役割が分かる |
+| 🟦 概念 | コードがどの役割のものか見分けられる |
+| 🟩 実装 | 小さな変更を自分で試せる |
 
 ## プロジェクトを始める方法
 
@@ -43,16 +43,15 @@ DBコンテナはDay3で必要になるため、そのタイミングで起動�
 
 入れるもの:
 
-```text
-Java 21             Spring Bootを動かす
-Maven               Spring Bootプロジェクトをビルドする
-Git                 GitHubからリポジトリを取得する
-Node.js / yarn      Reactを動かす
-IntelliJ IDEA       Spring Boot側を書く
-VS Code             React側を書く
-Bruno               APIを確認する
-Rancher Desktop     DBコンテナを起動する
-```
+| ラベル | ツール | 使う理由 |
+| --- | --- | --- |
+| 🟩 必須 | Java 21 | Spring Bootを動かす |
+| 🟩 必須 | Maven | Spring Bootプロジェクトをビルドする |
+| 🟩 必須 | Node.js / yarn | Reactを動かす |
+| 🟩 必須 | IntelliJ IDEA | Spring Boot側を書く |
+| 🟩 必須 | VS Code | React側を書く |
+| 🟨 確認 | Bruno | APIを直接呼んで確認する |
+| 🟨 Day3で確認 | Rancher Desktop | DBコンテナを起動する |
 
 #### Homebrewを使う場合
 

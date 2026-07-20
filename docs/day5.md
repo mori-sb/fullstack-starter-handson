@@ -18,6 +18,16 @@
 - CORS
 - まとめ
 
+## 今日の重点
+
+| ラベル | 重点 | 今日できるようにすること |
+| --- | --- | --- |
+| 🟦 概念 | ReactとSpring Bootの接続 | 画面操作からAPI、JSON、state更新まで追える |
+| 🟩 実装 | `api/movies.js` | API通信をコンポーネントから分離できる |
+| 🟩 実装 | `useEffect` と `fetch` | 初回表示で一覧APIを呼べる |
+| 🟨 確認 | Networkタブ | GET、POST、レスポンスJSONを確認できる |
+| 🟥 注意 | ReactはDBを直接触らない | API経由でデータを取得・保存する |
+
 ## ライブコーディングと演習
 
 ```text

@@ -9,13 +9,13 @@
 
 進め方は、すべての日で次の形に統一します。
 
-```text
-説明
-  ↓
-Movie題材でライブコーディング
-  ↓
-Restaurant題材で同じ構造を演習
-```
+| ラベル | フェーズ | やること |
+| --- | --- | --- |
+| 🟦 概念 | 説明 | 図と用語で仕組みを理解する |
+| 🟩 実装 | Movie題材でライブコーディング | 説明者が同じ構造を小さく作る |
+| 🟨 確認 | 動作確認 | Bruno、ブラウザ、ログで結果を見る |
+| 🟩 演習 | Restaurant題材で同じ構造を実装 | Movieを見ながら置き換えて作る |
+| 🟥 注意 | 振り返り | 生成されたコードを読まずに終わらない |
 
 ライブコーディングでは `Movie` を使います。
 演習では `Restaurant` を使います。
@@ -27,7 +27,7 @@ Restaurant題材で同じ構造を演習
 controller/MovieController.java
 service/MovieService.java
 repository/MovieRepository.java
-entity/Movie.java
+model/Movie.java
 dto/movie/MovieRequest.java
 dto/movie/MovieResponse.java
 MovieCard
@@ -72,14 +72,14 @@ GET /api/restaurants の一覧取得を同じ構造で作る
 
 基本の流れ:
 
-```text
-1. まず最小のコードを書く
-2. 動くか確認する
-3. コードを読む
-4. 役割を分ける
-5. 項目や機能を足す
-6. もう一度動作確認する
-```
+| 順番 | ラベル | やること |
+| --- | --- | --- |
+| 1 | 🟩 実装 | まず最小のコードを書く |
+| 2 | 🟨 確認 | 動くか確認する |
+| 3 | 🟦 概念 | コードを読む |
+| 4 | 🟦 概念 | 役割を分ける |
+| 5 | 🟩 実装 | 項目や機能を足す |
+| 6 | 🟨 確認 | もう一度動作確認する |
 
 Spring Bootの例:
 
@@ -503,7 +503,7 @@ GET http://localhost:8080/api/restaurants
 ### 使用する図
 
 - `repository-role.png`: RepositoryにSQLを書く流れ
-- `entity-table-map.png`: DBモデルとDBテーブルの対応
+- `dbmodel-table-map.png`: DBモデルとDBテーブルの対応
 - `query-param-flow.png`: クエリパラメータで一覧を絞り込む流れ
 
 ### 講義で説明する内容

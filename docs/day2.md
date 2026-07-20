@@ -19,6 +19,16 @@
 - APIの動作確認
 - 画像URLを含むレスポンス
 
+## 今日の重点
+
+| ラベル | 重点 | 今日できるようにすること |
+| --- | --- | --- |
+| 🟦 概念 | Controller / Service / Repository | APIの入口、処理、DBアクセスを分けて読める |
+| 🟦 概念 | Java class と DI | ControllerがServiceを使う流れを説明できる |
+| 🟩 実装 | Movie一覧API | 固定データをJSON配列で返せる |
+| 🟨 確認 | Brunoまたはブラウザ | `GET /api/movies` のレスポンスを確認できる |
+| 🟥 注意 | Controllerに処理を書きすぎない | ControllerはServiceを呼ぶ入口として見る |
+
 ## ライブコーディングと演習
 
 ```text
@@ -49,13 +59,13 @@ Day2では、DB保存までは急ぎません。
 
 Spring Bootでは、処理を役割ごとに分けて書く。
 
-```text
-Controller  APIの入口
-Service     業務処理を書く場所
-Repository  DBアクセスを書く場所
-DBモデル    DBテーブルの1行を受け取る形
-DTO         APIで受け渡しするデータの形
-```
+| ラベル | 役割 | 見る場所 |
+| --- | --- | --- |
+| 🟩 Controller | APIの入口 | `controller/` |
+| 🟩 Service | 業務処理を書く場所 | `service/` |
+| 🟩 Repository | DBアクセスを書く場所 | `repository/` |
+| 🟦 DBモデル | DBテーブルの1行を受け取る形 | `model/` |
+| 🟦 DTO | APIで受け渡しするデータの形 | `dto/` |
 
 AIがコードを生成した場合も、まず「このコードはどの役割か」を見る。
 
@@ -176,7 +186,7 @@ repository/RestaurantRepository.java
 model/Restaurant.java
 dto/restaurant/RestaurantRequest.java
 dto/restaurant/RestaurantResponse.java
-entity/RestaurantStatus.java
+model/RestaurantStatus.java
 ```
 
 ファイル名を見るだけでも、おおよその役割が分かるようにしておきます。
@@ -455,7 +465,7 @@ APIで返すJSONの形を確認したい
   -> dto/restaurant/RestaurantResponse.java
 
 DBに保存する項目を確認したい
-  -> entity/Restaurant.java
+  -> model/Restaurant.java
 ```
 
 ## 図で確認すること
@@ -537,7 +547,7 @@ com/example/gourmet/
 
 ```text
 今日はDBにはまだ接続しません。
-そのため repository/ や entity/ はまだ作りません。
+そのため repository/ や model/ はまだ作りません。
 
 まずは、次の3つだけを作ります。
 
