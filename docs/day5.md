@@ -293,135 +293,133 @@ CORSは、まず「ブラウザの安全機能」と考える。
 Day5では、まず一覧表示と登録をつなぎます。
 その後、同じ考え方で編集、削除、フィルタをつなぎます。
 
+## ライブコーディング: Movie API連携
+
+ここからは、説明者がMovie題材でReact画面とSpring Boot APIを接続します。
+参加者は、APIを呼ぶ処理をどのファイルに置くか、APIの結果がどこでstateに入るかを見ながら確認します。
+
+Day4で作ったMovie画面を使い、固定データをAPIから取得する形へ変更します。
+
+まずつなぐAPI:
+
+- 一覧取得
+- 登録
+
+確認する場所:
+
+- Bruno
+- ブラウザのNetwork
+- Reactの画面表示
+- Spring Bootのログ
+
 ## 説明者用: ライブコーディングで作るもの
 
 Day5のライブコーディングでは、Movie題材でReactとSpring Boot APIを接続します。
-一気に全部つながず、API関数、一覧取得、登録の順番で確認します。
-
-まず扱う範囲:
+完成コードを一気に貼るのではなく、次の順番で小さくつなぎます。
+各ステップでブラウザとNetworkを確認し、「今どのファイルが何を担当しているか」を言葉にします。
 
 ```text
-1. GET /api/movies
-   一覧をAPIから取得する。
+1. BrunoでGET /api/moviesを確認する
+   Spring Boot APIが先に動いていることを確認する。
+   画面につなぐ前に、API単体でJSONが返ることを見る。
 
-2. POST /api/movies
-   フォームから新しいMovieを登録する。
+2. api/movies.js
+   APIを呼ぶ関数を作る。
+   fetchMoviesで一覧取得、createMovieで登録を行う。
+   ReactコンポーネントにURLを直接書かないことを説明する。
 
-3. Networkタブ
-   ReactからAPIが呼ばれていることを確認する。
+3. App.jsx
+   movies、loading、errorのstateを持つ。
+   useEffectでfetchMoviesを呼び、取得したJSONをmovies stateへ入れる。
 
-4. loading / error
-   通信中と失敗時の表示を確認する。
+4. ブラウザのNetworkを確認する
+   GET /api/movies が呼ばれているか見る。
+   レスポンスJSONが画面に表示されるか見る。
+
+5. MovieForm.jsx
+   入力値をform stateで管理する。
+   onSubmitで親へformを渡す。
+   MovieFormからAPIを直接呼ばないことを説明する。
+
+6. App.jsx
+   MovieFormから受け取ったmovieをcreateMovieへ渡す。
+   登録後にloadMoviesを呼び、一覧を再取得する。
+
+7. もう一度Networkを確認する
+   POST /api/movies が呼ばれているか見る。
+   その後GET /api/moviesで一覧が更新されるか見る。
+
+8. loading / error
+   通信中と失敗時の表示をstateで管理する。
 ```
 
 余裕があれば扱う範囲:
 
 ```text
-5. PUT /api/movies/{id}
+9. PUT /api/movies/{id}
    編集をAPIにつなぐ。
 
-6. DELETE /api/movies/{id}
+10. DELETE /api/movies/{id}
    削除をAPIにつなぐ。
 
-7. GET /api/movies?genre=SF
+11. GET /api/movies?genre=SF
    クエリパラメータで絞り込む。
 ```
 
-ライブコーディングで触る場所:
+作るファイル:
 
 ```text
-frontend/
-└─ src/
-   ├─ App.jsx
-   ├─ api/
-   │  └─ movies.js
-   └─ components/
-      ├─ MovieForm.jsx
-      ├─ MovieList.jsx
-      ├─ MovieCard.jsx
-      └─ MovieFilter.jsx    フィルタまで扱う場合に作る
+frontend/src/api/movies.js
+frontend/src/App.jsx
+frontend/src/components/MovieForm.jsx
+frontend/src/components/MovieList.jsx
+frontend/src/components/MovieCard.jsx
+frontend/src/components/MovieFilter.jsx  余裕があれば
 ```
 
-ファイルごとの扱い:
-
-| 色 | ファイル | Day5でやること |
-| --- | --- | --- |
-| 🟩 新規作成 | `frontend/src/api/movies.js` | API通信関数を作る |
-| 🟦 編集 | `frontend/src/App.jsx` | APIを呼び、stateへ反映する |
-| 🟦 編集 | `frontend/src/components/MovieForm.jsx` | 送信時に親へ入力値を渡す |
-| ⬜ そのまま使う | `frontend/src/components/MovieList.jsx` | `movies` 配列を表示する |
-| ⬜ そのまま使う | `frontend/src/components/MovieCard.jsx` | Movie 1件を表示する |
-| 🟨 必要なら作成 | `frontend/src/components/MovieFilter.jsx` | フィルタ条件を親へ渡す |
-
-それぞれに書くこと:
-
-| ファイル | 書くこと |
-| --- | --- |
-| 🟩 `api/movies.js` | `fetchMovies()` で `GET /api/movies` を呼ぶ |
-| 🟩 `api/movies.js` | `createMovie(movie)` で `POST /api/movies` を呼ぶ |
-| 🟦 `App.jsx` | `movies` / `loading` / `error` のstateを持つ |
-| 🟦 `App.jsx` | `useEffect` で `fetchMovies()` を呼ぶ |
-| 🟦 `App.jsx` | `loadMovies()` を作り、一覧を再取得できるようにする |
-| 🟦 `App.jsx` | `handleAddMovie(movie)` で `createMovie(movie)` を呼ぶ |
-| 🟦 `MovieForm.jsx` | `form` stateを持つ |
-| 🟦 `MovieForm.jsx` | 入力値を `onChange` で更新する |
-| 🟦 `MovieForm.jsx` | 送信時に `onAddMovie(form)` を呼ぶ |
-| ⬜ `MovieList.jsx` | `movies` 配列をpropsで受け取り、`MovieCard` を並べる |
-| ⬜ `MovieCard.jsx` | Movie 1件をpropsで受け取り、タイトル、ジャンル、メモ、画像、ステータスを表示する |
-| 🟨 `MovieFilter.jsx` | フィルタ条件を選び、変更された条件をApp.jsxへ渡す |
-
-重要:
+説明者が各ステップで確認すること:
 
 ```text
-MovieForm.jsx はAPIを直接呼ばない。
-MovieForm.jsx は入力値を親へ渡す。
-App.jsx が createMovie(movie) を呼ぶ。
+BrunoでGET /api/moviesを確認したあと
+  Spring Boot APIが起動しているか。
+  JSON配列が返っているか。
+
+api/movies.jsを作ったあと
+  fetchMoviesでGET /api/moviesを呼べているか。
+  createMovieでPOST /api/moviesを呼べているか。
+  APIのURLがコンポーネント側に散らばっていないか。
+
+App.jsxで一覧取得をつないだあと
+  useEffectで初回表示時にfetchMoviesを呼んでいるか。
+  取得したJSONをsetMoviesでstateへ入れているか。
+  MovieListへmoviesをpropsで渡しているか。
+
+MovieFormを登録APIにつないだあと
+  MovieFormがAPIを直接呼んでいないか。
+  onSubmitで親へ入力値を渡しているか。
+  App.jsxでcreateMovieを呼んでいるか。
+
+登録後に一覧を更新するとき
+  loadMoviesをもう一度呼んでいるか。
+  POSTのあとにGETが呼ばれているか。
+  画面とDBの状態が揃っているか。
 ```
 
-説明者が進める順番:
-
-| 順番 | 種別 | やること | 確認すること |
-| --- | --- | --- | --- |
-| 1 | 🟨 確認 | Brunoで `GET /api/movies` を呼ぶ | Spring Boot APIが先に動いている |
-| 2 | 🟩 作成 | `frontend/src/api/movies.js` を作る | `fetchMovies` と `createMovie` がある |
-| 3 | 🟦 編集 | `frontend/src/App.jsx` を開く | `fetchMovies` と `createMovie` をimportしている |
-| 4 | 🟦 編集 | `App.jsx` で `useEffect` を使う | 初回表示時に `fetchMovies()` を呼んでいる |
-| 5 | 🟨 確認 | ブラウザのNetworkを見る | `GET /api/movies` が呼ばれている |
-| 6 | 🟦 編集 | `MovieForm.jsx` を開く | `onSubmit` で `onAddMovie(form)` を呼ぶ |
-| 7 | 🟦 編集 | `App.jsx` で `handleAddMovie` を作る | `createMovie(movie)` を呼んでいる |
-| 8 | 🟦 編集 | 登録後に `loadMovies()` を呼ぶ | 登録後に一覧を再取得できる |
-| 9 | 🟨 確認 | もう一度Networkを見る | `POST /api/movies` のあとに一覧が更新される |
-| 10 | 🟦 編集 | `loading` と `error` を入れる | 通信中と失敗時の表示をstateで管理している |
-
-各ステップで説明すること:
+説明者が口頭で補足するとよいこと:
 
 ```text
-api/movies.js
-  API通信だけを担当する。
-  画面の見た目は書かない。
-
-App.jsx
-  movies stateを持つ。
-  APIから取得したデータを画面へ渡す。
-
-MovieForm.jsx
-  入力値を管理する。
-  登録したいデータを親へ渡す。
-
-MovieList.jsx
-  movies配列を受け取り、MovieCardを並べる。
-
-MovieCard.jsx
-  Movie 1件分を表示する。
-```
-
-説明者が強調すること:
-
-```text
-ReactはDBを直接触らない。
 ReactはAPIを呼ぶ。
 APIの結果をstateに入れる。
 stateが変わると画面が変わる。
+
+フォームは入力を集める部品。
+APIを呼ぶ中心はApp.jsxに置く。
+
+まずGETだけをつなぐ。
+GETが動いたらPOSTをつなぐ。
+POSTが動いたら一覧を再取得する。
+
+この順番にすると、どこで壊れたか分かりやすい。
 ```
 
 ## ハンズオン
