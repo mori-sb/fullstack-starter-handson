@@ -189,19 +189,129 @@ CORSは、まず「ブラウザの安全機能」と考える。
 Day5では、まず一覧表示と登録をつなぎます。
 その後、同じ考え方で編集、削除、フィルタをつなぎます。
 
+## 説明者用: ライブコーディングで作るもの
+
+Day5のライブコーディングでは、Movie題材でReactとSpring Boot APIを接続します。
+一気に全部つながず、API関数、一覧取得、登録の順番で確認します。
+
+まず扱う範囲:
+
+```text
+1. GET /api/movies
+   一覧をAPIから取得する。
+
+2. POST /api/movies
+   フォームから新しいMovieを登録する。
+
+3. Networkタブ
+   ReactからAPIが呼ばれていることを確認する。
+
+4. loading / error
+   通信中と失敗時の表示を確認する。
+```
+
+余裕があれば扱う範囲:
+
+```text
+5. PUT /api/movies/{id}
+   編集をAPIにつなぐ。
+
+6. DELETE /api/movies/{id}
+   削除をAPIにつなぐ。
+
+7. GET /api/movies?genre=SF
+   クエリパラメータで絞り込む。
+```
+
+作るファイル:
+
+```text
+frontend/src/api/movies.js
+frontend/src/App.jsx
+frontend/src/components/MovieForm.jsx
+frontend/src/components/MovieList.jsx
+frontend/src/components/MovieCard.jsx
+```
+
+説明者が進める順番:
+
+```text
+1. BrunoでGET /api/moviesを確認する
+   Spring Boot APIが先に動いていることを確認する。
+
+2. frontend/src/api/movies.js を作る
+   fetchMovies と createMovie を作る。
+   ReactコンポーネントにURLを直接書かないことを説明する。
+
+3. App.jsxでuseEffectを使う
+   画面表示時にfetchMoviesを呼ぶ。
+   取得したJSONをmovies stateに入れる。
+
+4. ブラウザのNetworkを確認する
+   GET /api/movies が呼ばれているか見る。
+   レスポンスJSONが画面に表示されるか見る。
+
+5. MovieFormのonSubmitをcreateMovieにつなぐ
+   フォームの値をPOSTする。
+   登録後に一覧を再取得する。
+
+6. もう一度Networkを確認する
+   POST /api/movies が呼ばれているか見る。
+   その後GET /api/moviesで一覧が更新されるか見る。
+
+7. loadingとerrorを入れる
+   通信中と失敗時の表示をstateで管理する。
+```
+
+各ステップで説明すること:
+
+```text
+api/movies.js
+  API通信だけを担当する。
+  画面の見た目は書かない。
+
+App.jsx
+  movies stateを持つ。
+  APIから取得したデータを画面へ渡す。
+
+MovieForm.jsx
+  入力値を管理する。
+  登録したいデータを親へ渡す。
+
+MovieList.jsx
+  movies配列を受け取り、MovieCardを並べる。
+
+MovieCard.jsx
+  Movie 1件分を表示する。
+```
+
+説明者が強調すること:
+
+```text
+ReactはDBを直接触らない。
+ReactはAPIを呼ぶ。
+APIの結果をstateに入れる。
+stateが変わると画面が変わる。
+```
+
 ## ハンズオン
 
 React画面とSpring Boot APIを接続し、ミニアプリとして完成させる。
 
-完成ライン:
+基本ライン:
 
 - お店を登録できる
 - お店一覧を見られる
+- 登録後に一覧を更新できる
+- 画像を表示できる
+- NetworkでGETとPOSTを確認できる
+
+余裕があれば追加すること:
+
 - お店を編集できる
 - お店を削除できる
 - 地域、ジャンル、ステータスで絞り込める
-- 画像を表示できる
-- 操作後に一覧を更新できる
+- 操作後に一覧を再取得できる
 
 ## 実装の進め方
 

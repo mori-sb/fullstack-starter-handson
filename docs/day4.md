@@ -100,6 +100,78 @@ stateが変わる
 画面が再描画される
 ```
 
+## Reactコードを読むための最低限
+
+Day4では、Reactをすべて覚える必要はありません。
+まずは、次の書き方を読めるようにします。
+
+```text
+export function MovieCard(...)
+  他のファイルから使えるコンポーネントを定義している。
+
+import { MovieCard } from "./MovieCard";
+  別ファイルのコンポーネントを読み込んでいる。
+
+return (...)
+  画面に表示するJSXを返している。
+
+props
+  親から子へ渡されるデータ。
+
+useState
+  画面内で変わる値を覚える。
+
+map
+  配列を1件ずつ画面部品に変換する。
+
+onClick / onChange / onSubmit
+  ユーザー操作が起きたときに動く処理を指定する。
+```
+
+JSXはHTMLに似ていますが、JavaScriptの中に画面構造を書いています。
+そのため、HTMLと違って `{movie.title}` のようにJavaScriptの値を埋め込めます。
+
+```jsx
+<h3>{movie.title}</h3>
+```
+
+読み方:
+
+```text
+<h3>
+  見出しを表示するタグ。
+
+{movie.title}
+  JavaScriptの値を画面に表示する。
+
+movie
+  propsとして受け取った映画1件分のデータ。
+
+title
+  movieの中にあるタイトル。
+```
+
+JSXでよく見る書き方:
+
+```text
+className
+  HTMLのclassに相当する。
+  ReactではclassではなくclassNameと書く。
+
+htmlFor
+  labelとinputを関連付ける属性。
+  HTMLのforに相当する。
+
+{...}
+  JavaScriptの値や式をJSXの中に埋め込む。
+
+onClick={handleClick}
+  クリックされたときにhandleClickを実行する。
+
+<img ... />
+  子要素を持たないタグは閉じる。
+```
+
 ## 最初に伝えること
 
 Reactでは、画面を小さな部品に分けて作る。
@@ -402,6 +474,32 @@ setSelectedArea  値を変更する関数
 
 ![フォーム入力とstateの関係](../images/form-state-flow.png)
 
+Reactのフォームでは、入力欄の値をstateで管理する形をよく使います。
+
+```jsx
+<input
+  name="title"
+  value={form.title}
+  onChange={handleChange}
+/>
+```
+
+読み方:
+
+```text
+name="title"
+  どの入力項目かを表す名前。
+
+value={form.title}
+  入力欄に表示する値をstateから渡す。
+
+onChange={handleChange}
+  入力されたときにstateを更新する。
+```
+
+この形にすると、画面の入力値とstateの値がそろいます。
+登録ボタンを押したときは、stateに入っている `form` を使って登録処理を行います。
+
 ## useEffect
 
 useEffectは、画面表示時や値の変化時に処理を実行するために使う。
@@ -463,6 +561,82 @@ RestaurantCard
 - メモ
 - 画像URL
 - ステータス
+
+## 説明者用: ライブコーディングで作るもの
+
+ライブコーディングでは、完成コードを一気に貼るのではなく、次の順番で小さく作ります。
+各ステップでブラウザを確認し、「今どのコンポーネントが何を担当しているか」を言葉にします。
+
+```text
+1. App.jsx
+   固定のMovieデータを置く。
+   まだコンポーネント分割せず、データの形だけ確認する。
+
+2. components/MovieCard.jsx
+   映画1件分を表示する。
+   propsでmovieを受け取る。
+
+3. components/MovieList.jsx
+   movies配列を受け取り、mapでMovieCardを並べる。
+
+4. components/MovieForm.jsx
+   入力値をuseStateで管理する。
+   送信時に親へformを渡す。
+
+5. App.jsx
+   movies stateを持つ。
+   MovieFormから受け取ったmovieをmoviesへ追加する。
+
+6. components/MovieFilter.jsx
+   余裕があれば、ジャンルやステータスの選択UIを作る。
+   フィルタ条件のstateはApp.jsxに置く。
+```
+
+作るファイル:
+
+```text
+frontend/src/App.jsx
+frontend/src/components/MovieCard.jsx
+frontend/src/components/MovieList.jsx
+frontend/src/components/MovieForm.jsx
+frontend/src/components/MovieFilter.jsx  余裕があれば
+```
+
+説明者が各ステップで確認すること:
+
+```text
+MovieCardを作ったあと
+  1件分だけ表示できるか。
+  movie.title、movie.imageUrlを読めているか。
+
+MovieListを作ったあと
+  複数件をmapで表示できるか。
+  key={movie.id} が付いているか。
+
+MovieFormを作ったあと
+  入力するとform stateが変わるか。
+  onSubmitで親へ値を渡しているか。
+
+App.jsxへ登録処理を足したあと
+  登録ボタンでmovies stateが増えるか。
+  stateが増えると一覧表示も増えるか。
+
+コンポーネント分割を見直すとき
+  Cardが1件表示だけを担当しているか。
+  Listが配列表示だけを担当しているか。
+  Formが入力だけを担当しているか。
+```
+
+説明者が口頭で補足するとよいこと:
+
+```text
+Reactでは、まず小さく表示する。
+表示できたら配列にする。
+配列で表示できたら入力フォームを足す。
+フォームで入力できたらstateを更新する。
+
+この順番にすると、どこで壊れたか分かりやすい。
+```
 
 ## 実装の進め方
 
