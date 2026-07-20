@@ -422,6 +422,317 @@ POSTが動いたら一覧を再取得する。
 この順番にすると、どこで壊れたか分かりやすい。
 ```
 
+## ライブコーディング用コピペコード
+
+ライブコーディングでは、まず貼って動かしてから読みます。
+その後で、どのファイルが何を担当しているか、APIの結果がどこでstateに入るかを確認します。
+貼るときも、できれば次の順番で小さく確認します。
+
+```text
+1. api/movies.js
+   Spring Boot APIを呼ぶ関数を確認する
+
+2. App.jsx
+   useEffectで一覧を取得する流れを確認する
+
+3. App.jsx
+   登録後にAPIを呼び、一覧を再取得する流れを確認する
+
+4. MovieForm.jsx
+   フォームは入力値を親へ渡すだけにする
+```
+
+### api/movies.js
+
+```jsx
+const API_BASE_URL = "http://localhost:8080/api/movies";
+
+export async function fetchMovies() {
+  const response = await fetch(API_BASE_URL);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch movies");
+  }
+
+  return response.json();
+}
+
+export async function createMovie(movie) {
+  const response = await fetch(API_BASE_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(movie),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create movie");
+  }
+
+  return response.json();
+}
+```
+
+貼った後に見るポイント:
+
+```text
+API_BASE_URL
+  APIのURLを1か所にまとめている。
+
+fetchMovies
+  GET /api/movies を呼ぶ。
+  一覧取得で使う。
+
+createMovie
+  POST /api/movies を呼ぶ。
+  登録で使う。
+
+response.ok
+  HTTPステータスが成功かどうかを確認している。
+
+JSON.stringify(movie)
+  JavaScriptのオブジェクトをJSON文字列に変換している。
+```
+
+動作確認:
+
+```text
+この時点では、画面はまだ変わらない。
+api/movies.js は関数を用意しただけ。
+次にApp.jsxから呼んで、Networkで確認する。
+```
+
+### App.jsx 一覧取得
+
+Day4で作った固定データ表示を、APIから取得する形に変更します。
+
+```jsx
+import { useEffect, useState } from "react";
+import { fetchMovies, createMovie } from "./api/movies";
+import { MovieForm } from "./components/MovieForm";
+import { MovieList } from "./components/MovieList";
+
+export default function App() {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function loadMovies() {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await fetchMovies();
+      setMovies(data);
+    } catch (error) {
+      setError("映画一覧の取得に失敗しました");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadMovies();
+  }, []);
+
+  async function handleAddMovie(movie) {
+    try {
+      setError("");
+      await createMovie(movie);
+      await loadMovies();
+    } catch (error) {
+      setError("映画の登録に失敗しました");
+    }
+  }
+
+  return (
+    <main className="min-h-screen bg-slate-50 p-6">
+      <div className="mx-auto grid max-w-5xl gap-6">
+        <h1 className="text-2xl font-bold text-slate-900">映画メモ</h1>
+
+        <MovieForm onAddMovie={handleAddMovie} />
+
+        {loading && <p>読み込み中です</p>}
+        {error && <p className="text-red-600">{error}</p>}
+
+        <MovieList movies={movies} />
+      </div>
+    </main>
+  );
+}
+```
+
+貼った後に見るポイント:
+
+```text
+useEffect
+  画面を開いたあとにloadMoviesを呼ぶ。
+
+loadMovies
+  fetchMoviesでAPIを呼び、setMoviesでstateへ入れる。
+
+movies state
+  APIから取得した一覧データを持つ。
+
+loading state
+  通信中かどうかを持つ。
+
+error state
+  API通信に失敗したときのメッセージを持つ。
+
+handleAddMovie
+  createMovieで登録し、その後loadMoviesで一覧を取り直す。
+  登録に失敗した場合はerror stateを更新する。
+```
+
+動作確認:
+
+```text
+1. Spring Bootを起動する
+2. Reactを起動する
+3. ブラウザで画面を開く
+4. 開発者ツールのNetworkを開く
+5. GET /api/movies が呼ばれているか確認する
+6. レスポンスJSONがMovieListに表示されているか確認する
+```
+
+うまくいかないときに見る場所:
+
+```text
+Console
+  JavaScriptエラーを見る。
+
+Network
+  APIのURL、HTTPメソッド、ステータスコード、レスポンスを見る。
+
+Spring Bootログ
+  Controllerまで届いているか、例外が出ていないかを見る。
+```
+
+### MovieForm.jsx
+
+MovieFormはAPIを直接呼びません。
+入力値を集めて、親の `App.jsx` に渡します。
+
+```jsx
+import { useState } from "react";
+
+const initialForm = {
+  title: "",
+  genre: "",
+  memo: "",
+  imageUrl: "",
+  status: "WATCHED",
+};
+
+export function MovieForm({ onAddMovie }) {
+  const [form, setForm] = useState(initialForm);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setForm({ ...form, [name]: value });
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    await onAddMovie(form);
+    setForm(initialForm);
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="grid gap-3 rounded-lg border border-slate-200 bg-white p-4">
+      <input name="title" value={form.title} onChange={handleChange} placeholder="タイトル" className="rounded border p-2" />
+      <input name="genre" value={form.genre} onChange={handleChange} placeholder="ジャンル" className="rounded border p-2" />
+      <input name="imageUrl" value={form.imageUrl} onChange={handleChange} placeholder="画像URL" className="rounded border p-2" />
+      <textarea name="memo" value={form.memo} onChange={handleChange} placeholder="メモ" className="rounded border p-2" />
+      <select name="status" value={form.status} onChange={handleChange} className="rounded border p-2">
+        <option value="WATCHED">見た</option>
+        <option value="WANT_TO_WATCH">見たい</option>
+        <option value="FAVORITE">お気に入り</option>
+      </select>
+      <button className="rounded bg-cyan-600 px-4 py-2 font-semibold text-white" type="submit">
+        登録する
+      </button>
+    </form>
+  );
+}
+```
+
+貼った後に見るポイント:
+
+```text
+form state
+  入力中の値を持つ。
+
+handleChange
+  入力欄が変わるたびにform stateを更新する。
+
+handleSubmit
+  フォーム送信時に動く。
+  onAddMovie(form) で親へ入力値を渡す。
+  登録が終わってからフォームを空に戻す。
+
+MovieForm
+  APIは呼ばない。
+  APIを呼ぶのはApp.jsxのhandleAddMovie。
+```
+
+動作確認:
+
+```text
+1. フォームに入力する
+2. 登録ボタンを押す
+3. NetworkでPOST /api/movies が呼ばれているか確認する
+4. Request Payloadに入力した値が入っているか確認する
+5. POST後にGET /api/movies が呼ばれているか確認する
+6. 一覧に登録したMovieが表示されるか確認する
+```
+
+### ライブコーディング後に必ず確認すること
+
+```text
+GET /api/movies
+  画面を開いたときに呼ばれる。
+
+POST /api/movies
+  登録ボタンを押したときに呼ばれる。
+
+POST後のGET /api/movies
+  登録後に一覧を最新化するために呼ばれる。
+```
+
+最後に、次の流れを声に出して確認します。
+
+```text
+画面を開く
+  ↓
+useEffect
+  ↓
+fetchMovies
+  ↓
+GET /api/movies
+  ↓
+setMovies
+  ↓
+MovieListに表示
+```
+
+```text
+フォームに入力する
+  ↓
+onSubmit
+  ↓
+onAddMovie
+  ↓
+createMovie
+  ↓
+POST /api/movies
+  ↓
+loadMovies
+  ↓
+一覧を再取得
+```
+
 ## ハンズオン
 
 React画面とSpring Boot APIを接続し、ミニアプリとして完成させる。
