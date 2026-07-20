@@ -110,50 +110,24 @@ Day4では、Reactをすべて覚える必要はありません。
 Reactを習得するときは、最初から全部を覚えようとしない。
 まずは、次の7つを読めるようにします。
 
-```text
-1. JSX
-   JavaScriptの中にHTMLに近い形で画面を書く。
-
-2. Component
-   画面を部品に分ける。
-   例: MovieCard、MovieList、MovieForm
-
-3. props
-   親から子へ渡すデータ。
-   子は受け取ったpropsを使って表示する。
-
-4. state
-   画面の中で変わるデータ。
-   stateが変わると画面が更新される。
-
-5. useState
-   stateを作るためのReactの機能。
-   入力フォームや一覧データを覚える。
-
-6. useEffect
-   画面表示後に実行したい処理を書く。
-   API呼び出しはDay5で詳しく扱う。
-
-7. event handler
-   クリック、入力、送信など、ユーザー操作で動く関数。
-   例: onClick、onChange、onSubmit
-```
+| 色 | 覚えること | 役割 | コードで見る場所 |
+| --- | --- | --- | --- |
+| 🟦 | `JSX` | JavaScriptの中にHTMLに近い形で画面を書く | `return (...)` の中 |
+| 🟩 | `Component` | 画面を部品に分ける | `MovieCard`、`MovieList`、`MovieForm` |
+| 🟨 | `props` | 親から子へデータを渡す | `function MovieCard({ movie })` |
+| 🟧 | `state` | 画面の中で変わるデータ | `movies`、`form`、`selectedGenre` |
+| 🟥 | `useState` | stateを作る | `const [form, setForm] = useState(...)` |
+| 🟪 | `useEffect` | 画面表示後に処理を実行する | `useEffect(() => { ... }, [])` |
+| ⬛ | `event handler` | ユーザー操作で動く関数 | `onClick`、`onChange`、`onSubmit` |
 
 まずこの対応を覚える:
 
-```text
-表示する
-  JSX / Component / props
-
-入力する
-  state / useState / onChange
-
-操作する
-  onClick / onSubmit
-
-画面表示後に何かする
-  useEffect
-```
+| やりたいこと | 使うもの |
+| --- | --- |
+| 🟦 表示する | `JSX` / `Component` / `props` |
+| 🟧 入力する | `state` / `useState` / `onChange` |
+| ⬛ 操作する | `onClick` / `onSubmit` |
+| 🟪 画面表示後に何かする | `useEffect` |
 
 コードを読むときは、次の順番で見ると迷いにくいです。
 

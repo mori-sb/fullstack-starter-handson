@@ -69,25 +69,14 @@ Reactがstateを更新する
 Day5では、Day4で学んだReactの基本をAPI連携に使います。
 特に次の対応を意識します。
 
-```text
-fetch
-  Spring Boot APIを呼ぶ。
-
-useEffect
-  画面を開いたあとに一覧APIを呼ぶ。
-
-useState
-  APIから取得した一覧、読み込み中、エラーをstateとして持つ。
-
-props
-  App.jsxからMovieListやMovieFormへデータや関数を渡す。
-
-event handler
-  フォーム送信やボタンクリックでAPIを呼ぶ。
-
-JSX
-  stateの値を画面に表示する。
-```
+| 色 | 覚えること | Day5での役割 |
+| --- | --- | --- |
+| 🟦 | `fetch` | Spring Boot APIを呼ぶ |
+| 🟪 | `useEffect` | 画面を開いたあとに一覧APIを呼ぶ |
+| 🟥 | `useState` | APIから取得した一覧、読み込み中、エラーをstateとして持つ |
+| 🟨 | `props` | `App.jsx` から `MovieList` や `MovieForm` へデータや関数を渡す |
+| ⬛ | `event handler` | フォーム送信やボタンクリックでAPIを呼ぶ |
+| 🟩 | `JSX` | stateの値を画面に表示する |
 
 Day5で覚える流れ:
 
