@@ -367,6 +367,54 @@ ReactとSpring Bootをつなぐときは、1つずつ確認します。
 ライブコーディングではMovie題材で確認します。
 APIを呼ぶ処理は `frontend/src/api/movies.js` にまとめます。
 
+作る場所:
+
+```text
+frontend/
+└─ src/
+   ├─ App.jsx
+   ├─ api/
+   │  └─ movies.js        ここにAPIを呼ぶ関数を書く
+   └─ components/
+      ├─ MovieForm.jsx
+      ├─ MovieList.jsx
+      └─ MovieCard.jsx
+```
+
+それぞれの役割:
+
+```text
+frontend/src/api/movies.js
+  Spring Boot APIを呼ぶ関数を書く。
+  fetchMovies、createMovie などを置く。
+  JSXは書かない。
+  画面の見た目も書かない。
+
+frontend/src/App.jsx
+  movies stateを持つ。
+  api/movies.js の関数をimportして呼ぶ。
+  取得したデータをMovieListへ渡す。
+
+frontend/src/components/MovieList.jsx
+  movies配列を受け取り、MovieCardを並べる。
+
+frontend/src/components/MovieCard.jsx
+  Movie 1件分を表示する。
+
+frontend/src/components/MovieForm.jsx
+  入力値を管理し、登録したいMovieを親へ渡す。
+```
+
+まず `frontend/src/api/` ディレクトリがなければ作ります。
+その中に `movies.js` を作ります。
+
+```text
+frontend/src/api/movies.js
+```
+
+このファイルには、画面部品ではなく「APIを呼ぶ関数」だけを書きます。
+Reactコンポーネントから見ると、API呼び出しの細かい書き方を `movies.js` に隠せます。
+
 ```jsx
 const API_BASE_URL = "http://localhost:8080/api/movies";
 
@@ -403,6 +451,23 @@ return response.json();
 - APIを呼ぶ関数は `api/` にまとめる
 - 画面側は `fetchMovies()` を呼ぶだけにする
 
+`App.jsx` から使うときは、次のようにimportします。
+
+```jsx
+import { fetchMovies, createMovie } from "./api/movies";
+```
+
+読み方:
+
+```text
+import { fetchMovies, createMovie } from "./api/movies";
+  api/movies.js でexportした関数をApp.jsxで使えるようにしている。
+
+./api/movies
+  App.jsxから見た相対パス。
+  frontend/src/api/movies.js を指している。
+```
+
 API通信では、成功だけでなく失敗も考えます。
 最初は次のように、HTTPステータスを見てエラーにできます。
 
@@ -432,6 +497,17 @@ throw new Error(...)
 ### 2. 一覧取得だけをつなぐ
 
 最初に固定データをやめて、APIから取得したデータをstateに入れます。
+ここからは `frontend/src/App.jsx` を編集します。
+
+`App.jsx` でやること:
+
+```text
+1. fetchMoviesをimportする
+2. movies stateを用意する
+3. useEffectでfetchMoviesを呼ぶ
+4. setMoviesでAPIレスポンスをstateに入れる
+5. MovieListへmoviesを渡す
+```
 
 ```jsx
 useEffect(() => {
@@ -538,6 +614,8 @@ finally
 ### 3. 登録APIをつなぐ
 
 フォーム送信時にPOSTします。
+`createMovie` も `frontend/src/api/movies.js` に書きます。
+一覧取得と同じように、API通信の処理は `api/` にまとめます。
 
 ```jsx
 export async function createMovie(movie) {
